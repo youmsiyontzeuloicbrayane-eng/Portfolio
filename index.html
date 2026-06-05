@@ -77,13 +77,70 @@ section{
   cursor:pointer;
 }
 
-.profile img{width:100%;height:100%;object-fit:cover;}
+.profile img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
 
-.hero h1{font-size:2.3rem;margin-top:1rem;}
+.hero h1{
+  font-size:2.3rem;
+  margin-top:1rem;
+}
+
 .hero span{color:var(--green);}
-.hero p{color:var(--muted);margin-top:1rem;line-height:1.6;}
 
-/* FORM */
+.hero p{
+  color:var(--muted);
+  margin-top:1rem;
+  line-height:1.6;
+}
+
+/* ABOUT */
+.about h2{
+  margin-bottom:1rem;
+}
+
+.about p{
+  color:var(--muted);
+  line-height:1.9;
+  margin-bottom:1rem;
+  font-size:1rem;
+}
+
+/* COMPETENCES */
+.skill{
+  display:flex;
+  align-items:center;
+  gap:1rem;
+  background:var(--card);
+  padding:1rem;
+  margin-bottom:1rem;
+  border-radius:10px;
+  border:1px solid var(--border);
+  font-weight:500;
+}
+
+.skill i{
+  font-size:1.6rem;
+}
+
+/* couleurs logos */
+.html{color:#ff5722;}
+.js{color:#f7df1e;}
+.ui{color:#ff4fd8;}
+.db{color:#4dabf7;}
+.css{color:#2196f3;}
+
+/* PROJETS */
+.project-box{
+  background:var(--card);
+  padding:1rem;
+  margin-top:1rem;
+  border-radius:10px;
+  border:1px solid var(--border);
+}
+
 input,textarea{
   width:100%;
   padding:0.8rem;
@@ -104,31 +161,16 @@ button{
   border-radius:8px;
 }
 
-/* PROJECTS */
-.project-box{
+/* CONTACT */
+.contact{
+  text-align:center;
+}
+
+.contact-card{
   background:var(--card);
-  padding:1rem;
-  margin-top:1rem;
-  border-radius:10px;
+  padding:2rem;
+  border-radius:12px;
   border:1px solid var(--border);
-}
-
-.project-box a{
-  display:inline-block;
-  margin-top:0.5rem;
-  color:var(--green);
-  text-decoration:none;
-}
-
-/* TAG */
-.tag{
-  font-size:0.8rem;
-  color:#000;
-  background:var(--green);
-  padding:2px 6px;
-  border-radius:5px;
-  display:inline-block;
-  margin-bottom:5px;
 }
 </style>
 </head>
@@ -137,13 +179,13 @@ button{
 
 <!-- NAV -->
 <nav>
-  <div class="nav-links">
-    <a href="#accueil">Accueil</a>
-    <a href="#apropos">À propos</a>
-    <a href="#competences">Compétences</a>
-    <a href="#projets">Projets</a>
-    <a href="#contact">Contact</a>
-  </div>
+<div class="nav-links">
+<a href="#accueil">Accueil</a>
+<a href="#apropos">À propos</a>
+<a href="#competences">Compétences</a>
+<a href="#projets">Projets</a>
+<a href="#contact">Contact</a>
+</div>
 </nav>
 
 <!-- HERO -->
@@ -154,28 +196,52 @@ button{
 
 <h1>Salut, je suis<br><span>Loïc Brayane</span></h1>
 
-<p>Étudiant en Génie Informatique — IA, mobile, cybersécurité</p>
-
-</section>
-
-<!-- ABOUT -->
-<section id="apropos">
-<h2>À propos</h2>
 <p>
-Curieux, sérieux et passionné par l’informatique.
-Intéressé par l’IA, le développement mobile et la cybersécurité.
+Étudiant en Génie Informatique à l’IUT de Douala.<br>
+Passionné par l’IA, le développement mobile et la cybersécurité.
 </p>
+
 </section>
 
-<!-- COMPÉTENCES -->
+<!-- ABOUT (AMÉLIORÉ) -->
+<section id="apropos" class="about">
+
+<h2>À propos de moi</h2>
+
+<p>
+Je suis un étudiant en génie informatique à l’IUT de Douala,
+motivé par l’apprentissage et l’amélioration continue dans le domaine du numérique.
+</p>
+
+<p>
+En dehors des cours, je fais beaucoup de recherches personnelles et de pratiques
+afin de renforcer mes compétences techniques et comprendre les technologies modernes.
+</p>
+
+<p>
+Je suis particulièrement attiré par trois grands domaines :
+le développement web, l’intelligence artificielle et la cybersécurité.
+Ces domaines représentent pour moi le futur du numérique et de l’innovation.
+</p>
+
+<p>
+Mon objectif est de devenir un ingénieur capable de concevoir des solutions
+complètes, utiles et performantes.
+</p>
+
+</section>
+
+<!-- COMPÉTENCES (LOGOS COLORÉS + FIGMA RETIRÉ) -->
 <section id="competences">
+
 <h2>Compétences</h2>
 
-<p>HTML / CSS</p>
-<p>JavaScript</p>
-<p>UI/UX Design</p>
-<p>Base de données</p>
-<p>Figma</p>
+<div class="skill"><i class="fa-brands fa-html5 html"></i> HTML</div>
+<div class="skill"><i class="fa-brands fa-css3-alt css"></i> CSS</div>
+<div class="skill"><i class="fa-brands fa-js js"></i> JavaScript</div>
+<div class="skill"><i class="fa-solid fa-palette ui"></i> UI/UX Design</div>
+<div class="skill"><i class="fa-solid fa-database db"></i> Base de données</div>
+
 </section>
 
 <!-- PROJETS -->
@@ -186,7 +252,7 @@ Intéressé par l’IA, le développement mobile et la cybersécurité.
 <div id="projects"></div>
 
 <input id="title" placeholder="Titre projet">
-<input id="type" placeholder="Type (Web, App, Figma...)">
+<input id="type" placeholder="Type (Web, App, etc.)">
 <textarea id="desc" placeholder="Description"></textarea>
 <input id="link" placeholder="Lien (https://...)">
 
@@ -195,11 +261,14 @@ Intéressé par l’IA, le développement mobile et la cybersécurité.
 </section>
 
 <!-- CONTACT -->
-<section id="contact">
+<section id="contact" class="contact">
+
 <h2>Contact</h2>
 
+<div class="contact-card">
 <p>📱 681 591 969</p>
 <p>✉️ tonemail@gmail.com</p>
+</div>
 
 </section>
 
@@ -226,22 +295,21 @@ document.getElementById("profile").innerHTML =
 }
 }
 
-/* ADD PROJECT */
+/* PROJETS */
 function addProject(){
 
-const t = title.value.trim();
-const type = document.getElementById("type").value.trim();
-const d = desc.value.trim();
-const l = link.value.trim();
+const t = document.getElementById("title").value;
+const type = document.getElementById("type").value;
+const d = document.getElementById("desc").value;
+const l = document.getElementById("link").value;
 
 if(!t || !d){
-alert("Titre + description obligatoires");
+alert("Titre et description obligatoires");
 return;
 }
 
-/* vérification lien */
 if(l && !l.startsWith("http")){
-alert("Lien invalide (doit commencer par http/https)");
+alert("Lien invalide");
 return;
 }
 
@@ -259,26 +327,23 @@ desc.value="";
 link.value="";
 }
 
-/* RENDER */
 function render(){
 
 let projects = JSON.parse(localStorage.getItem("projects")) || [];
 
-projects.innerHTML = "";
-
 const container = document.getElementById("projects");
-container.innerHTML = "";
+container.innerHTML="";
 
 projects.forEach(p=>{
 container.innerHTML += `
 <div class="project-box">
-
-<div class="tag">${p.type || "Projet"}</div>
-
 <h3>${p.t}</h3>
+<p>${p.type}</p>
 <p>${p.d}</p>
 
-${p.l ? `<a href="${p.l}" target="_blank">Voir le projet →</a>` : ""}
+${p.l ? `<a href="${p.l}" target="_blank" style="color:#19ff9a;">
+Voir le projet →
+</a>` : ""}
 
 </div>
 `;
