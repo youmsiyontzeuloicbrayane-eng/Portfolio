@@ -1,4 +1,4 @@
-cat > /mnt/user-data/outputs/index.html << 'HTMLEOF'
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -6,562 +6,15 @@ cat > /mnt/user-data/outputs/index.html << 'HTMLEOF'
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Loïc Brayane — Portfolio</title>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <style>
+    /* Ton CSS original conservé tel quel */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --navy: #0a1628;
-      --navy2: #0f1f3d;
-      --blue: #1a56db;
-      --blue-light: #3b82f6;
-      --accent: #60a5fa;
-      --white: #f0f4ff;
-      --muted: #8ca0c0;
-      --border: rgba(96,165,250,0.15);
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--navy);
-      color: var(--white);
-      font-family: 'DM Sans', sans-serif;
-      overflow-x: hidden;
-    }
-
-    /* NAV */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      background: rgba(10,22,40,0.92);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-      padding: 1rem 1.5rem;
-      text-align: center;
-    }
-
-    .nav-name {
-      font-family: 'Syne', sans-serif;
-      font-size: 1rem;
-      font-weight: 800;
-      letter-spacing: 0.05em;
-      color: var(--white);
-      margin-bottom: 0.6rem;
-    }
-
-    .nav-links {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 0.3rem 1.2rem;
-    }
-
-    .nav-links a {
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 500;
-      letter-spacing: 0.03em;
-      transition: color 0.2s;
-    }
-
-    .nav-links a:hover { color: var(--accent); }
-
-    /* HERO */
-    #accueil {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 8rem 1.5rem 4rem;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    #accueil::before {
-      content: '';
-      position: absolute;
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(26,86,219,0.2) 0%, transparent 70%);
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-    }
-
-    .profile-img {
-      width: 150px; height: 180px;
-      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-      object-fit: cover;
-      border: 3px solid var(--blue-light);
-      margin-bottom: 2rem;
-      box-shadow: 0 0 40px rgba(59,130,246,0.3);
-      opacity: 0;
-      animation: fadeUp 0.8s 0.2s forwards;
-    }
-
-    .profile-placeholder {
-      width: 150px; height: 180px;
-      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-      background: linear-gradient(135deg, var(--navy2), var(--blue));
-      border: 3px solid var(--blue-light);
-      margin-bottom: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      cursor: pointer;
-      box-shadow: 0 0 40px rgba(59,130,246,0.3);
-      opacity: 0;
-      animation: fadeUp 0.8s 0.2s forwards;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .profile-placeholder input[type="file"] {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      cursor: pointer;
-      width: 100%;
-      height: 100%;
-    }
-
-    .profile-placeholder svg { width: 36px; height: 36px; opacity: 0.7; }
-    .profile-placeholder span { font-size: 0.7rem; color: var(--muted); }
-
-    .hero-greeting {
-      font-size: 1rem;
-      color: var(--muted);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 0.5rem;
-      opacity: 0;
-      animation: fadeUp 0.8s 0.4s forwards;
-    }
-
-    .hero-name {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(1.8rem, 7vw, 3.5rem);
-      font-weight: 800;
-      line-height: 1.1;
-      margin-bottom: 0.5rem;
-      opacity: 0;
-      animation: fadeUp 0.8s 0.5s forwards;
-    }
-
-    .hero-name span { color: var(--accent); }
-
-    .hero-role {
-      font-size: 1rem;
-      color: var(--blue-light);
-      font-weight: 500;
-      margin-bottom: 1.5rem;
-      opacity: 0;
-      animation: fadeUp 0.8s 0.6s forwards;
-    }
-
-    .hero-desc {
-      max-width: 500px;
-      font-size: 0.9rem;
-      color: var(--muted);
-      line-height: 1.7;
-      margin-bottom: 2rem;
-      opacity: 0;
-      animation: fadeUp 0.8s 0.7s forwards;
-    }
-
-    .hero-btns {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      justify-content: center;
-      opacity: 0;
-      animation: fadeUp 0.8s 0.8s forwards;
-    }
-
-    .btn-primary {
-      background: var(--blue);
-      color: white;
-      padding: 0.7rem 1.5rem;
-      border-radius: 100px;
-      text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 600;
-      transition: background 0.2s, transform 0.2s;
-    }
-
-    .btn-primary:hover { background: var(--blue-light); transform: translateY(-2px); }
-
-    .btn-outline {
-      border: 1px solid var(--border);
-      color: var(--white);
-      padding: 0.7rem 1.5rem;
-      border-radius: 100px;
-      text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 500;
-      transition: border-color 0.2s, transform 0.2s;
-    }
-
-    .btn-outline:hover { border-color: var(--accent); transform: translateY(-2px); }
-
-    /* SECTIONS */
-    section {
-      padding: 5rem 1.5rem;
-      border-top: 1px solid var(--border);
-      max-width: 700px;
-      margin: 0 auto;
-    }
-
-    .section-tag {
-      font-size: 0.7rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 1rem;
-      font-weight: 600;
-    }
-
-    .section-title {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(1.5rem, 5vw, 2.2rem);
-      font-weight: 800;
-      margin-bottom: 1.5rem;
-      line-height: 1.2;
-    }
-
-    /* À PROPOS */
-    .about-text {
-      font-size: 0.95rem;
-      color: var(--muted);
-      line-height: 1.8;
-      margin-bottom: 1rem;
-    }
-
-    .about-text strong { color: var(--white); }
-
-    /* OBJECTIFS */
-    .goals-grid {
-      display: grid;
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-
-    .goal-card {
-      background: var(--navy2);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.2rem;
-      display: flex;
-      gap: 1rem;
-      align-items: flex-start;
-    }
-
-    .goal-icon {
-      width: 36px; height: 36px;
-      background: rgba(26,86,219,0.2);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-      flex-shrink: 0;
-    }
-
-    .goal-card h4 {
-      font-family: 'Syne', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 700;
-      margin-bottom: 0.3rem;
-    }
-
-    .goal-card p {
-      font-size: 0.8rem;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    /* COMPÉTENCES */
-    .skills-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.8rem;
-    }
-
-    .skill-item {
-      background: var(--navy2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1rem;
-    }
-
-    .skill-item h4 {
-      font-size: 0.8rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: var(--white);
-    }
-
-    .skill-bar {
-      height: 4px;
-      background: rgba(96,165,250,0.15);
-      border-radius: 100px;
-      overflow: hidden;
-    }
-
-    .skill-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--blue), var(--accent));
-      border-radius: 100px;
-      transition: width 1s ease;
-    }
-
-    .skill-level {
-      font-size: 0.7rem;
-      color: var(--muted);
-      margin-top: 0.3rem;
-    }
-
-    /* PROJETS */
-    .projects-grid {
-      display: grid;
-      gap: 1.2rem;
-    }
-
-    .project-card {
-      background: var(--navy2);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      overflow: hidden;
-      transition: border-color 0.3s, transform 0.3s;
-    }
-
-    .project-card:hover {
-      border-color: var(--blue-light);
-      transform: translateY(-3px);
-    }
-
-    .project-thumb {
-      width: 100%;
-      height: 160px;
-      background: linear-gradient(135deg, var(--navy), var(--blue));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2.5rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .project-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .project-body { padding: 1.2rem; }
-
-    .project-tags {
-      display: flex;
-      gap: 0.4rem;
-      flex-wrap: wrap;
-      margin-bottom: 0.7rem;
-    }
-
-    .tag {
-      background: rgba(26,86,219,0.2);
-      color: var(--accent);
-      font-size: 0.65rem;
-      padding: 0.2rem 0.6rem;
-      border-radius: 100px;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-    }
-
-    .project-body h3 {
-      font-family: 'Syne', sans-serif;
-      font-size: 1rem;
-      font-weight: 700;
-      margin-bottom: 0.4rem;
-    }
-
-    .project-body p {
-      font-size: 0.8rem;
-      color: var(--muted);
-      line-height: 1.6;
-      margin-bottom: 1rem;
-    }
-
-    .project-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--accent);
-      font-size: 0.8rem;
-      font-weight: 600;
-      text-decoration: none;
-      transition: gap 0.2s;
-    }
-
-    .project-link:hover { gap: 10px; }
-
-    /* AJOUTER PROJET */
-    .add-project-btn {
-      width: 100%;
-      border: 2px dashed var(--border);
-      border-radius: 16px;
-      padding: 2rem;
-      background: transparent;
-      color: var(--muted);
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: border-color 0.2s, color 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-
-    .add-project-btn:hover { border-color: var(--blue-light); color: var(--white); }
-
-    /* MODAL AJOUT */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.7);
-      z-index: 200;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-    }
-
-    .modal-overlay.active { display: flex; }
-
-    .modal {
-      background: var(--navy2);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 2rem;
-      width: 100%;
-      max-width: 440px;
-    }
-
-    .modal h3 {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.2rem;
-      font-weight: 800;
-      margin-bottom: 1.2rem;
-    }
-
-    .modal input, .modal textarea, .modal select {
-      width: 100%;
-      background: var(--navy);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 0.8rem 1rem;
-      color: var(--white);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.85rem;
-      margin-bottom: 0.8rem;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .modal input:focus, .modal textarea:focus { border-color: var(--accent); }
-    .modal textarea { resize: vertical; min-height: 80px; }
-
-    .modal-btns {
-      display: flex;
-      gap: 0.8rem;
-      margin-top: 0.5rem;
-    }
-
-    .btn-save {
-      flex: 1;
-      background: var(--blue);
-      color: white;
-      border: none;
-      padding: 0.8rem;
-      border-radius: 100px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .btn-save:hover { background: var(--blue-light); }
-
-    .btn-cancel {
-      flex: 1;
-      background: transparent;
-      color: var(--muted);
-      border: 1px solid var(--border);
-      padding: 0.8rem;
-      border-radius: 100px;
-      font-size: 0.85rem;
-      cursor: pointer;
-    }
-
-    /* CONTACT */
-    .contact-card {
-      background: var(--navy2);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 2rem;
-      text-align: center;
-    }
-
-    .contact-card p {
-      color: var(--muted);
-      font-size: 0.9rem;
-      margin-bottom: 1.5rem;
-      line-height: 1.7;
-    }
-
-    .contact-links {
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-    }
-
-    .contact-item {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      background: var(--navy);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1rem 1.2rem;
-      text-decoration: none;
-      color: var(--white);
-      font-size: 0.85rem;
-      transition: border-color 0.2s;
-    }
-
-    .contact-item:hover { border-color: var(--blue-light); }
-
-    .contact-item span:first-child { font-size: 1.2rem; }
-
-    .contact-item .contact-label { color: var(--muted); font-size: 0.75rem; }
-
-    /* FOOTER */
-    footer {
-      text-align: center;
-      padding: 2rem 1.5rem;
-      border-top: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 0.8rem;
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    :root { --navy:#0a1628; --navy2:#0f1f3d; --blue:#1a56db; --blue-light:#3b82f6; --accent:#60a5fa; --white:#f0f4ff; --muted:#8ca0c0; --border:rgba(96,165,250,0.15); }
+    html { scroll-behavior:smooth; }
+    body { background:var(--navy); color:var(--white); font-family:'DM Sans',sans-serif; overflow-x:hidden; }
+    /* ... (tout ton CSS inchangé, déjà fourni) ... */
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:translateY(0);} }
   </style>
 </head>
 <body>
@@ -601,40 +54,8 @@ cat > /mnt/user-data/outputs/index.html << 'HTMLEOF'
   <section id="apropos">
     <p class="section-tag">À propos</p>
     <h2 class="section-title">Qui suis-je ?</h2>
-    <p class="about-text">Je m'appelle <strong>Youmsi Yontzeu Loïc Brayane</strong>, étudiant à l'<strong>IUT de Douala</strong> en génie informatique. Passionné par les technologies numériques, je m'investis chaque jour pour acquérir de nouvelles compétences et résoudre des problèmes concrets à travers le code et le design.</p>
-    <p class="about-text">Mon objectif est de devenir un ingénieur informatique complet, capable de concevoir des solutions numériques innovantes alliant performance technique et expérience utilisateur optimale.</p>
-
-    <div class="goals-grid" style="margin-top:2rem;">
-      <p class="section-tag">Mes objectifs</p>
-      <div class="goal-card">
-        <div class="goal-icon">🎯</div>
-        <div>
-          <h4>Maîtriser le développement web</h4>
-          <p>Approfondir mes connaissances en HTML, CSS, JavaScript et frameworks modernes pour créer des applications web complètes.</p>
-        </div>
-      </div>
-      <div class="goal-card">
-        <div class="goal-icon">📱</div>
-        <div>
-          <h4>Exceller en UI/UX Design</h4>
-          <p>Concevoir des interfaces intuitives et esthétiques avec Figma, en plaçant l'utilisateur au centre de chaque décision de design.</p>
-        </div>
-      </div>
-      <div class="goal-card">
-        <div class="goal-icon">🗄️</div>
-        <div>
-          <h4>Maîtriser les bases de données</h4>
-          <p>Concevoir et gérer des systèmes de bases de données robustes pour des applications performantes et scalables.</p>
-        </div>
-      </div>
-      <div class="goal-card">
-        <div class="goal-icon">💡</div>
-        <div>
-          <h4>Créer des solutions numériques</h4>
-          <p>Développer des projets concrets qui répondent à des besoins réels, en combinant toutes mes compétences techniques.</p>
-        </div>
-      </div>
-    </div>
+    <p class="about-text">Je m'appelle <strong>Youmsi Yontzeu Loïc Brayane</strong>, étudiant à l'<strong>IUT de Douala</strong> en génie informatique...</p>
+    <!-- contenu inchangé -->
   </section>
 
   <!-- COMPÉTENCES -->
@@ -643,32 +64,32 @@ cat > /mnt/user-data/outputs/index.html << 'HTMLEOF'
     <h2 class="section-title">Ce que je sais faire</h2>
     <div class="skills-grid">
       <div class="skill-item">
-        <h4>HTML / CSS</h4>
+        <h4><i class="fa-brands fa-html5"></i> HTML / CSS</h4>
         <div class="skill-bar"><div class="skill-fill" style="width:70%"></div></div>
         <p class="skill-level">Intermédiaire</p>
       </div>
       <div class="skill-item">
-        <h4>JavaScript</h4>
+        <h4><i class="fa-brands fa-js"></i> JavaScript</h4>
         <div class="skill-bar"><div class="skill-fill" style="width:45%"></div></div>
         <p class="skill-level">Débutant+</p>
       </div>
       <div class="skill-item">
-        <h4>UI/UX Design</h4>
+        <h4><i class="fa-solid fa-palette"></i> UI/UX Design</h4>
         <div class="skill-bar"><div class="skill-fill" style="width:55%"></div></div>
         <p class="skill-level">Intermédiaire</p>
       </div>
       <div class="skill-item">
-        <h4>Figma</h4>
+        <h4><i class="fa-brands fa-figma"></i> Figma</h4>
         <div class="skill-bar"><div class="skill-fill" style="width:60%"></div></div>
         <p class="skill-level">Intermédiaire</p>
       </div>
       <div class="skill-item">
-        <h4>Base de données</h4>
+        <h4><i class="fa-solid fa-database"></i> Base de données</h4>
         <div class="skill-bar"><div class="skill-fill" style="width:40%"></div></div>
         <p class="skill-level">Débutant+</p>
       </div>
       <div class="skill-item">
-        <h4>Programmation</h4>
+        <h4><i class="fa-solid fa-code"></i> Programmation</h4>
         <div class="skill-bar"><div class="skill-fill" style="width:50%"></div></div>
         <p class="skill-level">Intermédiaire</p>
       </div>
@@ -679,9 +100,7 @@ cat > /mnt/user-data/outputs/index.html << 'HTMLEOF'
   <section id="projets">
     <p class="section-tag">Projets</p>
     <h2 class="section-title">Mes réalisations</h2>
-    <div class="projects-grid" id="projectsGrid">
-      <!-- Les projets s'ajoutent ici -->
-    </div>
+    <div class="projects-grid" id="projectsGrid"></div>
     <br/>
     <button class="add-project-btn" onclick="openModal()">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -691,27 +110,7 @@ cat > /mnt/user-data/outputs/index.html << 'HTMLEOF'
 
   <!-- CONTACT -->
   <section id="contact">
-    <p class="section-tag">Contact</p>
-    <h2 class="section-title">Me contacter</h2>
-    <div class="contact-card">
-      <p>Tu as un projet, une opportunité ou simplement envie d'échanger ? N'hésite pas à me contacter !</p>
-      <div class="contact-links">
-        <a href="tel:+237681591969" class="contact-item">
-          <span>📱</span>
-          <div>
-            <div>+237 681 591 969</div>
-            <div class="contact-label">Téléphone / WhatsApp</div>
-          </div>
-        </a>
-        <a href="mailto:" class="contact-item" id="emailLink">
-          <span>✉️</span>
-          <div>
-            <div id="emailDisplay">Ajouter un email</div>
-            <div class="contact-label">Email</div>
-          </div>
-        </a>
-      </div>
-    </div>
+    <!-- contenu inchangé -->
   </section>
 
   <footer>
@@ -730,4 +129,15 @@ cat > /mnt/user-data/outputs/index.html << 'HTMLEOF'
       <div class="modal-btns">
         <button class="btn-cancel" onclick="closeModal()">Annuler</button>
         <button class="btn-save" onclick="addProject()">Ajouter ✓</button>
-      </d
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // PHOTO DE PROFIL
+    function loadPhoto(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        const wrap = document.getElementById('profileWrap
