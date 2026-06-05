@@ -1,41 +1,32 @@
+cat > /mnt/user-data/outputs/index.html << 'HTMLEOF'
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Loïc Brayane — Portfolio</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0d0d0d;
-      --surface: #161616;
-      --accent: #c9f02e;
-      --text: #f0ede6;
-      --muted: #888;
-      --border: #2a2a2a;
+      --navy: #0a1628;
+      --navy2: #0f1f3d;
+      --blue: #1a56db;
+      --blue-light: #3b82f6;
+      --accent: #60a5fa;
+      --white: #f0f4ff;
+      --muted: #8ca0c0;
+      --border: rgba(96,165,250,0.15);
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-      background: var(--bg);
-      color: var(--text);
+      background: var(--navy);
+      color: var(--white);
       font-family: 'DM Sans', sans-serif;
-      min-height: 100vh;
       overflow-x: hidden;
-    }
-
-    /* NOISE OVERLAY */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 999;
-      opacity: 0.4;
     }
 
     /* NAV */
@@ -43,401 +34,700 @@
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 100;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1.2rem 2rem;
-      backdrop-filter: blur(12px);
-      background: rgba(13,13,13,0.7);
+      background: rgba(10,22,40,0.92);
+      backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
+      padding: 1rem 1.5rem;
+      text-align: center;
     }
 
-    .nav-logo {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.1rem;
-      letter-spacing: 0.02em;
-      color: var(--text);
+    .nav-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      color: var(--white);
+      margin-bottom: 0.6rem;
+    }
+
+    .nav-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.3rem 1.2rem;
+    }
+
+    .nav-links a {
+      color: var(--muted);
       text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      transition: color 0.2s;
     }
 
-    .nav-dot {
-      width: 8px; height: 8px;
-      background: var(--accent);
-      border-radius: 50%;
-      display: inline-block;
-      margin-left: 6px;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.8); }
-    }
+    .nav-links a:hover { color: var(--accent); }
 
     /* HERO */
-    .hero {
+    #accueil {
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding: 0 2rem 4rem;
-      position: relative;
-    }
-
-    .hero-tag {
-      font-size: 0.75rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 1.5rem;
-      opacity: 0;
-      animation: fadeUp 0.8s 0.2s forwards;
-    }
-
-    .hero-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(3rem, 13vw, 7rem);
-      font-weight: 900;
-      line-height: 0.95;
-      letter-spacing: -0.02em;
-      opacity: 0;
-      animation: fadeUp 0.8s 0.4s forwards;
-    }
-
-    .hero-title span {
-      color: var(--accent);
-      display: block;
-    }
-
-    .hero-sub {
-      margin-top: 2rem;
-      font-size: 1rem;
-      color: var(--muted);
-      max-width: 340px;
-      line-height: 1.6;
-      opacity: 0;
-      animation: fadeUp 0.8s 0.6s forwards;
-    }
-
-    .hero-scroll {
-      margin-top: 3rem;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 0.8rem;
-      color: var(--muted);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      opacity: 0;
-      animation: fadeUp 0.8s 0.8s forwards;
-    }
-
-    .hero-scroll::before {
-      content: '';
-      display: block;
-      width: 40px;
-      height: 1px;
-      background: var(--accent);
-    }
-
-    /* BG GLOW */
-    .glow {
-      position: absolute;
-      width: 500px; height: 500px;
-      background: radial-gradient(circle, rgba(201,240,46,0.08) 0%, transparent 70%);
-      top: 10%; right: -100px;
-      pointer-events: none;
-    }
-
-    /* SECTIONS */
-    section {
-      padding: 5rem 2rem;
-      border-top: 1px solid var(--border);
-    }
-
-    .section-label {
-      font-size: 0.7rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 2.5rem;
-    }
-
-    /* ABOUT */
-    .about-text {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.3rem, 4vw, 2rem);
-      line-height: 1.5;
-      font-weight: 400;
-      max-width: 600px;
-    }
-
-    .about-text em {
-      font-style: italic;
-      color: var(--accent);
-    }
-
-    /* PROJECT */
-    .project-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      overflow: hidden;
-      transition: transform 0.3s, border-color 0.3s;
-    }
-
-    .project-card:hover {
-      transform: translateY(-4px);
-      border-color: var(--accent);
-    }
-
-    .project-iframe-wrap {
-      position: relative;
-      width: 100%;
-      padding-top: 60%;
-      background: #111;
-    }
-
-    .project-iframe-wrap iframe {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-
-    .figma-placeholder {
-      position: absolute;
-      inset: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 1rem;
-      background: #111;
-      cursor: pointer;
-    }
-
-    .figma-icon {
-      width: 48px; height: 48px;
-    }
-
-    .figma-placeholder p {
-      font-size: 0.85rem;
-      color: var(--muted);
+      padding: 8rem 1.5rem 4rem;
       text-align: center;
-      padding: 0 1rem;
+      position: relative;
+      overflow: hidden;
     }
 
-    .project-info {
-      padding: 1.5rem;
+    #accueil::before {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(26,86,219,0.2) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
     }
 
-    .project-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.4rem;
+    .profile-img {
+      width: 150px; height: 180px;
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      object-fit: cover;
+      border: 3px solid var(--blue-light);
+      margin-bottom: 2rem;
+      box-shadow: 0 0 40px rgba(59,130,246,0.3);
+      opacity: 0;
+      animation: fadeUp 0.8s 0.2s forwards;
+    }
+
+    .profile-placeholder {
+      width: 150px; height: 180px;
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      background: linear-gradient(135deg, var(--navy2), var(--blue));
+      border: 3px solid var(--blue-light);
+      margin-bottom: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      box-shadow: 0 0 40px rgba(59,130,246,0.3);
+      opacity: 0;
+      animation: fadeUp 0.8s 0.2s forwards;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .profile-placeholder input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .profile-placeholder svg { width: 36px; height: 36px; opacity: 0.7; }
+    .profile-placeholder span { font-size: 0.7rem; color: var(--muted); }
+
+    .hero-greeting {
+      font-size: 1rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
       margin-bottom: 0.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.4s forwards;
     }
 
-    .project-desc {
+    .hero-name {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.8rem, 7vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 0.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.5s forwards;
+    }
+
+    .hero-name span { color: var(--accent); }
+
+    .hero-role {
+      font-size: 1rem;
+      color: var(--blue-light);
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.6s forwards;
+    }
+
+    .hero-desc {
+      max-width: 500px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.7s forwards;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.8s forwards;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: white;
+      padding: 0.7rem 1.5rem;
+      border-radius: 100px;
+      text-decoration: none;
       font-size: 0.85rem;
+      font-weight: 600;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .btn-primary:hover { background: var(--blue-light); transform: translateY(-2px); }
+
+    .btn-outline {
+      border: 1px solid var(--border);
+      color: var(--white);
+      padding: 0.7rem 1.5rem;
+      border-radius: 100px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .btn-outline:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+    /* SECTIONS */
+    section {
+      padding: 5rem 1.5rem;
+      border-top: 1px solid var(--border);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .section-tag {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.5rem, 5vw, 2.2rem);
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      line-height: 1.2;
+    }
+
+    /* À PROPOS */
+    .about-text {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+
+    .about-text strong { color: var(--white); }
+
+    /* OBJECTIFS */
+    .goals-grid {
+      display: grid;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .goal-card {
+      background: var(--navy2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.2rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .goal-icon {
+      width: 36px; height: 36px;
+      background: rgba(26,86,219,0.2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .goal-card h4 {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    .goal-card p {
+      font-size: 0.8rem;
       color: var(--muted);
       line-height: 1.6;
-      margin-bottom: 1.2rem;
+    }
+
+    /* COMPÉTENCES */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+    }
+
+    .skill-item {
+      background: var(--navy2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+    }
+
+    .skill-item h4 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--white);
+    }
+
+    .skill-bar {
+      height: 4px;
+      background: rgba(96,165,250,0.15);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    .skill-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue), var(--accent));
+      border-radius: 100px;
+      transition: width 1s ease;
+    }
+
+    .skill-level {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 0.3rem;
+    }
+
+    /* PROJETS */
+    .projects-grid {
+      display: grid;
+      gap: 1.2rem;
+    }
+
+    .project-card {
+      background: var(--navy2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+
+    .project-card:hover {
+      border-color: var(--blue-light);
+      transform: translateY(-3px);
+    }
+
+    .project-thumb {
+      width: 100%;
+      height: 160px;
+      background: linear-gradient(135deg, var(--navy), var(--blue));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .project-body { padding: 1.2rem; }
+
+    .project-tags {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.7rem;
+    }
+
+    .tag {
+      background: rgba(26,86,219,0.2);
+      color: var(--accent);
+      font-size: 0.65rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 100px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    .project-body h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+
+    .project-body p {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 1rem;
     }
 
     .project-link {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      background: var(--accent);
-      color: #0d0d0d;
-      text-decoration: none;
+      gap: 6px;
+      color: var(--accent);
       font-size: 0.8rem;
       font-weight: 600;
-      letter-spacing: 0.05em;
-      padding: 0.6rem 1.2rem;
-      border-radius: 100px;
-      transition: opacity 0.2s;
+      text-decoration: none;
+      transition: gap 0.2s;
     }
 
-    .project-link:hover { opacity: 0.85; }
+    .project-link:hover { gap: 10px; }
 
-    /* EDIT SECTION */
-    .edit-section {
-      background: var(--surface);
-      border: 1px dashed var(--border);
+    /* AJOUTER PROJET */
+    .add-project-btn {
+      width: 100%;
+      border: 2px dashed var(--border);
       border-radius: 16px;
       padding: 2rem;
-      margin-top: 2rem;
-    }
-
-    .edit-section h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.1rem;
-      margin-bottom: 1rem;
-    }
-
-    .edit-section input {
-      width: 100%;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.8rem 1rem;
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
+      background: transparent;
+      color: var(--muted);
       font-size: 0.9rem;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .add-project-btn:hover { border-color: var(--blue-light); color: var(--white); }
+
+    /* MODAL AJOUT */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal {
+      background: var(--navy2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 440px;
+    }
+
+    .modal h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin-bottom: 1.2rem;
+    }
+
+    .modal input, .modal textarea, .modal select {
+      width: 100%;
+      background: var(--navy);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.8rem 1rem;
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
       margin-bottom: 0.8rem;
       outline: none;
       transition: border-color 0.2s;
     }
 
-    .edit-section input:focus {
-      border-color: var(--accent);
-    }
+    .modal input:focus, .modal textarea:focus { border-color: var(--accent); }
+    .modal textarea { resize: vertical; min-height: 80px; }
 
-    .edit-section input::placeholder {
-      color: var(--muted);
+    .modal-btns {
+      display: flex;
+      gap: 0.8rem;
+      margin-top: 0.5rem;
     }
 
     .btn-save {
-      background: var(--accent);
-      color: #0d0d0d;
+      flex: 1;
+      background: var(--blue);
+      color: white;
       border: none;
-      padding: 0.7rem 1.5rem;
+      padding: 0.8rem;
       border-radius: 100px;
       font-size: 0.85rem;
       font-weight: 600;
       cursor: pointer;
-      transition: opacity 0.2s;
+      transition: background 0.2s;
     }
 
-    .btn-save:hover { opacity: 0.85; }
+    .btn-save:hover { background: var(--blue-light); }
+
+    .btn-cancel {
+      flex: 1;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 0.8rem;
+      border-radius: 100px;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    /* CONTACT */
+    .contact-card {
+      background: var(--navy2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .contact-card p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.7;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: var(--navy);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      text-decoration: none;
+      color: var(--white);
+      font-size: 0.85rem;
+      transition: border-color 0.2s;
+    }
+
+    .contact-item:hover { border-color: var(--blue-light); }
+
+    .contact-item span:first-child { font-size: 1.2rem; }
+
+    .contact-item .contact-label { color: var(--muted); font-size: 0.75rem; }
 
     /* FOOTER */
     footer {
-      padding: 2rem;
+      text-align: center;
+      padding: 2rem 1.5rem;
       border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
-    footer p {
-      font-size: 0.8rem;
       color: var(--muted);
-    }
-
-    footer a {
-      color: var(--accent);
-      text-decoration: none;
       font-size: 0.8rem;
     }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
+      from { opacity: 0; transform: translateY(20px); }
       to   { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
 
+  <!-- NAV -->
   <nav>
-    <a href="#" class="nav-logo">LB <span class="nav-dot"></span></a>
-    <span style="font-size:0.75rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;">Design</span>
+    <div class="nav-name">Loïc Brayane</div>
+    <div class="nav-links">
+      <a href="#accueil">Accueil</a>
+      <a href="#apropos">À propos</a>
+      <a href="#competences">Compétences</a>
+      <a href="#projets">Projets</a>
+      <a href="#contact">Contact</a>
+    </div>
   </nav>
 
-  <section class="hero">
-    <div class="glow"></div>
-    <p class="hero-tag">Portfolio · Design UI/UX</p>
-    <h1 class="hero-title">Loïc<span>Brayane</span></h1>
-    <p class="hero-sub">Designer créatif passionné par les interfaces intuitives et les expériences mémorables.</p>
-    <div class="hero-scroll">Voir les projets</div>
+  <!-- HERO -->
+  <section id="accueil" style="border-top:none;">
+    <div class="profile-placeholder" id="profileWrap">
+      <input type="file" accept="image/*" onchange="loadPhoto(event)"/>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+      </svg>
+      <span>Ajouter photo</span>
+    </div>
+    <p class="hero-greeting">Salut, je suis</p>
+    <h1 class="hero-name">Youmsi Yontzeu<br/><span>Loïc Brayane</span></h1>
+    <p class="hero-role">Étudiant en Génie Informatique · IUT de Douala</p>
+    <p class="hero-desc">Je poursuis mes études en génie informatique et développe progressivement mes compétences en programmation, développement web, bases de données, UI/UX design et conception de solutions numériques.</p>
+    <div class="hero-btns">
+      <a href="#projets" class="btn-primary">Voir mes projets</a>
+      <a href="#contact" class="btn-outline">Me contacter</a>
+    </div>
   </section>
 
-  <section id="about">
-    <p class="section-label">À propos</p>
-    <p class="about-text">
-      Je crée des expériences digitales <em>soignées</em> qui allient esthétique et fonctionnalité.
-      Chaque détail compte.
-    </p>
-  </section>
+  <!-- À PROPOS -->
+  <section id="apropos">
+    <p class="section-tag">À propos</p>
+    <h2 class="section-title">Qui suis-je ?</h2>
+    <p class="about-text">Je m'appelle <strong>Youmsi Yontzeu Loïc Brayane</strong>, étudiant à l'<strong>IUT de Douala</strong> en génie informatique. Passionné par les technologies numériques, je m'investis chaque jour pour acquérir de nouvelles compétences et résoudre des problèmes concrets à travers le code et le design.</p>
+    <p class="about-text">Mon objectif est de devenir un ingénieur informatique complet, capable de concevoir des solutions numériques innovantes alliant performance technique et expérience utilisateur optimale.</p>
 
-  <section id="projets">
-    <p class="section-label">Projets</p>
-
-    <div class="project-card" id="project-card">
-      <div class="project-iframe-wrap">
-        <div class="figma-placeholder" id="figma-placeholder">
-          <svg class="figma-icon" viewBox="0 0 38 57" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M19 28.5A9.5 9.5 0 1 1 28.5 19 9.5 9.5 0 0 1 19 28.5z" fill="#1ABCFE"/>
-            <path d="M9.5 47.5A9.5 9.5 0 0 1 19 38h9.5v9.5a9.5 9.5 0 0 1-19 0z" fill="#0ACF83"/>
-            <path d="M19 0H9.5A9.5 9.5 0 0 0 9.5 19H19V0z" fill="#FF7262"/>
-            <path d="M28.5 0H19v19h9.5A9.5 9.5 0 0 0 28.5 0z" fill="#F24E1E"/>
-            <path d="M9.5 19A9.5 9.5 0 0 0 9.5 38H19V19H9.5z" fill="#A259FF"/>
-          </svg>
-          <p>Ajoute ton lien Figma ci-dessous<br/>pour afficher ton prototype ici</p>
+    <div class="goals-grid" style="margin-top:2rem;">
+      <p class="section-tag">Mes objectifs</p>
+      <div class="goal-card">
+        <div class="goal-icon">🎯</div>
+        <div>
+          <h4>Maîtriser le développement web</h4>
+          <p>Approfondir mes connaissances en HTML, CSS, JavaScript et frameworks modernes pour créer des applications web complètes.</p>
         </div>
-        <iframe id="figma-frame" style="display:none;" allowfullscreen></iframe>
       </div>
-      <div class="project-info">
-        <h2 class="project-title" id="project-title">Mon Prototype Figma</h2>
-        <p class="project-desc" id="project-desc">Design UI/UX — Projet de cours</p>
-        <a href="#" class="project-link" id="figma-btn" target="_blank" style="display:none;">
-          Voir sur Figma →
-        </a>
+      <div class="goal-card">
+        <div class="goal-icon">📱</div>
+        <div>
+          <h4>Exceller en UI/UX Design</h4>
+          <p>Concevoir des interfaces intuitives et esthétiques avec Figma, en plaçant l'utilisateur au centre de chaque décision de design.</p>
+        </div>
+      </div>
+      <div class="goal-card">
+        <div class="goal-icon">🗄️</div>
+        <div>
+          <h4>Maîtriser les bases de données</h4>
+          <p>Concevoir et gérer des systèmes de bases de données robustes pour des applications performantes et scalables.</p>
+        </div>
+      </div>
+      <div class="goal-card">
+        <div class="goal-icon">💡</div>
+        <div>
+          <h4>Créer des solutions numériques</h4>
+          <p>Développer des projets concrets qui répondent à des besoins réels, en combinant toutes mes compétences techniques.</p>
+        </div>
       </div>
     </div>
+  </section>
 
-    <!-- ZONE D'ÉDITION -->
-    <div class="edit-section">
-      <h3>✏️ Ajoute ton projet Figma</h3>
-      <input type="text" id="input-title" placeholder="Titre du projet (ex: App Mobile — Devoir Design)" />
-      <input type="text" id="input-desc" placeholder="Description courte (ex: Prototype UI/UX, cours de design)" />
-      <input type="text" id="input-link" placeholder="Colle ton lien Figma ici..." />
-      <br/>
-      <button class="btn-save" onclick="saveProject()">Enregistrer ✓</button>
+  <!-- COMPÉTENCES -->
+  <section id="competences">
+    <p class="section-tag">Compétences</p>
+    <h2 class="section-title">Ce que je sais faire</h2>
+    <div class="skills-grid">
+      <div class="skill-item">
+        <h4>HTML / CSS</h4>
+        <div class="skill-bar"><div class="skill-fill" style="width:70%"></div></div>
+        <p class="skill-level">Intermédiaire</p>
+      </div>
+      <div class="skill-item">
+        <h4>JavaScript</h4>
+        <div class="skill-bar"><div class="skill-fill" style="width:45%"></div></div>
+        <p class="skill-level">Débutant+</p>
+      </div>
+      <div class="skill-item">
+        <h4>UI/UX Design</h4>
+        <div class="skill-bar"><div class="skill-fill" style="width:55%"></div></div>
+        <p class="skill-level">Intermédiaire</p>
+      </div>
+      <div class="skill-item">
+        <h4>Figma</h4>
+        <div class="skill-bar"><div class="skill-fill" style="width:60%"></div></div>
+        <p class="skill-level">Intermédiaire</p>
+      </div>
+      <div class="skill-item">
+        <h4>Base de données</h4>
+        <div class="skill-bar"><div class="skill-fill" style="width:40%"></div></div>
+        <p class="skill-level">Débutant+</p>
+      </div>
+      <div class="skill-item">
+        <h4>Programmation</h4>
+        <div class="skill-bar"><div class="skill-fill" style="width:50%"></div></div>
+        <p class="skill-level">Intermédiaire</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJETS -->
+  <section id="projets">
+    <p class="section-tag">Projets</p>
+    <h2 class="section-title">Mes réalisations</h2>
+    <div class="projects-grid" id="projectsGrid">
+      <!-- Les projets s'ajoutent ici -->
+    </div>
+    <br/>
+    <button class="add-project-btn" onclick="openModal()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Ajouter un projet
+    </button>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <p class="section-tag">Contact</p>
+    <h2 class="section-title">Me contacter</h2>
+    <div class="contact-card">
+      <p>Tu as un projet, une opportunité ou simplement envie d'échanger ? N'hésite pas à me contacter !</p>
+      <div class="contact-links">
+        <a href="tel:+237681591969" class="contact-item">
+          <span>📱</span>
+          <div>
+            <div>+237 681 591 969</div>
+            <div class="contact-label">Téléphone / WhatsApp</div>
+          </div>
+        </a>
+        <a href="mailto:" class="contact-item" id="emailLink">
+          <span>✉️</span>
+          <div>
+            <div id="emailDisplay">Ajouter un email</div>
+            <div class="contact-label">Email</div>
+          </div>
+        </a>
+      </div>
     </div>
   </section>
 
   <footer>
-    <p>© 2026 Loïc Brayane</p>
-    <a href="mailto:">Contact</a>
+    <p>© 2026 Youmsi Yontzeu Loïc Brayane · Tous droits réservés</p>
   </footer>
 
-  <script>
-    function saveProject() {
-      const title = document.getElementById('input-title').value.trim();
-      const desc = document.getElementById('input-desc').value.trim();
-      const link = document.getElementById('input-link').value.trim();
-
-      if (title) document.getElementById('project-title').textContent = title;
-      if (desc) document.getElementById('project-desc').textContent = desc;
-
-      if (link) {
-        // Convertir lien Figma en embed
-        let embedUrl = link;
-        if (link.includes('figma.com')) {
-          embedUrl = 'https://www.figma.com/embed?embed_host=share&url=' + encodeURIComponent(link);
-          document.getElementById('figma-frame').src = embedUrl;
-          document.getElementById('figma-frame').style.display = 'block';
-          document.getElementById('figma-placeholder').style.display = 'none';
-          document.getElementById('figma-btn').href = link;
-          document.getElementById('figma-btn').style.display = 'inline-flex';
-        }
-      }
-
-      // Feedback
-      const btn = document.querySelector('.btn-save');
-      btn.textContent = 'Sauvegardé ✓';
-      btn.style.background = '#4ade80';
-      setTimeout(() => {
-        btn.textContent = 'Enregistrer ✓';
-        btn.style.background = 'var(--accent)';
-      }, 2000);
-    }
-  </script>
-</body>
-</html>
+  <!-- MODAL AJOUT PROJET -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h3>Ajouter un projet</h3>
+      <input type="text" id="pTitle" placeholder="Titre du projet *"/>
+      <input type="text" id="pTags" placeholder="Tags (ex: Web, Design, Python...)"/>
+      <textarea id="pDesc" placeholder="Description du projet *"></textarea>
+      <input type="text" id="pLink" placeholder="Lien du projet (URL, Figma...)"/>
+      <input type="text" id="pEmoji" placeholder="Emoji icône (ex: 🌐 📱 🎨)"/>
+      <div class="modal-btns">
+        <button class="btn-cancel" onclick="closeModal()">Annuler</button>
+        <button class="btn-save" onclick="addProject()">Ajouter ✓</button>
+      </d
