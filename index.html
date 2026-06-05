@@ -1,143 +1,262 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Loïc Brayane — Portfolio</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+
+  <!-- ICONES -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
   <style>
-    /* Ton CSS original conservé tel quel */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root { --navy:#0a1628; --navy2:#0f1f3d; --blue:#1a56db; --blue-light:#3b82f6; --accent:#60a5fa; --white:#f0f4ff; --muted:#8ca0c0; --border:rgba(96,165,250,0.15); }
-    html { scroll-behavior:smooth; }
-    body { background:var(--navy); color:var(--white); font-family:'DM Sans',sans-serif; overflow-x:hidden; }
-    /* ... (tout ton CSS inchangé, déjà fourni) ... */
-    @keyframes fadeUp { from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:translateY(0);} }
+
+    :root {
+      --navy: #0a1628;
+      --navy2: #0f1f3d;
+      --blue: #1a56db;
+      --blue-light: #3b82f6;
+      --accent: #60a5fa;
+      --white: #f0f4ff;
+      --muted: #8ca0c0;
+      --border: rgba(96,165,250,0.15);
+    }
+
+    body {
+      background: var(--navy);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    nav {
+      position: fixed;
+      top:0; left:0; right:0;
+      background: rgba(10,22,40,0.9);
+      backdrop-filter: blur(10px);
+      padding: 1rem;
+      text-align: center;
+      z-index: 100;
+    }
+
+    section { padding: 5rem 1.5rem; max-width: 800px; margin:auto; }
+
+    .section-tag { color: var(--accent); font-size: 0.8rem; }
+
+    .skills-grid {
+      display:grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 1rem;
+    }
+
+    .skill-item {
+      background: var(--navy2);
+      padding: 1rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .skill-item h4 i {
+      margin-right: 8px;
+      color: var(--accent);
+    }
+
+    .skill-bar {
+      height:5px;
+      background:#1a2a44;
+      border-radius: 10px;
+      overflow:hidden;
+    }
+
+    .skill-fill {
+      height:100%;
+      background: linear-gradient(90deg,var(--blue),var(--accent));
+    }
+
+    .projects-grid {
+      display:grid;
+      gap:1rem;
+    }
+
+    .project-card {
+      background: var(--navy2);
+      border:1px solid var(--border);
+      border-radius: 12px;
+      padding:1rem;
+    }
+
+    .tag {
+      font-size:0.7rem;
+      background: rgba(96,165,250,0.2);
+      padding:2px 6px;
+      border-radius: 20px;
+      margin-right:4px;
+    }
+
+    .add-project-btn {
+      margin-top: 1rem;
+      padding:1rem;
+      width:100%;
+      background: none;
+      border: 2px dashed var(--border);
+      color: var(--muted);
+      cursor:pointer;
+    }
+
+    .modal-overlay {
+      display:none;
+      position:fixed;
+      inset:0;
+      background: rgba(0,0,0,0.7);
+      align-items:center;
+      justify-content:center;
+    }
+
+    .modal-overlay.active { display:flex; }
+
+    .modal {
+      background: var(--navy2);
+      padding:2rem;
+      border-radius: 15px;
+      width: 90%;
+      max-width:400px;
+    }
+
+    input, textarea {
+      width:100%;
+      margin-bottom:10px;
+      padding:10px;
+      background: var(--navy);
+      border:1px solid var(--border);
+      color:white;
+    }
+
+    button {
+      cursor:pointer;
+    }
+
   </style>
 </head>
+
 <body>
 
-  <!-- NAV -->
-  <nav>
-    <div class="nav-name">Loïc Brayane</div>
-    <div class="nav-links">
-      <a href="#accueil">Accueil</a>
-      <a href="#apropos">À propos</a>
-      <a href="#competences">Compétences</a>
-      <a href="#projets">Projets</a>
-      <a href="#contact">Contact</a>
+<nav>
+  Loïc Brayane Portfolio
+</nav>
+
+<section id="competences">
+  <p class="section-tag">Compétences</p>
+
+  <div class="skills-grid">
+
+    <div class="skill-item">
+      <h4><i class="fa-brands fa-html5"></i> HTML / CSS</h4>
+      <div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div>
     </div>
-  </nav>
 
-  <!-- HERO -->
-  <section id="accueil" style="border-top:none;">
-    <div class="profile-placeholder" id="profileWrap">
-      <input type="file" accept="image/*" onchange="loadPhoto(event)"/>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
-      </svg>
-      <span>Ajouter photo</span>
+    <div class="skill-item">
+      <h4><i class="fa-brands fa-js"></i> JavaScript</h4>
+      <div class="skill-bar"><div class="skill-fill" style="width:50%"></div></div>
     </div>
-    <p class="hero-greeting">Salut, je suis</p>
-    <h1 class="hero-name">Youmsi Yontzeu<br/><span>Loïc Brayane</span></h1>
-    <p class="hero-role">Étudiant en Génie Informatique · IUT de Douala</p>
-    <p class="hero-desc">Je poursuis mes études en génie informatique et développe progressivement mes compétences en programmation, développement web, bases de données, UI/UX design et conception de solutions numériques.</p>
-    <div class="hero-btns">
-      <a href="#projets" class="btn-primary">Voir mes projets</a>
-      <a href="#contact" class="btn-outline">Me contacter</a>
+
+    <div class="skill-item">
+      <h4><i class="fa-solid fa-palette"></i> UI/UX</h4>
+      <div class="skill-bar"><div class="skill-fill" style="width:60%"></div></div>
     </div>
-  </section>
 
-  <!-- À PROPOS -->
-  <section id="apropos">
-    <p class="section-tag">À propos</p>
-    <h2 class="section-title">Qui suis-je ?</h2>
-    <p class="about-text">Je m'appelle <strong>Youmsi Yontzeu Loïc Brayane</strong>, étudiant à l'<strong>IUT de Douala</strong> en génie informatique...</p>
-    <!-- contenu inchangé -->
-  </section>
-
-  <!-- COMPÉTENCES -->
-  <section id="competences">
-    <p class="section-tag">Compétences</p>
-    <h2 class="section-title">Ce que je sais faire</h2>
-    <div class="skills-grid">
-      <div class="skill-item">
-        <h4><i class="fa-brands fa-html5"></i> HTML / CSS</h4>
-        <div class="skill-bar"><div class="skill-fill" style="width:70%"></div></div>
-        <p class="skill-level">Intermédiaire</p>
-      </div>
-      <div class="skill-item">
-        <h4><i class="fa-brands fa-js"></i> JavaScript</h4>
-        <div class="skill-bar"><div class="skill-fill" style="width:45%"></div></div>
-        <p class="skill-level">Débutant+</p>
-      </div>
-      <div class="skill-item">
-        <h4><i class="fa-solid fa-palette"></i> UI/UX Design</h4>
-        <div class="skill-bar"><div class="skill-fill" style="width:55%"></div></div>
-        <p class="skill-level">Intermédiaire</p>
-      </div>
-      <div class="skill-item">
-        <h4><i class="fa-brands fa-figma"></i> Figma</h4>
-        <div class="skill-bar"><div class="skill-fill" style="width:60%"></div></div>
-        <p class="skill-level">Intermédiaire</p>
-      </div>
-      <div class="skill-item">
-        <h4><i class="fa-solid fa-database"></i> Base de données</h4>
-        <div class="skill-bar"><div class="skill-fill" style="width:40%"></div></div>
-        <p class="skill-level">Débutant+</p>
-      </div>
-      <div class="skill-item">
-        <h4><i class="fa-solid fa-code"></i> Programmation</h4>
-        <div class="skill-bar"><div class="skill-fill" style="width:50%"></div></div>
-        <p class="skill-level">Intermédiaire</p>
-      </div>
+    <div class="skill-item">
+      <h4><i class="fa-brands fa-figma"></i> Figma</h4>
+      <div class="skill-bar"><div class="skill-fill" style="width:65%"></div></div>
     </div>
-  </section>
 
-  <!-- PROJETS -->
-  <section id="projets">
-    <p class="section-tag">Projets</p>
-    <h2 class="section-title">Mes réalisations</h2>
-    <div class="projects-grid" id="projectsGrid"></div>
-    <br/>
-    <button class="add-project-btn" onclick="openModal()">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      Ajouter un projet
-    </button>
-  </section>
-
-  <!-- CONTACT -->
-  <section id="contact">
-    <!-- contenu inchangé -->
-  </section>
-
-  <footer>
-    <p>© 2026 Youmsi Yontzeu Loïc Brayane · Tous droits réservés</p>
-  </footer>
-
-  <!-- MODAL AJOUT PROJET -->
-  <div class="modal-overlay" id="modalOverlay">
-    <div class="modal">
-      <h3>Ajouter un projet</h3>
-      <input type="text" id="pTitle" placeholder="Titre du projet *"/>
-      <input type="text" id="pTags" placeholder="Tags (ex: Web, Design, Python...)"/>
-      <textarea id="pDesc" placeholder="Description du projet *"></textarea>
-      <input type="text" id="pLink" placeholder="Lien du projet (URL, Figma...)"/>
-      <input type="text" id="pEmoji" placeholder="Emoji icône (ex: 🌐 📱 🎨)"/>
-      <div class="modal-btns">
-        <button class="btn-cancel" onclick="closeModal()">Annuler</button>
-        <button class="btn-save" onclick="addProject()">Ajouter ✓</button>
-      </div>
+    <div class="skill-item">
+      <h4><i class="fa-solid fa-database"></i> Database</h4>
+      <div class="skill-bar"><div class="skill-fill" style="width:40%"></div></div>
     </div>
+
+    <div class="skill-item">
+      <h4><i class="fa-solid fa-code"></i> Programmation</h4>
+      <div class="skill-bar"><div class="skill-fill" style="width:55%"></div></div>
+    </div>
+
   </div>
+</section>
 
-  <script>
-    // PHOTO DE PROFIL
-    function loadPhoto(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(ev) {
-        const wrap = document.getElementById('profileWrap
+<section id="projets">
+  <p class="section-tag">Projets</p>
+
+  <div class="projects-grid" id="projectsGrid"></div>
+
+  <button class="add-project-btn" onclick="openModal()">
+    + Ajouter un projet
+  </button>
+</section>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <input id="title" placeholder="Titre">
+    <input id="tags" placeholder="Tags (ex: web, app)">
+    <textarea id="desc" placeholder="Description"></textarea>
+
+    <button onclick="addProject()">Ajouter</button>
+    <button onclick="closeModal()">Annuler</button>
+  </div>
+</div>
+
+<script>
+
+function openModal(){
+  document.getElementById("modal").classList.add("active");
+}
+
+function closeModal(){
+  document.getElementById("modal").classList.remove("active");
+}
+
+function addProject(){
+
+  const title = document.getElementById("title").value;
+  const tags = document.getElementById("tags").value;
+  const desc = document.getElementById("desc").value;
+
+  if(!title || !desc) return;
+
+  let projects = JSON.parse(localStorage.getItem("projects")) || [];
+
+  projects.push({title,tags,desc});
+
+  localStorage.setItem("projects", JSON.stringify(projects));
+
+  renderProjects();
+  closeModal();
+}
+
+function renderProjects(){
+
+  const grid = document.getElementById("projectsGrid");
+  grid.innerHTML = "";
+
+  let projects = JSON.parse(localStorage.getItem("projects")) || [];
+
+  projects.forEach(p => {
+
+    const div = document.createElement("div");
+    div.className = "project-card";
+
+    div.innerHTML = `
+      <h3>${p.title}</h3>
+      <div>${p.tags}</div>
+      <p>${p.desc}</p>
+    `;
+
+    grid.appendChild(div);
+  });
+}
+
+renderProjects();
+
+</script>
+
+</body>
+</html>
