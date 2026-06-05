@@ -73,8 +73,6 @@ section{
   margin:auto;
   overflow:hidden;
   border:3px solid var(--green);
-  box-shadow:0 0 25px rgba(25,255,154,0.3);
-  cursor:pointer;
 }
 
 .profile img{
@@ -83,29 +81,11 @@ section{
   object-fit:cover;
 }
 
-.hero h1{
-  font-size:2.3rem;
-  margin-top:1rem;
-}
-
-.hero span{color:var(--green);}
-
-.hero p{
-  color:var(--muted);
-  margin-top:1rem;
-  line-height:1.6;
-}
-
 /* ABOUT */
-.about h2{
-  margin-bottom:1rem;
-}
-
 .about p{
   color:var(--muted);
-  line-height:1.9;
+  line-height:1.8;
   margin-bottom:1rem;
-  font-size:1rem;
 }
 
 /* COMPETENCES */
@@ -118,29 +98,55 @@ section{
   margin-bottom:1rem;
   border-radius:10px;
   border:1px solid var(--border);
-  font-weight:500;
 }
 
-.skill i{
-  font-size:1.6rem;
-}
-
-/* couleurs logos */
+.skill i{font-size:1.5rem;}
 .html{color:#ff5722;}
 .js{color:#f7df1e;}
+.css{color:#2196f3;}
 .ui{color:#ff4fd8;}
 .db{color:#4dabf7;}
-.css{color:#2196f3;}
 
 /* PROJETS */
-.project-box{
-  background:var(--card);
-  padding:1rem;
-  margin-top:1rem;
-  border-radius:10px;
-  border:1px solid var(--border);
+.project-grid{
+  display:grid;
+  gap:1rem;
 }
 
+.project-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  overflow:hidden;
+}
+
+.project-img{
+  width:100%;
+  height:180px;
+  object-fit:cover;
+}
+
+.project-body{
+  padding:1rem;
+}
+
+.project-body h3{
+  margin-bottom:0.3rem;
+}
+
+.project-body p{
+  color:var(--muted);
+  font-size:0.9rem;
+}
+
+.project-link{
+  display:inline-block;
+  margin-top:0.5rem;
+  color:var(--green);
+  text-decoration:none;
+}
+
+/* INPUT */
 input,textarea{
   width:100%;
   padding:0.8rem;
@@ -159,18 +165,6 @@ button{
   font-weight:bold;
   cursor:pointer;
   border-radius:8px;
-}
-
-/* CONTACT */
-.contact{
-  text-align:center;
-}
-
-.contact-card{
-  background:var(--card);
-  padding:2rem;
-  border-radius:12px;
-  border:1px solid var(--border);
 }
 </style>
 </head>
@@ -196,42 +190,26 @@ button{
 
 <h1>Salut, je suis<br><span>Loïc Brayane</span></h1>
 
-<p>
-Étudiant en Génie Informatique à l’IUT de Douala.<br>
-Passionné par l’IA, le développement mobile et la cybersécurité.
-</p>
+<p>Étudiant en Génie Informatique</p>
 
 </section>
 
-<!-- ABOUT (AMÉLIORÉ) -->
+<!-- ABOUT -->
 <section id="apropos" class="about">
 
-<h2>À propos de moi</h2>
+<h2>À propos</h2>
 
 <p>
-Je suis un étudiant en génie informatique à l’IUT de Douala,
-motivé par l’apprentissage et l’amélioration continue dans le domaine du numérique.
+Étudiant passionné par l’informatique, curieux et motivé par l’IA, le développement web et la cybersécurité.
 </p>
 
 <p>
-En dehors des cours, je fais beaucoup de recherches personnelles et de pratiques
-afin de renforcer mes compétences techniques et comprendre les technologies modernes.
-</p>
-
-<p>
-Je suis particulièrement attiré par trois grands domaines :
-le développement web, l’intelligence artificielle et la cybersécurité.
-Ces domaines représentent pour moi le futur du numérique et de l’innovation.
-</p>
-
-<p>
-Mon objectif est de devenir un ingénieur capable de concevoir des solutions
-complètes, utiles et performantes.
+Je fais beaucoup de pratique personnelle pour améliorer mes compétences et construire des projets concrets.
 </p>
 
 </section>
 
-<!-- COMPÉTENCES (LOGOS COLORÉS + FIGMA RETIRÉ) -->
+<!-- COMPÉTENCES -->
 <section id="competences">
 
 <h2>Compétences</h2>
@@ -239,7 +217,7 @@ complètes, utiles et performantes.
 <div class="skill"><i class="fa-brands fa-html5 html"></i> HTML</div>
 <div class="skill"><i class="fa-brands fa-css3-alt css"></i> CSS</div>
 <div class="skill"><i class="fa-brands fa-js js"></i> JavaScript</div>
-<div class="skill"><i class="fa-solid fa-palette ui"></i> UI/UX Design</div>
+<div class="skill"><i class="fa-solid fa-palette ui"></i> UI/UX</div>
 <div class="skill"><i class="fa-solid fa-database db"></i> Base de données</div>
 
 </section>
@@ -249,11 +227,12 @@ complètes, utiles et performantes.
 
 <h2>Projets</h2>
 
-<div id="projects"></div>
+<div id="projects" class="project-grid"></div>
 
 <input id="title" placeholder="Titre projet">
-<input id="type" placeholder="Type (Web, App, etc.)">
+<input id="type" placeholder="Type projet">
 <textarea id="desc" placeholder="Description"></textarea>
+<input id="image" placeholder="Image URL (ou upload future)">
 <input id="link" placeholder="Lien (https://...)">
 
 <button onclick="addProject()">Ajouter projet</button>
@@ -261,14 +240,12 @@ complètes, utiles et performantes.
 </section>
 
 <!-- CONTACT -->
-<section id="contact" class="contact">
+<section id="contact">
 
 <h2>Contact</h2>
 
-<div class="contact-card">
 <p>📱 681 591 969</p>
-<p>✉️ tonemail@gmail.com</p>
-</div>
+<p>✉️ email@gmail.com</p>
 
 </section>
 
@@ -279,12 +256,12 @@ document.getElementById("profile").onclick = () =>
 document.getElementById("file").click();
 
 document.getElementById("file").onchange = e => {
-const reader = new FileReader();
-reader.onload = ev => {
+const r = new FileReader();
+r.onload = ev => {
 localStorage.setItem("profile", ev.target.result);
 loadProfile();
 };
-reader.readAsDataURL(e.target.files[0]);
+r.readAsDataURL(e.target.files[0]);
 };
 
 function loadProfile(){
@@ -295,16 +272,17 @@ document.getElementById("profile").innerHTML =
 }
 }
 
-/* PROJETS */
+/* ADD PROJECT */
 function addProject(){
 
-const t = document.getElementById("title").value;
+const t = title.value;
 const type = document.getElementById("type").value;
-const d = document.getElementById("desc").value;
+const d = desc.value;
+const img = document.getElementById("image").value;
 const l = document.getElementById("link").value;
 
 if(!t || !d){
-alert("Titre et description obligatoires");
+alert("Titre + description obligatoires");
 return;
 }
 
@@ -315,7 +293,7 @@ return;
 
 let projects = JSON.parse(localStorage.getItem("projects")) || [];
 
-projects.push({t,type,d,l});
+projects.push({t,type,d,img,l});
 
 localStorage.setItem("projects",JSON.stringify(projects));
 
@@ -324,9 +302,11 @@ render();
 title.value="";
 type.value="";
 desc.value="";
+image.value="";
 link.value="";
 }
 
+/* RENDER */
 function render(){
 
 let projects = JSON.parse(localStorage.getItem("projects")) || [];
@@ -336,15 +316,18 @@ container.innerHTML="";
 
 projects.forEach(p=>{
 container.innerHTML += `
-<div class="project-box">
+<div class="project-card">
+
+${p.img ? `<img class="project-img" src="${p.img}">` : ""}
+
+<div class="project-body">
 <h3>${p.t}</h3>
 <p>${p.type}</p>
 <p>${p.d}</p>
 
-${p.l ? `<a href="${p.l}" target="_blank" style="color:#19ff9a;">
-Voir le projet →
-</a>` : ""}
+${p.l ? `<a class="project-link" href="${p.l}" target="_blank">Voir le projet →</a>` : ""}
 
+</div>
 </div>
 `;
 });
