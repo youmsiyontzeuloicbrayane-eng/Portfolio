@@ -7,8 +7,6 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
 <style>
 :root{
   --bg:#0a1628;
@@ -17,41 +15,41 @@
   --accent:#60a5fa;
   --text:#f0f4ff;
   --muted:#8ca0c0;
-  --border:rgba(96,165,250,0.15);
 }
 
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box;}
 
 body{
   font-family:DM Sans;
   background:var(--bg);
   color:var(--text);
+  scroll-behavior:smooth;
 }
 
-/* NAV */
+/* NAVIGATION */
 nav{
   position:fixed;
   top:0;
+  left:0;
   width:100%;
-  background:rgba(10,22,40,0.9);
+  background:rgba(10,22,40,0.95);
   backdrop-filter:blur(10px);
   padding:1rem;
-  z-index:100;
+  z-index:1000;
+  border-bottom:1px solid rgba(96,165,250,0.2);
 }
 
 .nav-links{
   display:flex;
   justify-content:center;
+  flex-wrap:wrap;
   gap:1.5rem;
 }
 
 .nav-links a{
   color:var(--muted);
   text-decoration:none;
+  font-weight:500;
 }
 
 .nav-links a:hover{
@@ -60,7 +58,7 @@ nav{
 
 /* SECTIONS */
 section{
-  padding:6rem 1.5rem;
+  padding:5rem 1.5rem;
   max-width:900px;
   margin:auto;
 }
@@ -68,17 +66,17 @@ section{
 /* HERO */
 .hero{
   text-align:center;
+  padding-top:8rem;
 }
 
 .profile{
-  width:160px;
-  height:160px;
+  width:170px;
+  height:170px;
   border-radius:50%;
-  border:3px solid var(--accent);
   margin:auto;
   overflow:hidden;
+  border:3px solid var(--accent);
   cursor:pointer;
-  background:var(--card);
 }
 
 .profile img{
@@ -87,87 +85,37 @@ section{
   object-fit:cover;
 }
 
-/* TITRES */
-h1{
-  font-size:2.5rem;
+.hero-text{
+  margin-top:1.5rem;
+  color:var(--muted);
+  line-height:1.6;
+}
+
+.hero h1{
+  font-size:2.3rem;
   margin-top:1rem;
 }
 
-h1 span{
+.hero h1 span{
   color:var(--accent);
 }
 
-/* COMPÉTENCES */
-.skills{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:1rem;
+/* ABOUT */
+.about p{
+  line-height:1.8;
+  color:var(--muted);
+  margin-bottom:1rem;
 }
 
-.skill{
-  background:var(--card);
-  padding:1rem;
-  border-radius:10px;
+/* CONTACT */
+.contact{
+  text-align:center;
+  padding-bottom:3rem;
 }
 
-.bar{
-  height:6px;
-  background:#1a2a44;
-  border-radius:10px;
-}
-
-.fill{
-  height:100%;
-  background:linear-gradient(90deg,var(--blue),var(--accent));
-}
-
-/* PROJETS */
-.projects{
-  display:grid;
-  gap:1rem;
-}
-
-.card{
-  background:var(--card);
-  padding:1rem;
-  border-radius:10px;
-}
-
-button{
-  width:100%;
-  padding:1rem;
-  margin-top:1rem;
-  background:none;
-  border:2px dashed var(--accent);
-  color:var(--text);
-  cursor:pointer;
-}
-
-/* MODAL */
-.modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.7);
-  justify-content:center;
-  align-items:center;
-}
-
-.modal-content{
-  background:var(--card);
-  padding:2rem;
-  border-radius:10px;
-  width:90%;
-  max-width:400px;
-}
-
-input,textarea{
-  width:100%;
+.contact p{
   margin:0.5rem 0;
-  padding:0.8rem;
-  background:var(--bg);
-  border:1px solid var(--border);
-  color:white;
+  color:var(--muted);
 }
 </style>
 </head>
@@ -188,18 +136,43 @@ input,textarea{
 <!-- HERO -->
 <section id="accueil" class="hero">
 
-  <div class="profile" id="profile">
-    <input type="file" id="file" hidden>
-  </div>
-
-  <p style="color:var(--muted)">Salut, je suis</p>
+  <div class="profile" id="profile"></div>
+  <input type="file" id="file" hidden>
 
   <h1>
-    Loïc Brayane <br>
-    <span>Développeur Web</span>
+    Salut, je suis <br>
+    <span>Youmsi Yontzeu Loïc Brayane</span>
   </h1>
 
-  <p>Étudiant en Génie Informatique</p>
+  <p class="hero-text">
+    Étudiant à l’IUT de Douala en Génie Informatique.<br><br>
+
+    Je poursuis mes études en génie informatique et développe progressivement mes compétences en
+    programmation, développement web, bases de données, UI/UX design et conception de solutions numériques.
+  </p>
+
+</section>
+
+<!-- ABOUT -->
+<section id="apropos" class="about">
+
+<h2>À propos de moi</h2>
+
+<p>
+Je suis un étudiant passionné par l’informatique et la création de solutions numériques modernes.
+Je fais preuve de sérieux, de curiosité et d’un fort engagement dans l’apprentissage autonome en dehors de l’école.
+</p>
+
+<p>
+Mes intérêts sont principalement orientés vers :
+<br>👉 Intelligence Artificielle (IA)
+<br>👉 Développement mobile
+<br>👉 Cybersécurité
+</p>
+
+<p>
+Je cherche constamment à comprendre comment les systèmes fonctionnent en profondeur et à construire des projets concrets qui répondent à des besoins réels.
+</p>
 
 </section>
 
@@ -207,66 +180,31 @@ input,textarea{
 <section id="competences">
 <h2>Compétences</h2>
 
-<div class="skills">
+<p>HTML / CSS</p>
+<p>JavaScript</p>
+<p>UI/UX Design</p>
+<p>Base de données</p>
 
-<div class="skill">
-<h4><i class="fa-brands fa-html5"></i> HTML/CSS</h4>
-<div class="bar"><div class="fill" style="width:80%"></div></div>
-</div>
-
-<div class="skill">
-<h4><i class="fa-brands fa-js"></i> JavaScript</h4>
-<div class="bar"><div class="fill" style="width:55%"></div></div>
-</div>
-
-<div class="skill">
-<h4><i class="fa-solid fa-palette"></i> UI/UX</h4>
-<div class="bar"><div class="fill" style="width:60%"></div></div>
-</div>
-
-<div class="skill">
-<h4><i class="fa-solid fa-database"></i> Base de données</h4>
-<div class="bar"><div class="fill" style="width:45%"></div></div>
-</div>
-
-</div>
 </section>
 
 <!-- PROJETS -->
 <section id="projets">
-
 <h2>Projets</h2>
-
-<div class="projects" id="projects"></div>
-
-<button onclick="openModal()">+ Ajouter un projet</button>
-
+<div id="projects"></div>
 </section>
 
 <!-- CONTACT -->
-<section id="contact">
+<section id="contact" class="contact">
 <h2>Contact</h2>
-<p>📱 +237 681 591 969</p>
+
+<p>📱 681 591 969</p>
 <p>✉️ tonemail@gmail.com</p>
+
 </section>
-
-<!-- MODAL -->
-<div class="modal" id="modal">
-<div class="modal-content">
-
-<input id="title" placeholder="Titre">
-<input id="tags" placeholder="Tags">
-<textarea id="desc" placeholder="Description"></textarea>
-
-<button onclick="addProject()">Ajouter</button>
-<button onclick="closeModal()">Annuler</button>
-
-</div>
-</div>
 
 <script>
 
-/* PROFILE */
+/* PHOTO PROFILE */
 document.getElementById("profile").onclick = () =>
 document.getElementById("file").click();
 
@@ -287,52 +225,7 @@ document.getElementById("profile").innerHTML =
 }
 }
 
-/* PROJECTS */
-function addProject(){
-
-const t = title.value;
-const tg = tags.value;
-const d = desc.value;
-
-if(!t || !d) return;
-
-let data = JSON.parse(localStorage.getItem("projects")) || [];
-
-data.push({t,tg,d});
-
-localStorage.setItem("projects",JSON.stringify(data));
-
-render();
-closeModal();
-}
-
-function render(){
-
-let data = JSON.parse(localStorage.getItem("projects")) || [];
-
-projects.innerHTML = "";
-
-data.forEach(p=>{
-projects.innerHTML += `
-<div class="card">
-<h3>${p.t}</h3>
-<p>${p.tg}</p>
-<p>${p.d}</p>
-</div>
-`;
-});
-}
-
-function openModal(){
-modal.style.display="flex";
-}
-
-function closeModal(){
-modal.style.display="none";
-}
-
 loadProfile();
-render();
 
 </script>
 
