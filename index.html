@@ -1,260 +1,271 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Loïc Brayane — Portfolio</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Portfolio</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 
-  <!-- ICONES -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<style>
+:root{
+  --navy:#0a1628;
+  --navy2:#0f1f3d;
+  --blue:#1a56db;
+  --accent:#60a5fa;
+  --white:#f0f4ff;
+  --muted:#8ca0c0;
+}
 
-    :root {
-      --navy: #0a1628;
-      --navy2: #0f1f3d;
-      --blue: #1a56db;
-      --blue-light: #3b82f6;
-      --accent: #60a5fa;
-      --white: #f0f4ff;
-      --muted: #8ca0c0;
-      --border: rgba(96,165,250,0.15);
-    }
+body{
+  margin:0;
+  font-family:'DM Sans';
+  background:var(--navy);
+  color:var(--white);
+}
 
-    body {
-      background: var(--navy);
-      color: var(--white);
-      font-family: 'DM Sans', sans-serif;
-    }
+nav{
+  position:fixed;
+  top:0;left:0;right:0;
+  background:rgba(10,22,40,0.9);
+  padding:1rem;
+  text-align:center;
+}
 
-    nav {
-      position: fixed;
-      top:0; left:0; right:0;
-      background: rgba(10,22,40,0.9);
-      backdrop-filter: blur(10px);
-      padding: 1rem;
-      text-align: center;
-      z-index: 100;
-    }
+section{
+  max-width:900px;
+  margin:auto;
+  padding:5rem 1.5rem;
+}
 
-    section { padding: 5rem 1.5rem; max-width: 800px; margin:auto; }
+.hero{
+  text-align:center;
+}
 
-    .section-tag { color: var(--accent); font-size: 0.8rem; }
+.profile{
+  width:150px;
+  height:150px;
+  border-radius:50%;
+  border:3px solid var(--accent);
+  margin:auto;
+  overflow:hidden;
+  cursor:pointer;
+}
 
-    .skills-grid {
-      display:grid;
-      grid-template-columns: repeat(2,1fr);
-      gap: 1rem;
-    }
+.profile img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
 
-    .skill-item {
-      background: var(--navy2);
-      padding: 1rem;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-    }
+.skills{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1rem;
+}
 
-    .skill-item h4 i {
-      margin-right: 8px;
-      color: var(--accent);
-    }
+.skill{
+  background:var(--navy2);
+  padding:1rem;
+  border-radius:10px;
+}
 
-    .skill-bar {
-      height:5px;
-      background:#1a2a44;
-      border-radius: 10px;
-      overflow:hidden;
-    }
+.bar{
+  height:6px;
+  background:#1a2a44;
+}
 
-    .skill-fill {
-      height:100%;
-      background: linear-gradient(90deg,var(--blue),var(--accent));
-    }
+.fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--blue),var(--accent));
+}
 
-    .projects-grid {
-      display:grid;
-      gap:1rem;
-    }
+.projects{
+  display:grid;
+  gap:1rem;
+}
 
-    .project-card {
-      background: var(--navy2);
-      border:1px solid var(--border);
-      border-radius: 12px;
-      padding:1rem;
-    }
+.card{
+  background:var(--navy2);
+  padding:1rem;
+  border-radius:10px;
+}
 
-    .tag {
-      font-size:0.7rem;
-      background: rgba(96,165,250,0.2);
-      padding:2px 6px;
-      border-radius: 20px;
-      margin-right:4px;
-    }
+button{
+  padding:1rem;
+  width:100%;
+  background:none;
+  border:2px dashed var(--accent);
+  color:var(--white);
+  cursor:pointer;
+}
 
-    .add-project-btn {
-      margin-top: 1rem;
-      padding:1rem;
-      width:100%;
-      background: none;
-      border: 2px dashed var(--border);
-      color: var(--muted);
-      cursor:pointer;
-    }
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.7);
+  align-items:center;
+  justify-content:center;
+}
 
-    .modal-overlay {
-      display:none;
-      position:fixed;
-      inset:0;
-      background: rgba(0,0,0,0.7);
-      align-items:center;
-      justify-content:center;
-    }
+.modal-content{
+  background:var(--navy2);
+  padding:2rem;
+  border-radius:10px;
+  width:90%;
+  max-width:400px;
+}
 
-    .modal-overlay.active { display:flex; }
-
-    .modal {
-      background: var(--navy2);
-      padding:2rem;
-      border-radius: 15px;
-      width: 90%;
-      max-width:400px;
-    }
-
-    input, textarea {
-      width:100%;
-      margin-bottom:10px;
-      padding:10px;
-      background: var(--navy);
-      border:1px solid var(--border);
-      color:white;
-    }
-
-    button {
-      cursor:pointer;
-    }
-
-  </style>
+input,textarea{
+  width:100%;
+  margin:0.5rem 0;
+  padding:0.8rem;
+  border:none;
+  background:var(--navy);
+  color:white;
+}
+</style>
 </head>
 
 <body>
 
-<nav>
-  Loïc Brayane Portfolio
-</nav>
+<nav>Mon Portfolio</nav>
 
-<section id="competences">
-  <p class="section-tag">Compétences</p>
+<section class="hero">
 
-  <div class="skills-grid">
+<div class="profile" id="profile">
+<input type="file" id="file" hidden>
+</div>
 
-    <div class="skill-item">
-      <h4><i class="fa-brands fa-html5"></i> HTML / CSS</h4>
-      <div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div>
-    </div>
+<h1>Loïc Brayane</h1>
+<p>Développeur Web & UI/UX Designer</p>
+<p>Étudiant en Génie Informatique</p>
 
-    <div class="skill-item">
-      <h4><i class="fa-brands fa-js"></i> JavaScript</h4>
-      <div class="skill-bar"><div class="skill-fill" style="width:50%"></div></div>
-    </div>
+<p>Création de solutions web modernes et performantes.</p>
 
-    <div class="skill-item">
-      <h4><i class="fa-solid fa-palette"></i> UI/UX</h4>
-      <div class="skill-bar"><div class="skill-fill" style="width:60%"></div></div>
-    </div>
-
-    <div class="skill-item">
-      <h4><i class="fa-brands fa-figma"></i> Figma</h4>
-      <div class="skill-bar"><div class="skill-fill" style="width:65%"></div></div>
-    </div>
-
-    <div class="skill-item">
-      <h4><i class="fa-solid fa-database"></i> Database</h4>
-      <div class="skill-bar"><div class="skill-fill" style="width:40%"></div></div>
-    </div>
-
-    <div class="skill-item">
-      <h4><i class="fa-solid fa-code"></i> Programmation</h4>
-      <div class="skill-bar"><div class="skill-fill" style="width:55%"></div></div>
-    </div>
-
-  </div>
 </section>
 
-<section id="projets">
-  <p class="section-tag">Projets</p>
+<section>
+<h2>Compétences</h2>
 
-  <div class="projects-grid" id="projectsGrid"></div>
+<div class="skills">
 
-  <button class="add-project-btn" onclick="openModal()">
-    + Ajouter un projet
-  </button>
+<div class="skill">
+<h4><i class="fa-brands fa-html5"></i> HTML/CSS</h4>
+<div class="bar"><div class="fill" style="width:80%"></div></div>
+</div>
+
+<div class="skill">
+<h4><i class="fa-brands fa-js"></i> JavaScript</h4>
+<div class="bar"><div class="fill" style="width:55%"></div></div>
+</div>
+
+<div class="skill">
+<h4><i class="fa-solid fa-palette"></i> UI/UX</h4>
+<div class="bar"><div class="fill" style="width:60%"></div></div>
+</div>
+
+<div class="skill">
+<h4><i class="fa-brands fa-figma"></i> Figma</h4>
+<div class="bar"><div class="fill" style="width:65%"></div></div>
+</div>
+
+</div>
 </section>
 
-<div class="modal-overlay" id="modal">
-  <div class="modal">
-    <input id="title" placeholder="Titre">
-    <input id="tags" placeholder="Tags (ex: web, app)">
-    <textarea id="desc" placeholder="Description"></textarea>
+<section>
+<h2>Projets</h2>
 
-    <button onclick="addProject()">Ajouter</button>
-    <button onclick="closeModal()">Annuler</button>
-  </div>
+<div class="projects" id="projects"></div>
+
+<button onclick="openModal()">+ Ajouter un projet</button>
+</section>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+<div class="modal-content">
+<input id="title" placeholder="Titre">
+<input id="tags" placeholder="Tags">
+<textarea id="desc" placeholder="Description"></textarea>
+<button onclick="addProject()">Ajouter</button>
+<button onclick="closeModal()">Annuler</button>
+</div>
 </div>
 
 <script>
 
+// PROFILE IMAGE
+document.getElementById("profile").onclick = () => {
+document.getElementById("file").click();
+};
+
+document.getElementById("file").onchange = e => {
+const reader = new FileReader();
+reader.onload = ev => {
+localStorage.setItem("profile", ev.target.result);
+loadProfile();
+};
+reader.readAsDataURL(e.target.files[0]);
+};
+
+function loadProfile(){
+const img = localStorage.getItem("profile");
+if(img){
+document.getElementById("profile").innerHTML =
+`<img src="${img}">`;
+}
+}
+
+// PROJECTS
+function addProject(){
+
+const t = title.value;
+const tg = tags.value;
+const d = desc.value;
+
+if(!t || !d) return;
+
+let data = JSON.parse(localStorage.getItem("projects")) || [];
+
+data.push({t,tg,d});
+
+localStorage.setItem("projects",JSON.stringify(data));
+
+render();
+
+closeModal();
+}
+
+function render(){
+
+let data = JSON.parse(localStorage.getItem("projects")) || [];
+
+projects.innerHTML = "";
+
+data.forEach(p=>{
+projects.innerHTML += `
+<div class="card">
+<h3>${p.t}</h3>
+<p>${p.tg}</p>
+<p>${p.d}</p>
+</div>
+`;
+});
+}
+
 function openModal(){
-  document.getElementById("modal").classList.add("active");
+modal.style.display="flex";
 }
 
 function closeModal(){
-  document.getElementById("modal").classList.remove("active");
+modal.style.display="none";
 }
 
-function addProject(){
-
-  const title = document.getElementById("title").value;
-  const tags = document.getElementById("tags").value;
-  const desc = document.getElementById("desc").value;
-
-  if(!title || !desc) return;
-
-  let projects = JSON.parse(localStorage.getItem("projects")) || [];
-
-  projects.push({title,tags,desc});
-
-  localStorage.setItem("projects", JSON.stringify(projects));
-
-  renderProjects();
-  closeModal();
-}
-
-function renderProjects(){
-
-  const grid = document.getElementById("projectsGrid");
-  grid.innerHTML = "";
-
-  let projects = JSON.parse(localStorage.getItem("projects")) || [];
-
-  projects.forEach(p => {
-
-    const div = document.createElement("div");
-    div.className = "project-card";
-
-    div.innerHTML = `
-      <h3>${p.title}</h3>
-      <div>${p.tags}</div>
-      <p>${p.desc}</p>
-    `;
-
-    grid.appendChild(div);
-  });
-}
-
-renderProjects();
+loadProfile();
+render();
 
 </script>
 
