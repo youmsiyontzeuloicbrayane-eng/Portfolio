@@ -14,29 +14,16 @@
         }
     </script>
     <style>
-        /* ---------- RESET & BASE ---------- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            cursor: none;
-        }
-        html, body {
-            width: 100%;
-            overflow-x: hidden;
-            position: relative;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
         body {
             font-family: 'Inter', sans-serif;
             background: black;
             color: white;
             overflow-x: hidden;
+            width: 100%;
         }
-        input, button, textarea, a {
-            cursor: auto;
-        }
-
-        /* TYPOGRAPHIE FUTURISTE */
+        input, button, textarea, a { cursor: auto; }
+        
         h1, h2, h3, .logo {
             font-family: 'Orbitron', monospace;
             letter-spacing: 1px;
@@ -130,176 +117,36 @@
             letter-spacing: 0.8px;
             backdrop-filter: blur(4px);
         }
-
-        /* SCROLLBAR */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #111; }
         ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #8b5cf6, #ec4899); border-radius: 10px; }
-
-        /* NAVBAR */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 100;
-            transition: all 0.3s;
-            background: transparent;
-        }
-        .navbar.scrolled {
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(12px);
-        }
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-        }
-        .nav-links a {
-            color: #ccc;
-            text-decoration: none;
-            font-weight: 500;
-            transition: 0.3s;
-        }
-        .nav-links a:hover, .nav-links a.active {
-            color: #c084fc;
-            text-shadow: 0 0 5px #c084fc;
-        }
-        .menu-icon {
-            display: none;
-            font-size: 1.8rem;
-            cursor: pointer;
-        }
-
-        /* SECTIONS */
-        section {
-            min-height: 100vh;
-            padding: 100px 5% 80px;
-            position: relative;
-            z-index: 2;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-        }
-        .skills-grid, .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1.5rem;
-        }
-        .skill-card, .project-card {
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 1.5rem;
-            padding: 1.5rem;
-            text-align: center;
-            transition: all 0.3s;
-        }
-        .skill-card:hover, .project-card:hover {
-            transform: translateY(-8px);
-            border-color: rgba(139, 92, 246, 0.8);
-            box-shadow: 0 0 25px rgba(139, 92, 246, 0.4);
-        }
-        .skill-card i {
-            font-size: 3rem;
-            margin-bottom: 0.8rem;
-        }
-        .project-card img {
-            width: 100%;
-            height: 160px;
-            object-fit: cover;
-            border-radius: 1rem;
-            margin-bottom: 1rem;
-        }
-        .btn {
-            display: inline-block;
-            padding: 0.8rem 2rem;
-            background: linear-gradient(135deg, #7c3aed, #db2777);
-            border-radius: 2rem;
-            font-weight: 600;
-            text-decoration: none;
-            color: white;
-            transition: 0.3s;
-            border: none;
-            cursor: pointer;
-        }
-        .btn-outline {
-            background: transparent;
-            border: 1px solid #a855f7;
-        }
-        .btn-outline:hover {
-            background: rgba(168, 85, 247, 0.2);
-            transform: scale(1.02);
-        }
-        .profile-img {
-            width: 150px;
-            height: 150px;
-            margin: 0 auto 1.5rem;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #a855f7, #ec4899);
-            padding: 3px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .profile-img:hover {
-            transform: scale(1.02);
-        }
-        .profile-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-            background: black;
-            pointer-events: none;
-        }
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-        }
-        .info-card, .form-card {
-            background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 1.5rem;
-            padding: 2rem;
-        }
-        .info-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        .info-item i {
-            font-size: 1.8rem;
-            color: #c084fc;
-        }
-        input, textarea {
-            width: 100%;
-            padding: 0.8rem;
-            margin-bottom: 1rem;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 0.8rem;
-            color: white;
-            font-family: inherit;
-        }
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: #a855f7;
-        }
-        footer {
-            text-align: center;
-            padding: 2rem;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-
-        /* ADMIN PANEL */
+        .navbar { position: fixed; top: 0; left: 0; width: 100%; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; transition: all 0.3s; background: transparent; }
+        .navbar.scrolled { background: rgba(0,0,0,0.8); backdrop-filter: blur(12px); }
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a { color: #ccc; text-decoration: none; font-weight: 500; transition: 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: #c084fc; text-shadow: 0 0 5px #c084fc; }
+        .menu-icon { display: none; font-size: 1.8rem; cursor: pointer; }
+        section { min-height: 100vh; padding: 100px 5% 80px; position: relative; z-index: 2; }
+        .container { max-width: 1200px; margin: 0 auto; width: 100%; }
+        .skills-grid, .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; }
+        .skill-card, .project-card { background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 1.5rem; padding: 1.5rem; text-align: center; transition: all 0.3s; }
+        .skill-card:hover, .project-card:hover { transform: translateY(-8px); border-color: rgba(139, 92, 246, 0.8); box-shadow: 0 0 25px rgba(139, 92, 246, 0.4); }
+        .skill-card i { font-size: 3rem; margin-bottom: 0.8rem; }
+        .project-card img { width: 100%; height: 160px; object-fit: cover; border-radius: 1rem; margin-bottom: 1rem; }
+        .btn { display: inline-block; padding: 0.8rem 2rem; background: linear-gradient(135deg, #7c3aed, #db2777); border-radius: 2rem; font-weight: 600; text-decoration: none; color: white; transition: 0.3s; border: none; cursor: pointer; }
+        .btn-outline { background: transparent; border: 1px solid #a855f7; }
+        .btn-outline:hover { background: rgba(168, 85, 247, 0.2); transform: scale(1.02); }
+        .profile-img { width: 150px; height: 150px; margin: 0 auto 1.5rem; border-radius: 50%; background: linear-gradient(135deg, #a855f7, #ec4899); padding: 3px; cursor: pointer; transition: 0.3s; }
+        .profile-img:hover { transform: scale(1.02); }
+        .profile-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; background: black; pointer-events: none; }
+        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .info-card, .form-card { background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 1.5rem; padding: 2rem; }
+        .info-item { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+        .info-item i { font-size: 1.8rem; color: #c084fc; }
+        input, textarea { width: 100%; padding: 0.8rem; margin-bottom: 1rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 0.8rem; color: white; font-family: inherit; }
+        input:focus, textarea:focus { outline: none; border-color: #a855f7; }
+        footer { text-align: center; padding: 2rem; border-top: 1px solid rgba(255,255,255,0.1); }
+        
         .admin-panel {
             display: none;
             position: fixed;
@@ -319,118 +166,28 @@
             box-shadow: 0 0 40px rgba(168,85,247,0.6);
             color: white;
         }
-        .admin-panel h3 {
-            margin-bottom: 1rem;
-            font-size: 1.6rem;
-            text-align: center;
-        }
-        .admin-panel input, .admin-panel textarea {
-            width: 100%;
-            margin-bottom: 0.8rem;
-            background: #1e1e2f;
-            border: 1px solid #a855f7;
-            border-radius: 0.8rem;
-            color: white;
-        }
-        .admin-panel button {
-            margin-top: 0.5rem;
-        }
-        .close-admin {
-            position: absolute;
-            top: 12px;
-            right: 18px;
-            font-size: 1.8rem;
-            cursor: pointer;
-            color: #ccc;
-            transition: 0.2s;
-        }
-        .close-admin:hover {
-            color: #ec4899;
-        }
-        #admin-projects-list {
-            margin-top: 1rem;
-            max-height: 200px;
-            overflow-y: auto;
-            background: #111;
-            padding: 0.5rem;
-            border-radius: 0.8rem;
-        }
-        #admin-projects-list div {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #1e1e2f;
-            margin-bottom: 6px;
-            padding: 6px 10px;
-            border-radius: 8px;
-        }
-
+        .admin-panel h3 { margin-bottom: 1rem; font-size: 1.6rem; text-align: center; }
+        .admin-panel input, .admin-panel textarea { width: 100%; margin-bottom: 0.8rem; background: #1e1e2f; border: 1px solid #a855f7; border-radius: 0.8rem; color: white; }
+        .admin-panel button { margin-top: 0.5rem; }
+        .close-admin { position: absolute; top: 12px; right: 18px; font-size: 1.8rem; cursor: pointer; color: #ccc; transition: 0.2s; }
+        .close-admin:hover { color: #ec4899; }
+        #admin-projects-list { margin-top: 1rem; max-height: 200px; overflow-y: auto; background: #111; padding: 0.5rem; border-radius: 0.8rem; }
+        #admin-projects-list div { display: flex; justify-content: space-between; align-items: center; background: #1e1e2f; margin-bottom: 6px; padding: 6px 10px; border-radius: 8px; }
+        
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-                flex-direction: column;
-                background: rgba(0,0,0,0.95);
-                position: absolute;
-                top: 70px;
-                right: 20px;
-                padding: 1rem;
-                border-radius: 1rem;
-                gap: 1rem;
-            }
-            .nav-links.open {
-                display: flex;
-            }
-            .menu-icon {
-                display: block;
-            }
-            .contact-grid {
-                grid-template-columns: 1fr;
-            }
-            h1 {
-                font-size: 2.5rem;
-            }
-            h2 {
-                font-size: 2rem;
-            }
-            .admin-panel {
-                width: 95%;
-                padding: 1rem;
-            }
+            .nav-links { display: none; flex-direction: column; background: rgba(0,0,0,0.95); position: absolute; top: 70px; right: 20px; padding: 1rem; border-radius: 1rem; gap: 1rem; }
+            .nav-links.open { display: flex; }
+            .menu-icon { display: block; }
+            .contact-grid { grid-template-columns: 1fr; }
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+            .admin-panel { width: 95%; padding: 1rem; }
         }
-
-        .cursor-dot, .cursor-ring {
-            position: fixed;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-        }
-        .cursor-dot {
-            width: 6px;
-            height: 6px;
-            background: #c084fc;
-        }
-        .cursor-ring {
-            width: 32px;
-            height: 32px;
-            border: 2px solid #a855f7;
-            transition: 0.1s;
-        }
-        #typed-text {
-            border-right: 2px solid #c084fc;
-            white-space: nowrap;
-            overflow: hidden;
-            font-family: 'Orbitron', monospace;
-            font-weight: 500;
-        }
-        #bg-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-        }
+        .cursor-dot, .cursor-ring { position: fixed; border-radius: 50%; pointer-events: none; z-index: 9999; }
+        .cursor-dot { width: 6px; height: 6px; background: #c084fc; }
+        .cursor-ring { width: 32px; height: 32px; border: 2px solid #a855f7; transition: 0.1s; }
+        #typed-text { border-right: 2px solid #c084fc; white-space: nowrap; overflow: hidden; font-family: 'Orbitron', monospace; font-weight: 500; }
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
     </style>
 </head>
 <body>
@@ -438,7 +195,6 @@
     <div class="cursor-dot"></div>
     <div class="cursor-ring"></div>
 
-    <!-- Admin Panel (double-clic sur LBY) -->
     <div id="admin-panel" class="admin-panel">
         <span class="close-admin" id="close-admin">&times;</span>
         <h3><i class="fas fa-lock"></i> Admin - Gestion des projets</h3>
@@ -549,5 +305,346 @@
 
     <script type="module">
         import * as THREE from 'three';
-        // Import EmailJS (bibliothèque officielle)
-        import emailjs from 'https://cdn.jsdelivr.net/npm/
+        import emailjs from 'https://cdn.jsdelivr.net/npm/emailjs-com@3.2.0/dist/emailjs.min.js';
+
+        // === TES IDENTIFIANTS EMAILJS ===
+        const SERVICE_ID = 'service_d9862n6';
+        const TEMPLATE_ID = 'template_t9l84tx';
+        const PUBLIC_KEY = 'rRVVucP8EH8_pQAnI';
+        emailjs.init(PUBLIC_KEY);
+        // ==============================
+
+        // ---------- 3D Background ----------
+        const canvas = document.getElementById('bg-canvas');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x000000, 0);
+        const particlesGeometry = new THREE.BufferGeometry();
+        const count = 1500;
+        const positions = new Float32Array(count * 3);
+        for (let i = 0; i < count * 3; i += 3) {
+            positions[i] = (Math.random() - 0.5) * 200;
+            positions[i+1] = (Math.random() - 0.5) * 100;
+            positions[i+2] = (Math.random() - 0.5) * 80;
+        }
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        const particleMat = new THREE.PointsMaterial({ size: 0.2, color: 0x8b5cf6, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
+        const particles = new THREE.Points(particlesGeometry, particleMat);
+        scene.add(particles);
+        
+        const particles2Geo = new THREE.BufferGeometry();
+        const positions2 = new Float32Array(800 * 3);
+        for (let i = 0; i < 800 * 3; i += 3) {
+            positions2[i] = (Math.random() - 0.5) * 180;
+            positions2[i+1] = (Math.random() - 0.5) * 90;
+            positions2[i+2] = (Math.random() - 0.5) * 60;
+        }
+        particles2Geo.setAttribute('position', new THREE.BufferAttribute(positions2, 3));
+        const particleMat2 = new THREE.PointsMaterial({ size: 0.15, color: 0xec4899, transparent: true, opacity: 0.4, blending: THREE.AdditiveBlending });
+        const particles2 = new THREE.Points(particles2Geo, particleMat2);
+        scene.add(particles2);
+        
+        camera.position.z = 30;
+        let mouseX = 0, mouseY = 0;
+        window.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+            mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+        });
+        let frame;
+        function animate() {
+            frame = requestAnimationFrame(animate);
+            particles.rotation.y += 0.0005;
+            particles.rotation.x += 0.0003;
+            particles2.rotation.y -= 0.0004;
+            particles2.rotation.x += 0.0002;
+            particles.rotation.x += mouseY * 0.0003;
+            particles.rotation.y += mouseX * 0.0003;
+            renderer.render(scene, camera);
+        }
+        animate();
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // ---------- Curseur ----------
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorRing = document.querySelector('.cursor-ring');
+        document.addEventListener('mousemove', (e) => {
+            cursorDot.style.transform = `translate(${e.clientX - 3}px, ${e.clientY - 3}px)`;
+            cursorRing.style.transform = `translate(${e.clientX - 16}px, ${e.clientY - 16}px)`;
+        });
+
+        // ---------- Texte machine à écrire ----------
+        const roles = ["Étudiant en informatique", "Créateur de solutions numériques", "Passionné d'innovation"];
+        let rIndex = 0, cIndex = 0, deleting = false;
+        const typedSpan = document.getElementById('typed-text');
+        function typeEffect() {
+            const current = roles[rIndex];
+            if (deleting) typedSpan.textContent = current.substring(0, cIndex-1), cIndex--;
+            else typedSpan.textContent = current.substring(0, cIndex+1), cIndex++;
+            if (!deleting && cIndex === current.length) { deleting = true; setTimeout(typeEffect, 2000); return; }
+            if (deleting && cIndex === 0) { deleting = false; rIndex = (rIndex+1) % roles.length; }
+            setTimeout(typeEffect, deleting ? 50 : 100);
+        }
+        typeEffect();
+
+        // ---------- Navigation ----------
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('section');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                if (scrollY >= section.offsetTop - 100) current = section.id;
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) link.classList.add('active');
+            });
+            const navbar = document.getElementById('navbar');
+            if (navbar) navbar.classList.toggle('scrolled', scrollY > 50);
+        });
+        document.querySelectorAll('.nav-link, .logo').forEach(el => {
+            el.addEventListener('click', function(e) {
+                e.preventDefault();
+                let targetId = this.getAttribute('href');
+                if (targetId && targetId.startsWith('#')) targetId = targetId.substring(1);
+                else targetId = 'hero';
+                const target = document.getElementById(targetId);
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+                const mobileMenu = document.getElementById('nav-links');
+                if (mobileMenu) mobileMenu.classList.remove('open');
+            });
+        });
+        const menuIcon = document.getElementById('menu-icon');
+        if (menuIcon) {
+            menuIcon.addEventListener('click', () => {
+                const nav = document.getElementById('nav-links');
+                if (nav) nav.classList.toggle('open');
+            });
+        }
+
+        // ---------- Gestion des projets (localStorage) ----------
+        let projects = [];
+        const STORAGE_KEY = 'portfolio_projects';
+        
+        function loadProjects() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                projects = JSON.parse(stored);
+            } else {
+                projects = [
+                    { id: '1', name: "Application IA Générative", type: "Intelligence Artificielle", description: "Application web utilisant GPT-4 pour générer du contenu automatique", imageUrl: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=200&fit=crop", link: "#" },
+                    { id: '2', name: "Dashboard Cloud", type: "Cloud Computing", description: "Interface de monitoring pour infrastructure cloud", imageUrl: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&h=200&fit=crop", link: "#" },
+                    { id: '3', name: "E-commerce Moderne", type: "Web Development", description: "Plateforme e-commerce avec paiement Stripe", imageUrl: "https://images.unsplash.com/photo-1557821552-17105176677c?w=400&h=200&fit=crop", link: "#" }
+                ];
+                saveProjects();
+            }
+            renderProjects();
+        }
+        
+        function saveProjects() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
+        }
+        
+        function renderProjects() {
+            const grid = document.getElementById('projects-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            projects.forEach(proj => {
+                const card = document.createElement('div');
+                card.className = 'project-card';
+                card.innerHTML = `
+                    <img src="${proj.imageUrl}" onerror="this.src='https://via.placeholder.com/400x200?text=Image+introuvable'">
+                    <span style="color:#c084fc; font-size:0.8rem;">${proj.type}</span>
+                    <h3>${proj.name}</h3>
+                    <p style="font-size:0.9rem; color:#aaa;">${proj.description}</p>
+                    <a href="${proj.link}" target="_blank" class="btn" style="margin-top:1rem; display:inline-block; padding:0.5rem 1rem; font-size:0.8rem;">Voir projet →</a>
+                `;
+                grid.appendChild(card);
+            });
+        }
+        
+        // Admin panel
+        const adminPanel = document.getElementById('admin-panel');
+        const logo = document.getElementById('secret-logo');
+        const closeAdmin = document.getElementById('close-admin');
+        const addBtn = document.getElementById('add-project-btn');
+        const cancelEdit = document.getElementById('cancel-edit');
+        const adminMsg = document.getElementById('admin-msg');
+        let editingId = null;
+        
+        function refreshAdminList() {
+            const listDiv = document.getElementById('admin-projects-list');
+            if (!listDiv) return;
+            listDiv.innerHTML = '<h4 style="margin-bottom:8px;">Projets existants :</h4>';
+            projects.forEach(proj => {
+                const div = document.createElement('div');
+                div.style.cssText = 'display:flex; justify-content:space-between; margin-bottom:8px; background:#222; padding:5px; border-radius:5px;';
+                div.innerHTML = `
+                    <span><strong>${proj.name}</strong> (${proj.type})</span>
+                    <div>
+                        <button data-id="${proj.id}" class="edit-proj" style="background:#3b82f6; border:none; color:white; padding:2px 8px; border-radius:4px;">✏️</button>
+                        <button data-id="${proj.id}" class="delete-proj" style="background:#ef4444; border:none; color:white; padding:2px 8px; border-radius:4px;">🗑️</button>
+                    </div>
+                `;
+                listDiv.appendChild(div);
+            });
+            document.querySelectorAll('.edit-proj').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = btn.getAttribute('data-id');
+                    const proj = projects.find(p => p.id === id);
+                    if (proj) {
+                        document.getElementById('proj-name').value = proj.name;
+                        document.getElementById('proj-type').value = proj.type;
+                        document.getElementById('proj-desc').value = proj.description;
+                        document.getElementById('proj-img').value = proj.imageUrl;
+                        document.getElementById('proj-link').value = proj.link;
+                        editingId = id;
+                        addBtn.textContent = 'Modifier le projet';
+                        cancelEdit.style.display = 'inline-block';
+                    }
+                });
+            });
+            document.querySelectorAll('.delete-proj').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = btn.getAttribute('data-id');
+                    if (confirm('Supprimer ce projet ?')) {
+                        projects = projects.filter(p => p.id !== id);
+                        saveProjects();
+                        renderProjects();
+                        refreshAdminList();
+                        adminMsg.textContent = 'Projet supprimé';
+                        setTimeout(() => adminMsg.textContent = '', 2000);
+                    }
+                });
+            });
+        }
+        
+        if (logo) {
+            logo.addEventListener('dblclick', () => {
+                adminPanel.style.display = 'block';
+                refreshAdminList();
+            });
+        }
+        if (closeAdmin) {
+            closeAdmin.addEventListener('click', () => adminPanel.style.display = 'none');
+        }
+        if (cancelEdit) {
+            cancelEdit.addEventListener('click', () => {
+                editingId = null;
+                addBtn.textContent = 'Ajouter le projet';
+                cancelEdit.style.display = 'none';
+                document.getElementById('proj-name').value = '';
+                document.getElementById('proj-type').value = '';
+                document.getElementById('proj-desc').value = '';
+                document.getElementById('proj-img').value = 'https://images.unsplash.com/photo-1557821552-17105176677c?w=400&h=200&fit=crop';
+                document.getElementById('proj-link').value = '#';
+            });
+        }
+        
+        if (addBtn) {
+            addBtn.addEventListener('click', () => {
+                const name = document.getElementById('proj-name').value.trim();
+                const type = document.getElementById('proj-type').value.trim();
+                const desc = document.getElementById('proj-desc').value.trim();
+                const img = document.getElementById('proj-img').value.trim();
+                const link = document.getElementById('proj-link').value.trim();
+                if (!name || !type || !desc) {
+                    adminMsg.textContent = 'Nom, type et description requis.';
+                    adminMsg.style.color = 'red';
+                    return;
+                }
+                if (editingId) {
+                    const index = projects.findIndex(p => p.id === editingId);
+                    if (index !== -1) {
+                        projects[index] = { ...projects[index], name, type, description: desc, imageUrl: img || projects[index].imageUrl, link: link || projects[index].link };
+                        editingId = null;
+                        addBtn.textContent = 'Ajouter le projet';
+                        cancelEdit.style.display = 'none';
+                    }
+                } else {
+                    const newId = Date.now().toString();
+                    projects.push({ id: newId, name, type, description: desc, imageUrl: img || "https://via.placeholder.com/400x200?text=Projet", link: link || "#" });
+                }
+                saveProjects();
+                renderProjects();
+                refreshAdminList();
+                adminMsg.textContent = editingId ? 'Projet modifié !' : 'Projet ajouté !';
+                adminMsg.style.color = '#4ade80';
+                setTimeout(() => adminMsg.textContent = '', 2000);
+                document.getElementById('proj-name').value = '';
+                document.getElementById('proj-type').value = '';
+                document.getElementById('proj-desc').value = '';
+                document.getElementById('proj-img').value = 'https://images.unsplash.com/photo-1557821552-17105176677c?w=400&h=200&fit=crop';
+                document.getElementById('proj-link').value = '#';
+            });
+        }
+        
+        // ---------- Photo de profil (upload) ----------
+        const profileImg = document.getElementById('profile-pic');
+        const profileClick = document.getElementById('profile-img-click');
+        if (profileClick) {
+            profileClick.addEventListener('click', () => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'image/*';
+                input.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (ev) => { if (profileImg) profileImg.src = ev.target.result; };
+                        reader.readAsDataURL(file);
+                    }
+                };
+                input.click();
+            });
+        }
+        
+        // ---------- FORMULAIRE DE CONTACT (EmailJS réel) ----------
+        const contactForm = document.getElementById('contact-form');
+        const statusP = document.getElementById('form-status');
+        
+        if (contactForm) {
+            contactForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const message = document.getElementById('message').value;
+                
+                if (!name || !email || !message) {
+                    statusP.textContent = "⚠️ Tous les champs sont requis.";
+                    statusP.style.color = "#f97316";
+                    return;
+                }
+                
+                statusP.textContent = "📧 Envoi en cours...";
+                statusP.style.color = "#c084fc";
+                
+                try {
+                    const templateParams = {
+                        from_name: name,
+                        from_email: email,
+                        message: message,
+                        to_name: "Loïc Brayane"
+                    };
+                    await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams);
+                    statusP.innerHTML = "✅ Message envoyé avec succès !";
+                    statusP.style.color = "#4ade80";
+                    contactForm.reset();
+                    setTimeout(() => statusP.innerHTML = "", 5000);
+                } catch (err) {
+                    console.error(err);
+                    statusP.innerHTML = "❌ Erreur lors de l'envoi. Vérifie tes identifiants EmailJS.";
+                    statusP.style.color = "#ef4444";
+                }
+            });
+        }
+        
+        loadProjects();
+    </script>
+</body>
+</html>
