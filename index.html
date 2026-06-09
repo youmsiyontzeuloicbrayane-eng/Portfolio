@@ -1,342 +1,589 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Portfolio - Loïc Brayane</title>
-
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
-
-<style>
-:root{
-  --bg:#031a14;
-  --card:#0a3a2c;
-  --green:#19ff9a;
-  --text:#eafff6;
-  --muted:#9bd9c2;
-  --border:rgba(25,255,154,0.15);
-}
-
-*{margin:0;padding:0;box-sizing:border-box;}
-
-body{
-  font-family:DM Sans;
-  background:radial-gradient(circle at top, #0a3a2c, #031a14);
-  color:var(--text);
-}
-
-/* NAV */
-nav{
-  position:fixed;
-  top:0;
-  width:100%;
-  background:rgba(3,26,20,0.9);
-  backdrop-filter:blur(10px);
-  padding:1rem;
-  border-bottom:1px solid var(--border);
-}
-
-.nav-links{
-  display:flex;
-  justify-content:center;
-  gap:1rem;
-  flex-wrap:wrap;
-}
-
-.nav-links a{
-  color:var(--muted);
-  text-decoration:none;
-}
-
-.nav-links a:hover{
-  color:var(--green);
-}
-
-/* SECTIONS */
-section{
-  max-width:900px;
-  margin:auto;
-  padding:5rem 1rem;
-}
-
-/* HERO */
-.hero{
-  text-align:center;
-  padding-top:7rem;
-}
-
-.profile{
-  width:160px;
-  height:160px;
-  border-radius:50%;
-  margin:auto;
-  overflow:hidden;
-  border:3px solid var(--green);
-}
-
-.profile img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-
-/* ABOUT */
-.about p{
-  color:var(--muted);
-  line-height:1.8;
-  margin-bottom:1rem;
-}
-
-/* COMPETENCES */
-.skill{
-  display:flex;
-  align-items:center;
-  gap:1rem;
-  background:var(--card);
-  padding:1rem;
-  margin-bottom:1rem;
-  border-radius:10px;
-  border:1px solid var(--border);
-}
-
-.skill i{font-size:1.5rem;}
-.html{color:#ff5722;}
-.js{color:#f7df1e;}
-.css{color:#2196f3;}
-.ui{color:#ff4fd8;}
-.db{color:#4dabf7;}
-
-/* PROJETS */
-.project-grid{
-  display:grid;
-  gap:1rem;
-}
-
-.project-card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:12px;
-  overflow:hidden;
-}
-
-.project-img{
-  width:100%;
-  height:180px;
-  object-fit:cover;
-}
-
-.project-body{
-  padding:1rem;
-}
-
-.project-body h3{
-  margin-bottom:0.3rem;
-}
-
-.project-body p{
-  color:var(--muted);
-  font-size:0.9rem;
-}
-
-.project-link{
-  display:inline-block;
-  margin-top:0.5rem;
-  color:var(--green);
-  text-decoration:none;
-}
-
-/* INPUT */
-input,textarea{
-  width:100%;
-  padding:0.8rem;
-  margin:0.4rem 0;
-  border-radius:8px;
-  border:1px solid var(--border);
-  background:#02130f;
-  color:white;
-}
-
-button{
-  width:100%;
-  padding:1rem;
-  background:var(--green);
-  border:none;
-  font-weight:bold;
-  cursor:pointer;
-  border-radius:8px;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Loïc Brayane | Portfolio Futuriste</title>
+    <!-- Google Fonts & Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Three.js -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.128.0/build/three.module.js"
+            }
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: black;
+            color: white;
+            overflow-x: hidden;
+        }
+        input, button, textarea, a {
+            cursor: auto;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #111; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #8b5cf6, #ec4899); border-radius: 10px; }
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+        .navbar.scrolled {
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            cursor: pointer;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        .nav-links a {
+            color: #ccc;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+            position: relative;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            color: #c084fc;
+        }
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #a855f7, #ec4899);
+        }
+        .menu-icon {
+            display: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+        /* Sections */
+        section {
+            min-height: 100vh;
+            padding: 100px 5% 80px;
+            position: relative;
+            z-index: 2;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h2 {
+            font-size: 2.8rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #c084fc, #f472b6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        /* Cards */
+        .skills-grid, .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+        }
+        .skill-card, .project-card {
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .skill-card:hover, .project-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(139, 92, 246, 0.8);
+            box-shadow: 0 0 25px rgba(139, 92, 246, 0.4);
+        }
+        .skill-card i {
+            font-size: 3rem;
+            margin-bottom: 0.8rem;
+        }
+        .project-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: linear-gradient(135deg, #7c3aed, #db2777);
+            border-radius: 2rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: white;
+            transition: 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #a855f7;
+        }
+        .btn-outline:hover {
+            background: rgba(168, 85, 247, 0.2);
+            transform: scale(1.02);
+        }
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            padding: 3px;
+        }
+        .profile-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            background: black;
+        }
+        /* Contact form */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        .info-card, .form-card {
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 1.5rem;
+            padding: 2rem;
+        }
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .info-item i {
+            font-size: 1.8rem;
+            color: #c084fc;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 0.8rem;
+            color: white;
+            font-family: inherit;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #a855f7;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                background: rgba(0,0,0,0.95);
+                backdrop-filter: blur(20px);
+                position: absolute;
+                top: 70px;
+                right: 20px;
+                padding: 1rem;
+                border-radius: 1rem;
+                gap: 1rem;
+            }
+            .nav-links.open {
+                display: flex;
+            }
+            .menu-icon {
+                display: block;
+            }
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+            h2 {
+                font-size: 2rem;
+            }
+        }
+        /* Cursor follower */
+        .cursor-dot, .cursor-ring {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        .cursor-dot {
+            width: 6px;
+            height: 6px;
+            background: #c084fc;
+        }
+        .cursor-ring {
+            width: 32px;
+            height: 32px;
+            border: 2px solid #a855f7;
+            transition: 0.1s;
+        }
+        /* Hero text animation */
+        #typed-text {
+            border-right: 2px solid #c084fc;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        @keyframes blink {
+            50% { border-color: transparent; }
+        }
+        /* 3D canvas */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+    </style>
 </head>
-
 <body>
 
-<!-- NAV -->
-<nav>
-<div class="nav-links">
-<a href="#accueil">Accueil</a>
-<a href="#apropos">À propos</a>
-<a href="#competences">Compétences</a>
-<a href="#projets">Projets</a>
-<a href="#contact">Contact</a>
-</div>
-</nav>
+    <canvas id="bg-canvas"></canvas>
 
-<!-- HERO -->
-<section id="accueil" class="hero">
+    <div class="cursor-dot"></div>
+    <div class="cursor-ring"></div>
 
-<div class="profile" id="profile"></div>
-<input type="file" id="file" hidden>
+    <nav class="navbar" id="navbar">
+        <div class="logo">LBY</div>
+        <div class="menu-icon" id="menu-icon"><i class="fas fa-bars"></i></div>
+        <div class="nav-links" id="nav-links">
+            <a href="#hero" class="nav-link">Accueil</a>
+            <a href="#university" class="nav-link">Université</a>
+            <a href="#skills" class="nav-link">Compétences</a>
+            <a href="#about" class="nav-link">À propos</a>
+            <a href="#projects" class="nav-link">Projets</a>
+            <a href="#contact" class="nav-link">Contact</a>
+        </div>
+    </nav>
 
-<h1>Salut, je suis<br><span>Loïc Brayane</span></h1>
+    <!-- Hero Section -->
+    <section id="hero">
+        <div class="container" style="text-align: center; margin-top: 10vh;">
+            <div class="profile-img">
+                <img src="https://via.placeholder.com/150/1a1a2e/ffffff?text=LOIC" alt="Photo de profil" id="profile-pic">
+            </div>
+            <h1 style="font-size: 3.5rem; margin-bottom: 1rem;">
+                <span style="background: linear-gradient(135deg, #a855f7, #ec4899, #3b82f6); -webkit-background-clip: text; background-clip: text; color: transparent;">Loïc Brayane</span>
+            </h1>
+            <div style="font-size: 1.5rem; color: #ccc; height: 3rem;">
+                <span id="typed-text"></span>
+            </div>
+            <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center;">
+                <a href="#contact" class="btn">Me contacter</a>
+                <a href="#projects" class="btn btn-outline">Voir projets</a>
+            </div>
+        </div>
+    </section>
 
-<p>Étudiant en Génie Informatique</p>
+    <!-- University -->
+    <section id="university">
+        <div class="container">
+            <h2>Université</h2>
+            <div style="background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); border-radius: 2rem; padding: 2rem; text-align: center; border: 1px solid #a855f7;">
+                <i class="fas fa-university" style="font-size: 4rem; color: #c084fc;"></i>
+                <h3 style="font-size: 2rem; margin: 1rem 0;">IUT DE DOUALA</h3>
+                <p>Département Informatique - BUT Informatique</p>
+                <p>2024 - 2027</p>
+            </div>
+        </div>
+    </section>
 
-</section>
+    <!-- Skills -->
+    <section id="skills">
+        <div class="container">
+            <h2>Compétences</h2>
+            <div class="skills-grid">
+                <div class="skill-card"><i class="fab fa-python" style="color:#3776AB;"></i><h3>PYTHON</h3></div>
+                <div class="skill-card"><i class="fab fa-html5" style="color:#E34F26;"></i><h3>HTML5</h3></div>
+                <div class="skill-card"><i class="fab fa-css3-alt" style="color:#1572B6;"></i><h3>CSS3</h3></div>
+                <div class="skill-card"><i class="fas fa-paintbrush" style="color:#FF6B6B;"></i><h3>UI/UX</h3></div>
+                <div class="skill-card"><i class="fab fa-js" style="color:#F7DF1E;"></i><h3>JAVASCRIPT</h3></div>
+                <div class="skill-card"><i class="fas fa-database" style="color:#4479A1;"></i><h3>BASE DE DONNÉES</h3></div>
+                <div class="skill-card"><i class="fas fa-cloud" style="color:#4285F4;"></i><h3>CLOUD COMPUTING</h3></div>
+                <div class="skill-card"><i class="fas fa-server" style="color:#183A61;"></i><h3>VIRTUALISATION</h3></div>
+            </div>
+        </div>
+    </section>
 
-<!-- ABOUT -->
-<section id="apropos" class="about">
+    <!-- About -->
+    <section id="about">
+        <div class="container">
+            <h2>À propos</h2>
+            <div style="background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); border-radius: 2rem; padding: 2rem; line-height: 1.6;">
+                <p>Je suis étudiant et passionné par le numérique, la technologie et l'innovation. Je m'intéresse particulièrement au développement web, à la programmation et à la création de solutions numériques capables de répondre à des besoins concrets.</p>
+                <p style="margin-top: 1rem;">Actuellement, je poursuis mes études tout en développant mes compétences dans des domaines tels que le HTML, le CSS, le JavaScript et Python à travers des projets personnels et des exercices pratiques. J'aime apprendre continuellement, explorer de nouvelles technologies et relever des défis qui me permettent de progresser.</p>
+                <p style="margin-top: 1rem;">Je suis une personne curieuse, déterminée et ambitieuse, toujours à la recherche d'opportunités pour acquérir de nouvelles compétences et enrichir mon expérience. Mon objectif est de construire une carrière solide dans le secteur du numérique, de participer à des projets innovants et de contribuer au développement de solutions technologiques utiles et performantes.</p>
+            </div>
+        </div>
+    </section>
 
-<h2>À propos</h2>
+    <!-- Projects -->
+    <section id="projects">
+        <div class="container">
+            <h2>Projets</h2>
+            <div class="projects-grid" id="projects-grid">
+                <!-- JS will inject projects -->
+            </div>
+        </div>
+    </section>
 
-<p>
-Étudiant passionné par l’informatique, curieux et motivé par l’IA, le développement web et la cybersécurité.
-</p>
+    <!-- Contact -->
+    <section id="contact">
+        <div class="container">
+            <h2>Contact</h2>
+            <div class="contact-grid">
+                <div class="info-card">
+                    <h3>Informations</h3>
+                    <div class="info-item"><i class="fas fa-phone"></i><span>681591969</span></div>
+                    <div class="info-item"><i class="fas fa-envelope"></i><span>youmsiyontzeuloicbrayane@gmail.com</span></div>
+                </div>
+                <div class="form-card">
+                    <h3>Envoyez-moi un message</h3>
+                    <form id="contact-form">
+                        <input type="text" id="name" placeholder="Votre nom" required>
+                        <input type="email" id="email" placeholder="Votre email" required>
+                        <textarea id="message" rows="4" placeholder="Votre message" required></textarea>
+                        <button type="submit" class="btn" style="width:100%">Envoyer <i class="fas fa-paper-plane"></i></button>
+                        <p id="form-status" style="margin-top: 1rem; text-align:center;"></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<p>
-Je fais beaucoup de pratique personnelle pour améliorer mes compétences et construire des projets concrets.
-</p>
+    <footer>
+        <p>&copy; 2025 Loïc Brayane - Tous droits réservés</p>
+    </footer>
 
-</section>
+    <script type="module">
+        import * as THREE from 'three';
 
-<!-- COMPÉTENCES -->
-<section id="competences">
+        // ---------- 3D Background ----------
+        const canvas = document.getElementById('bg-canvas');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x000000, 0);
 
-<h2>Compétences</h2>
+        // Particles
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 1500;
+        const posArray = new Float32Array(particlesCount * 3);
+        for (let i = 0; i < particlesCount * 3; i += 3) {
+            posArray[i] = (Math.random() - 0.5) * 200;
+            posArray[i+1] = (Math.random() - 0.5) * 100;
+            posArray[i+2] = (Math.random() - 0.5) * 80;
+        }
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const particlesMaterial = new THREE.PointsMaterial({ size: 0.2, color: 0x8b5cf6, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
+        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
 
-<div class="skill"><i class="fa-brands fa-html5 html"></i> HTML</div>
-<div class="skill"><i class="fa-brands fa-css3-alt css"></i> CSS</div>
-<div class="skill"><i class="fa-brands fa-js js"></i> JavaScript</div>
-<div class="skill"><i class="fa-solid fa-palette ui"></i> UI/UX</div>
-<div class="skill"><i class="fa-solid fa-database db"></i> Base de données</div>
+        const particlesGeometry2 = new THREE.BufferGeometry();
+        const posArray2 = new Float32Array(800 * 3);
+        for (let i = 0; i < 800 * 3; i += 3) {
+            posArray2[i] = (Math.random() - 0.5) * 180;
+            posArray2[i+1] = (Math.random() - 0.5) * 90;
+            posArray2[i+2] = (Math.random() - 0.5) * 60;
+        }
+        particlesGeometry2.setAttribute('position', new THREE.BufferAttribute(posArray2, 3));
+        const particlesMaterial2 = new THREE.PointsMaterial({ size: 0.15, color: 0xec4899, transparent: true, opacity: 0.4, blending: THREE.AdditiveBlending });
+        const particlesMesh2 = new THREE.Points(particlesGeometry2, particlesMaterial2);
+        scene.add(particlesMesh2);
 
-</section>
+        camera.position.z = 30;
+        let mouseX = 0, mouseY = 0;
+        window.addEventListener('mousemove', (event) => {
+            mouseX = (event.clientX / window.innerWidth - 0.5) * 2;
+            mouseY = (event.clientY / window.innerHeight - 0.5) * 2;
+        });
 
-<!-- PROJETS -->
-<section id="projets">
+        function animate() {
+            requestAnimationFrame(animate);
+            particlesMesh.rotation.y += 0.0005;
+            particlesMesh.rotation.x += 0.0003;
+            particlesMesh2.rotation.y -= 0.0004;
+            particlesMesh2.rotation.x += 0.0002;
+            particlesMesh.rotation.x += mouseY * 0.0003;
+            particlesMesh.rotation.y += mouseX * 0.0003;
+            renderer.render(scene, camera);
+        }
+        animate();
 
-<h2>Projets</h2>
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
 
-<div id="projects" class="project-grid"></div>
+        // ---------- Cursor follower ----------
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorRing = document.querySelector('.cursor-ring');
+        document.addEventListener('mousemove', (e) => {
+            cursorDot.style.transform = `translate(${e.clientX - 3}px, ${e.clientY - 3}px)`;
+            cursorRing.style.transform = `translate(${e.clientX - 16}px, ${e.clientY - 16}px)`;
+        });
 
-<input id="title" placeholder="Titre projet">
-<input id="type" placeholder="Type projet">
-<textarea id="desc" placeholder="Description"></textarea>
-<input id="image" placeholder="Image URL (ou upload future)">
-<input id="link" placeholder="Lien (https://...)">
+        // ---------- Typing animation ----------
+        const roles = ["Étudiant en informatique", "Créateur de solutions numériques", "Passionné d'innovation"];
+        let roleIndex = 0, charIndex = 0, isDeleting = false;
+        const typedEl = document.getElementById('typed-text');
+        function typeEffect() {
+            const current = roles[roleIndex];
+            if (isDeleting) {
+                typedEl.textContent = current.substring(0, charIndex-1);
+                charIndex--;
+            } else {
+                typedEl.textContent = current.substring(0, charIndex+1);
+                charIndex++;
+            }
+            if (!isDeleting && charIndex === current.length) {
+                isDeleting = true;
+                setTimeout(typeEffect, 2000);
+                return;
+            }
+            if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                roleIndex = (roleIndex + 1) % roles.length;
+            }
+            setTimeout(typeEffect, isDeleting ? 50 : 100);
+        }
+        typeEffect();
 
-<button onclick="addProject()">Ajouter projet</button>
+        // ---------- Navbar active & smooth scroll ----------
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-link');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (scrollY >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) navbar.classList.add('scrolled');
+            else navbar.classList.remove('scrolled');
+        });
 
-</section>
+        document.querySelectorAll('.nav-link, .logo').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href')?.substring(1) || 'hero';
+                const target = document.getElementById(targetId);
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+                document.getElementById('nav-links')?.classList.remove('open');
+            });
+        });
 
-<!-- CONTACT -->
-<section id="contact">
+        // Mobile menu
+        document.getElementById('menu-icon')?.addEventListener('click', () => {
+            document.getElementById('nav-links')?.classList.toggle('open');
+        });
 
-<h2>Contact</h2>
+        // ---------- Projects data (static) ----------
+        const projects = [
+            { name: "Application IA Générative", type: "Intelligence Artificielle", desc: "Application web utilisant GPT-4 pour générer du contenu automatique", img: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=200&fit=crop", link: "#" },
+            { name: "Dashboard Cloud", type: "Cloud Computing", desc: "Interface de monitoring pour infrastructure cloud", img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&h=200&fit=crop", link: "#" },
+            { name: "E-commerce Moderne", type: "Web Development", desc: "Plateforme e-commerce avec paiement Stripe", img: "https://images.unsplash.com/photo-1557821552-17105176677c?w=400&h=200&fit=crop", link: "#" }
+        ];
+        const projectsGrid = document.getElementById('projects-grid');
+        projects.forEach(proj => {
+            const card = document.createElement('div');
+            card.className = 'project-card';
+            card.innerHTML = `
+                <img src="${proj.img}" alt="${proj.name}">
+                <span style="color:#c084fc; font-size:0.8rem;">${proj.type}</span>
+                <h3 style="margin:0.5rem 0;">${proj.name}</h3>
+                <p style="font-size:0.9rem; color:#aaa;">${proj.desc}</p>
+                <a href="${proj.link}" class="btn" style="margin-top:1rem; display:inline-block; padding:0.5rem 1rem; font-size:0.8rem;">Voir projet →</a>
+            `;
+            projectsGrid.appendChild(card);
+        });
 
-<p>📱 681 591 969</p>
-<p>✉️ email@gmail.com</p>
+        // ---------- Contact form (simulate emailjs) ----------
+        const form = document.getElementById('contact-form');
+        const statusP = document.getElementById('form-status');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            if (!name || !email || !message) {
+                statusP.textContent = "Veuillez remplir tous les champs.";
+                statusP.style.color = "red";
+                return;
+            }
+            statusP.textContent = "Envoi en cours...";
+            // Simulation (remplacer par EmailJS si souhaité)
+            setTimeout(() => {
+                statusP.textContent = "Message envoyé avec succès ! (simulation)";
+                statusP.style.color = "#4ade80";
+                form.reset();
+                setTimeout(() => statusP.textContent = "", 3000);
+            }, 1000);
+        });
 
-</section>
-
-<script>
-
-/* PROFILE */
-document.getElementById("profile").onclick = () =>
-document.getElementById("file").click();
-
-document.getElementById("file").onchange = e => {
-const r = new FileReader();
-r.onload = ev => {
-localStorage.setItem("profile", ev.target.result);
-loadProfile();
-};
-r.readAsDataURL(e.target.files[0]);
-};
-
-function loadProfile(){
-const img = localStorage.getItem("profile");
-if(img){
-document.getElementById("profile").innerHTML =
-`<img src="${img}">`;
-}
-}
-
-/* ADD PROJECT */
-function addProject(){
-
-const t = title.value;
-const type = document.getElementById("type").value;
-const d = desc.value;
-const img = document.getElementById("image").value;
-const l = document.getElementById("link").value;
-
-if(!t || !d){
-alert("Titre + description obligatoires");
-return;
-}
-
-if(l && !l.startsWith("http")){
-alert("Lien invalide");
-return;
-}
-
-let projects = JSON.parse(localStorage.getItem("projects")) || [];
-
-projects.push({t,type,d,img,l});
-
-localStorage.setItem("projects",JSON.stringify(projects));
-
-render();
-
-title.value="";
-type.value="";
-desc.value="";
-image.value="";
-link.value="";
-}
-
-/* RENDER */
-function render(){
-
-let projects = JSON.parse(localStorage.getItem("projects")) || [];
-
-const container = document.getElementById("projects");
-container.innerHTML="";
-
-projects.forEach(p=>{
-container.innerHTML += `
-<div class="project-card">
-
-${p.img ? `<img class="project-img" src="${p.img}">` : ""}
-
-<div class="project-body">
-<h3>${p.t}</h3>
-<p>${p.type}</p>
-<p>${p.d}</p>
-
-${p.l ? `<a class="project-link" href="${p.l}" target="_blank">Voir le projet →</a>` : ""}
-
-</div>
-</div>
-`;
-});
-}
-
-loadProfile();
-render();
-
-</script>
-
+        // Profile picture fallback
+        const profilePic = document.querySelector('#hero .profile-img img');
+        if (profilePic) {
+            profilePic.onerror = () => { profilePic.src = "https://via.placeholder.com/150/1a1a2e/ffffff?text=LOIC"; };
+        }
+    </script>
 </body>
 </html>
