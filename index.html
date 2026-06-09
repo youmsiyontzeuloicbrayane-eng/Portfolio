@@ -1,679 +1,693 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Loïc Brayane | Portfolio Futuriste</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script type="importmap">
+cat > setup-portfolio.sh << 'EOF'
+#!/bin/bash
+
+echo "🚀 Création du portfolio futuriste (version corrigée)..."
+
+# Initialisation Next.js (sans poser de questions)
+npx create-next-app@latest . --typescript --tailwind --app --no-src-dir --yes --use-npm
+
+# Installation des dépendances
+npm install framer-motion three @react-three/fiber @react-three/drei emailjs-com react-icons react-intersection-observer
+
+# Création des dossiers
+mkdir -p app/components data public/images
+
+# ------------------------------
+# 1. app/layout.tsx (corrigé)
+# ------------------------------
+cat > app/layout.tsx << 'LAYOUT'
+import './globals.css'
+import { Inter } from 'next/font/google'
+
+const inter = Inter({ subsets: ['latin'] })
+
+export const metadata = {
+  title: "Loïc Brayane | Portfolio Futuriste",
+  description: "Portfolio développeur étudiant passionné par le numérique"
+}
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="fr">
+      <body className={inter.className}>{children}</body>
+    </html>
+  )
+}
+LAYOUT
+
+# ------------------------------
+# 2. app/globals.css (ajout curseur)
+# ------------------------------
+cat > app/globals.css << 'CSS'
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    cursor: none;
+    background: black;
+    overflow-x: hidden;
+  }
+  input, button, textarea, a {
+    cursor: auto;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .glow-effect {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+    transition: all 0.3s ease;
+  }
+  .glow-effect:hover {
+    box-shadow: 0 0 40px rgba(139, 92, 246, 0.6);
+  }
+  .card-hover {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .card-hover:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3);
+  }
+}
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #1a1a1a; }
+::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 4px; }
+CSS
+
+# ------------------------------
+# 3. app/page.tsx (correction scaleX)
+# ------------------------------
+cat > app/page.tsx << 'PAGE'
+'use client'
+import { useScroll, useSpring, motion } from 'framer-motion'
+import Navbar from './components/Navbar'
+import Hero from './components/Hero'
+import University from './components/University'
+import Skills from './components/Skills'
+import About from './components/About'
+import Projects from './components/Projects'
+import Contact from './components/Contact'
+import Background3D from './components/Background3D'
+import CursorFollower from './components/CursorFollower'
+
+export default function Home() {
+  const { scrollYProgress } = useScroll()
+  const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30 })
+  return (
+    <>
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 z-50"
+        style={{ scaleX, transformOrigin: "0%" }}
+      />
+      <Background3D />
+      <CursorFollower />
+      <Navbar />
+      <main className="relative z-10">
+        <Hero />
+        <University />
+        <Skills />
+        <About />
+        <Projects />
+        <Contact />
+      </main>
+    </>
+  )
+}
+PAGE
+
+# ------------------------------
+# 4. app/components/Background3D.tsx (cleanup + dispose)
+# ------------------------------
+cat > app/components/Background3D.tsx << 'BG3D'
+'use client'
+import { useEffect, useRef } from 'react'
+import * as THREE from 'three'
+
+export default function Background3D() {
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const scene = new THREE.Scene()
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+    const renderer = new THREE.WebGLRenderer({ alpha: true })
+    renderer.setSize(window.innerWidth, window.innerHeight)
+    renderer.setClearColor(0x000000, 0)
+    containerRef.current?.appendChild(renderer.domElement)
+
+    // Premières particules
+    const particlesGeometry = new THREE.BufferGeometry()
+    const particlesCount = 2000
+    const posArray = new Float32Array(particlesCount * 3)
+    for (let i = 0; i < particlesCount * 3; i += 3) {
+      posArray[i] = (Math.random() - 0.5) * 200
+      posArray[i+1] = (Math.random() - 0.5) * 100
+      posArray[i+2] = (Math.random() - 0.5) * 50
+    }
+    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3))
+    const particlesMaterial = new THREE.PointsMaterial({ size: 0.2, color: 0x8b5cf6, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending })
+    const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial)
+    scene.add(particlesMesh)
+
+    // Deuxièmes particules
+    const particlesGeometry2 = new THREE.BufferGeometry()
+    const posArray2 = new Float32Array(1000 * 3)
+    for (let i = 0; i < 1000 * 3; i += 3) {
+      posArray2[i] = (Math.random() - 0.5) * 150
+      posArray2[i+1] = (Math.random() - 0.5) * 80
+      posArray2[i+2] = (Math.random() - 0.5) * 40
+    }
+    particlesGeometry2.setAttribute('position', new THREE.BufferAttribute(posArray2, 3))
+    const particlesMaterial2 = new THREE.PointsMaterial({ size: 0.1, color: 0xec4899, transparent: true, opacity: 0.4, blending: THREE.AdditiveBlending })
+    const particlesMesh2 = new THREE.Points(particlesGeometry2, particlesMaterial2)
+    scene.add(particlesMesh2)
+
+    camera.position.z = 30
+    let mouseX = 0, mouseY = 0
+    const onMouseMove = (event: MouseEvent) => {
+      mouseX = (event.clientX / window.innerWidth - 0.5) * 2
+      mouseY = (event.clientY / window.innerHeight - 0.5) * 2
+    }
+    window.addEventListener('mousemove', onMouseMove)
+
+    let frameId: number
+    const animate = () => {
+      frameId = requestAnimationFrame(animate)
+      particlesMesh.rotation.y += 0.001
+      particlesMesh.rotation.x += 0.0005
+      particlesMesh2.rotation.y -= 0.0008
+      particlesMesh2.rotation.x += 0.0003
+      particlesMesh.rotation.x += mouseY * 0.0005
+      particlesMesh.rotation.y += mouseX * 0.0005
+      renderer.render(scene, camera)
+    }
+    animate()
+
+    const handleResize = () => {
+      camera.aspect = window.innerWidth / window.innerHeight
+      camera.updateProjectionMatrix()
+      renderer.setSize(window.innerWidth, window.innerHeight)
+    }
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      cancelAnimationFrame(frameId)
+      window.removeEventListener('mousemove', onMouseMove)
+      window.removeEventListener('resize', handleResize)
+      renderer.dispose()
+      particlesGeometry.dispose()
+      particlesGeometry2.dispose()
+      containerRef.current?.removeChild(renderer.domElement)
+    }
+  }, [])
+
+  return <div ref={containerRef} className="fixed top-0 left-0 w-full h-full -z-10" />
+}
+BG3D
+
+# ------------------------------
+# 5. app/components/CursorFollower.tsx (inchangé mais globals.css gère le curseur)
+# ------------------------------
+cat > app/components/CursorFollower.tsx << 'CURSOR'
+'use client'
+import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
+
+export default function CursorFollower() {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [isHovering, setIsHovering] = useState(false)
+
+  useEffect(() => {
+    const updateMousePosition = (e: MouseEvent) => setMousePosition({ x: e.clientX, y: e.clientY })
+    const handleMouseEnter = () => setIsHovering(true)
+    const handleMouseLeave = () => setIsHovering(false)
+
+    window.addEventListener('mousemove', updateMousePosition)
+    const interactiveElements = document.querySelectorAll('a, button, input, textarea')
+    interactiveElements.forEach(el => {
+      el.addEventListener('mouseenter', handleMouseEnter)
+      el.addEventListener('mouseleave', handleMouseLeave)
+    })
+
+    return () => {
+      window.removeEventListener('mousemove', updateMousePosition)
+      interactiveElements.forEach(el => {
+        el.removeEventListener('mouseenter', handleMouseEnter)
+        el.removeEventListener('mouseleave', handleMouseLeave)
+      })
+    }
+  }, [])
+
+  return (
+    <>
+      <motion.div
+        className="fixed w-8 h-8 rounded-full border-2 border-purple-500 pointer-events-none z-50"
+        animate={{ x: mousePosition.x - 16, y: mousePosition.y - 16, scale: isHovering ? 1.5 : 1 }}
+        transition={{ type: "spring", stiffness: 500, damping: 28 }}
+      />
+      <motion.div
+        className="fixed w-2 h-2 bg-purple-500 rounded-full pointer-events-none z-50"
+        animate={{ x: mousePosition.x - 4, y: mousePosition.y - 4 }}
+        transition={{ type: "spring", stiffness: 1000, damping: 20 }}
+      />
+    </>
+  )
+}
+CURSOR
+
+# ------------------------------
+# 6. app/components/Navbar.tsx (correction filter(Boolean))
+# ------------------------------
+cat > app/components/Navbar.tsx << 'NAVBAR'
+'use client'
+import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
+import { FaBars, FaTimes } from 'react-icons/fa'
+
+const navItems = [
+  { name: 'Accueil', href: 'hero' },
+  { name: 'Université', href: 'university' },
+  { name: 'Compétences', href: 'skills' },
+  { name: 'À propos', href: 'about' },
+  { name: 'Projets', href: 'projects' },
+  { name: 'Contact', href: 'contact' },
+]
+
+export default function Navbar() {
+  const [isOpen, setIsOpen] = useState(false)
+  const [activeSection, setActiveSection] = useState('hero')
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50)
+      const sections = navItems.map(item => document.getElementById(item.href)).filter(Boolean) as HTMLElement[]
+      const scrollPosition = window.scrollY + 100
+      for (let i = sections.length - 1; i >= 0; i--) {
+        if (sections[i].offsetTop <= scrollPosition) {
+          setActiveSection(navItems[i].href)
+          break
+        }
+      }
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId)
+    if (element) { element.scrollIntoView({ behavior: 'smooth' }); setIsOpen(false) }
+  }
+
+  return (
+    <>
+      <motion.nav initial={{ y: -100 }} animate={{ y: 0 }} className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${scrolled ? 'bg-black/80 backdrop-blur-lg shadow-lg' : 'bg-transparent'}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <motion.div whileHover={{ scale: 1.05 }} className="text-2xl font-bold bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent cursor-pointer" onClick={() => scrollToSection('hero')}>LBY</motion.div>
+            <div className="hidden md:flex space-x-8">
+              {navItems.map((item) => (
+                <motion.button key={item.name} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }} onClick={() => scrollToSection(item.href)} className={`relative px-3 py-2 text-sm font-medium transition-colors ${activeSection === item.href ? 'text-purple-400' : 'text-gray-300 hover:text-white'}`}>
+                  {item.name}
+                  {activeSection === item.href && <motion.div layoutId="activeSection" className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500" />}
+                </motion.button>
+              ))}
+            </div>
+            <motion.button whileTap={{ scale: 0.95 }} onClick={() => setIsOpen(!isOpen)} className="md:hidden text-white text-2xl">{isOpen ? <FaTimes /> : <FaBars />}</motion.button>
+          </div>
+        </div>
+      </motion.nav>
+      {isOpen && (
+        <motion.div initial={{ opacity: 0, x: '100%' }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: '100%' }} className="fixed top-16 right-0 bottom-0 w-64 bg-black/95 backdrop-blur-lg z-30 md:hidden">
+          <div className="flex flex-col p-6 space-y-4">
+            {navItems.map((item) => (
+              <motion.button key={item.name} whileHover={{ x: 10 }} onClick={() => scrollToSection(item.href)} className={`text-left py-2 px-4 rounded-lg transition-colors ${activeSection === item.href ? 'bg-purple-500/20 text-purple-400' : 'text-gray-300 hover:bg-white/10'}`}>{item.name}</motion.button>
+            ))}
+          </div>
+        </motion.div>
+      )}
+    </>
+  )
+}
+NAVBAR
+
+# ------------------------------
+# 7. app/components/Hero.tsx (gestion erreur image)
+# ------------------------------
+cat > app/components/Hero.tsx << 'HERO'
+'use client'
+import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
+import Image from 'next/image'
+
+const roles = ['Étudiant en informatique', 'Créateur de solutions numériques', "Passionné d'innovation"]
+
+export default function Hero() {
+  const [roleIndex, setRoleIndex] = useState(0)
+  const [displayText, setDisplayText] = useState('')
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [imgSrc, setImgSrc] = useState("/images/profile.jpg")
+
+  useEffect(() => {
+    const currentRole = roles[roleIndex]
+    let timeout: NodeJS.Timeout
+    if (!isDeleting && displayText === currentRole) {
+      timeout = setTimeout(() => setIsDeleting(true), 2000)
+    } else if (isDeleting && displayText === '') {
+      setIsDeleting(false)
+      setRoleIndex((roleIndex + 1) % roles.length)
+    } else {
+      timeout = setTimeout(() => {
+        setDisplayText(prev => isDeleting ? prev.slice(0, -1) : currentRole.slice(0, prev.length + 1))
+      }, isDeleting ? 50 : 100)
+    }
+    return () => clearTimeout(timeout)
+  }, [displayText, isDeleting, roleIndex])
+
+  return (
+    <section id="hero" className="min-h-screen flex items-center justify-center px-4 pt-20">
+      <div className="text-center max-w-4xl mx-auto">
+        <motion.div initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }} className="relative w-40 h-40 mx-auto mb-8">
+          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 animate-pulse" />
+          <div className="absolute inset-1 rounded-full overflow-hidden bg-black">
+            <Image src={imgSrc} alt="Photo de profil" width={150} height={150} className="w-full h-full object-cover" onError={() => setImgSrc("https://via.placeholder.com/150/8b5cf6/ffffff?text=LOIC")} />
+          </div>
+        </motion.div>
+        <motion.h1 initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2, duration: 0.6 }} className="text-5xl md:text-7xl font-bold mb-6">
+          <span className="bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient">
+            Loïc Brayane
+          </span>
+        </motion.h1>
+        <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4, duration: 0.6 }} className="text-xl md:text-2xl text-gray-300 mb-8 h-12">
+          <span className="border-r-2 border-purple-500 pr-1">{displayText}<span className="animate-blink">|</span></span>
+        </motion.div>
+        <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.6, duration: 0.6 }} className="flex gap-4 justify-center">
+          <motion.a whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} href="#contact" className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full font-medium shadow-lg hover:shadow-purple-500/50 transition-all">Me contacter</motion.a>
+          <motion.a whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} href="#projects" className="px-8 py-3 border border-purple-500 rounded-full font-medium hover:bg-purple-500/20 transition-all">Voir projets</motion.a>
+        </motion.div>
+      </div>
+    </section>
+  )
+}
+HERO
+
+# ------------------------------
+# 8. app/components/University.tsx (aucun changement majeur)
+# ------------------------------
+cat > app/components/University.tsx << 'UNI'
+'use client'
+import { motion, useInView } from 'framer-motion'
+import { useRef } from 'react'
+import { FaUniversity, FaGraduationCap, FaCalendarAlt } from 'react-icons/fa'
+
+export default function University() {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, amount: 0.3 })
+  return (
+    <section id="university" className="py-20 px-4">
+      <div ref={ref} className="max-w-6xl mx-auto">
+        <motion.h2 initial={{ opacity: 0, y: 50 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6 }} className="text-4xl md:text-5xl font-bold text-center mb-12 bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">Université</motion.h2>
+        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={isInView ? { opacity: 1, scale: 1 } : {}} transition={{ delay: 0.2, duration: 0.6 }} className="relative group">
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur-2xl opacity-30 group-hover:opacity-70 transition-opacity" />
+          <div className="relative bg-black/50 backdrop-blur-xl rounded-2xl p-8 border border-purple-500/30 group-hover:border-purple-500/60 transition-all">
+            <div className="flex flex-col md:flex-row items-center gap-8">
+              <div className="w-32 h-32 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center animate-float">
+                <FaUniversity className="text-5xl text-white" />
+              </div>
+              <div className="flex-1 text-center md:text-left">
+                <h3 className="text-2xl md:text-3xl font-bold mb-2">IUT DE DOUALA</h3>
+                <p className="text-gray-300 mb-4">Département Informatique</p>
+                <div className="flex flex-wrap gap-4 justify-center md:justify-start">
+                  <div className="flex items-center gap-2 text-gray-400"><FaGraduationCap className="text-purple-400" /> BUT Informatique</div>
+                  <div className="flex items-center gap-2 text-gray-400"><FaCalendarAlt className="text-purple-400" /> 2024 - 2027</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  )
+}
+UNI
+
+# ------------------------------
+# 9. app/components/Skills.tsx (inchangé)
+# ------------------------------
+cat > app/components/Skills.tsx << 'SKILLS'
+'use client'
+import { motion, useInView } from 'framer-motion'
+import { useRef } from 'react'
+import { FaPython, FaHtml5, FaCss3Alt, FaJs, FaDatabase, FaCloudsmith } from 'react-icons/fa'
+import { SiUx, SiVirtualbox } from 'react-icons/si'
+
+const skills = [
+  { name: 'PYTHON', icon: FaPython, color: '#3776AB' },
+  { name: 'HTML', icon: FaHtml5, color: '#E34F26' },
+  { name: 'CSS', icon: FaCss3Alt, color: '#1572B6' },
+  { name: 'UI/UX', icon: SiUx, color: '#FF6B6B' },
+  { name: 'JAVASCRIPT', icon: FaJs, color: '#F7DF1E' },
+  { name: 'BASE DE DONNÉES', icon: FaDatabase, color: '#4479A1' },
+  { name: 'CLOUD COMPUTING', icon: FaCloudsmith, color: '#4285F4' },
+  { name: 'VIRTUALISATION', icon: SiVirtualbox, color: '#183A61' },
+]
+
+export default function Skills() {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, amount: 0.3 })
+  return (
+    <section id="skills" className="py-20 px-4">
+      <div ref={ref} className="max-w-6xl mx-auto">
+        <motion.h2 initial={{ opacity: 0, y: 50 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6 }} className="text-4xl md:text-5xl font-bold text-center mb-12 bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">Compétences</motion.h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {skills.map((skill, index) => (
+            <motion.div key={skill.name} initial={{ opacity: 0, scale: 0.5 }} animate={isInView ? { opacity: 1, scale: 1 } : {}} transition={{ delay: index * 0.1, duration: 0.5 }} whileHover={{ scale: 1.05, rotateY: 10 }} className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur-xl opacity-0 group-hover:opacity-50 transition-opacity" />
+              <div className="relative bg-black/50 backdrop-blur-xl rounded-2xl p-6 text-center border border-purple-500/30 group-hover:border-purple-500/60 transition-all">
+                <skill.icon className="text-5xl mx-auto mb-3" style={{ color: skill.color }} />
+                <h3 className="font-semibold text-sm md:text-base">{skill.name}</h3>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+SKILLS
+
+# ------------------------------
+# 10. app/components/About.tsx (inchangé)
+# ------------------------------
+cat > app/components/About.tsx << 'ABOUT'
+'use client'
+import { motion, useInView } from 'framer-motion'
+import { useRef } from 'react'
+
+const aboutText = "Je suis étudiant et passionné par le numérique, la technologie et l'innovation. Je m'intéresse particulièrement au développement web, à la programmation et à la création de solutions numériques capables de répondre à des besoins concrets. Actuellement, je poursuis mes études tout en développant mes compétences dans des domaines tels que le HTML, le CSS, le JavaScript et Python à travers des projets personnels et des exercices pratiques. J'aime apprendre continuellement, explorer de nouvelles technologies et relever des défis qui me permettent de progresser. Je suis une personne curieuse, déterminée et ambitieuse, toujours à la recherche d'opportunités pour acquérir de nouvelles compétences et enrichir mon expérience. Mon objectif est de construire une carrière solide dans le secteur du numérique, de participer à des projets innovants et de contribuer au développement de solutions technologiques utiles et performantes."
+
+export default function About() {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, amount: 0.3 })
+  return (
+    <section id="about" className="py-20 px-4">
+      <div ref={ref} className="max-w-4xl mx-auto">
+        <motion.h2 initial={{ opacity: 0, y: 50 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6 }} className="text-4xl md:text-5xl font-bold text-center mb-12 bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">À propos</motion.h2>
+        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={isInView ? { opacity: 1, scale: 1 } : {}} transition={{ duration: 0.6 }} className="relative group">
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur-2xl opacity-20 group-hover:opacity-50 transition-opacity" />
+          <div className="relative bg-black/50 backdrop-blur-xl rounded-2xl p-8 border border-purple-500/30 group-hover:border-purple-500/60 transition-all">
+            <p className="text-gray-300 leading-relaxed text-lg">{aboutText}</p>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  )
+}
+ABOUT
+
+# ------------------------------
+# 11. data/projects.json (exemple)
+# ------------------------------
+cat > data/projects.json << 'PROJECTSJSON'
+[
+  {
+    "id": 1,
+    "name": "Application IA Générative",
+    "type": "Intelligence Artificielle",
+    "description": "Application web utilisant GPT-4 pour générer du contenu automatique",
+    "imageUrl": "https://images.unsplash.com/photo-1677442136019-21780ecad995",
+    "link": "https://github.com/loic/ia-generative"
+  },
+  {
+    "id": 2,
+    "name": "Dashboard Cloud",
+    "type": "Cloud Computing",
+    "description": "Interface de monitoring pour infrastructure cloud",
+    "imageUrl": "https://images.unsplash.com/photo-1451187580459-43490279c0fa",
+    "link": "https://github.com/loic/dashboard-cloud"
+  },
+  {
+    "id": 3,
+    "name": "E-commerce Moderne",
+    "type": "Web Development",
+    "description": "Plateforme e-commerce avec paiement Stripe",
+    "imageUrl": "https://images.unsplash.com/photo-1557821552-17105176677c",
+    "link": "https://github.com/loic/ecommerce"
+  }
+]
+PROJECTSJSON
+
+# ------------------------------
+# 12. app/components/Projects.tsx (lire projects.json)
+# ------------------------------
+cat > app/components/Projects.tsx << 'PROJECTSCOMP'
+'use client'
+import { motion, useInView } from 'framer-motion'
+import { useRef } from 'react'
+import Image from 'next/image'
+import projectsData from '../../data/projects.json'
+
+export default function Projects() {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, amount: 0.3 })
+  const projects = projectsData
+
+  return (
+    <section id="projects" className="py-20 px-4">
+      <div ref={ref} className="max-w-6xl mx-auto">
+        <motion.h2 initial={{ opacity: 0, y: 50 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6 }} className="text-4xl md:text-5xl font-bold text-center mb-12 bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">Projets</motion.h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {projects.map((project, index) => (
+            <motion.div key={project.id} initial={{ opacity: 0, y: 50 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ delay: index * 0.1, duration: 0.6 }} whileHover={{ y: -10 }} className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur-xl opacity-0 group-hover:opacity-50 transition-opacity" />
+              <div className="relative bg-black/50 backdrop-blur-xl rounded-2xl overflow-hidden border border-purple-500/30 group-hover:border-purple-500/60 transition-all">
+                <div className="relative h-48 overflow-hidden">
+                  <Image src={project.imageUrl} alt={project.name} width={400} height={200} className="w-full h-full object-cover transition-transform group-hover:scale-110" unoptimized />
+                </div>
+                <div className="p-6">
+                  <span className="text-xs text-purple-400 uppercase tracking-wider">{project.type}</span>
+                  <h3 className="text-xl font-bold mt-2 mb-2">{project.name}</h3>
+                  <p className="text-gray-400 text-sm mb-4">{project.description}</p>
+                  <motion.a whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} href={project.link} target="_blank" className="inline-block px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg text-sm font-medium">Voir le projet →</motion.a>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+PROJECTSCOMP
+
+# ------------------------------
+# 13. app/components/Contact.tsx (avec emailjs et non setTimeout)
+# ------------------------------
+cat > app/components/Contact.tsx << 'CONTACT'
+'use client'
+import { motion, useInView } from 'framer-motion'
+import { useRef, useState } from 'react'
+import { FaPhone, FaEnvelope, FaPaperPlane } from 'react-icons/fa'
+import emailjs from 'emailjs-com'
+
+export default function Contact() {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, amount: 0.3 })
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' })
+  const [isSent, setIsSent] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsLoading(true)
+    setError('')
+    
+    try {
+      // Remplace ces identifiants par les tiens (inscris-toi sur emailjs.com)
+      await emailjs.send(
+        'YOUR_SERVICE_ID',      // Ex: 'service_abc123'
+        'YOUR_TEMPLATE_ID',     // Ex: 'template_xyz789'
         {
-            "imports": {
-                "three": "https://unpkg.com/three@0.128.0/build/three.module.js"
-            }
-        }
-    </script>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: black;
-            color: white;
-            overflow-x: hidden; /* ← Évite le scroll horizontal */
-            width: 100%;
-            position: relative;
-        }
-        input, button, textarea, a { cursor: auto; }
-        
-        /* --- TYPOGRAPHIE FUTURISTE --- */
-        h1, h2, h3, .logo {
-            font-family: 'Orbitron', monospace;
-            letter-spacing: 1px;
-        }
-        h1 {
-            font-size: 3.8rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #fff, #c084fc, #ec4899, #3b82f6);
-            background-size: 300% auto;
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            animation: shine 6s linear infinite;
-            text-shadow: 0 0 20px rgba(192, 132, 252, 0.3);
-        }
-        @keyframes shine {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 200% 50%; }
-        }
-        h2 {
-            font-size: 2.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            background: linear-gradient(135deg, #c084fc, #f472b6);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            position: relative;
-            display: inline-block;
-            padding-bottom: 10px;
-            margin-bottom: 2rem;
-        }
-        h2::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 25%;
-            width: 50%;
-            height: 3px;
-            background: linear-gradient(90deg, #c084fc, #ec4899);
-            border-radius: 3px;
-            transform: scaleX(0);
-            transition: transform 0.4s ease;
-        }
-        section:hover h2::after {
-            transform: scaleX(1);
-        }
-        h3 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            background: linear-gradient(135deg, #e0e0e0, #c084fc);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            letter-spacing: -0.5px;
-        }
-        .section-title-wrapper {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-        .skill-card h3, .project-card h3 {
-            transition: all 0.3s;
-        }
-        .skill-card:hover h3, .project-card:hover h3 {
-            text-shadow: 0 0 8px rgba(192, 132, 252, 0.8);
-            transform: scale(1.02);
-        }
-        .logo {
-            font-size: 2rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #a855f7, #ec4899);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            letter-spacing: 2px;
-            text-shadow: 0 0 5px rgba(168,85,247,0.5);
-            transition: 0.3s;
-        }
-        .logo:hover {
-            text-shadow: 0 0 15px rgba(168,85,247,0.8);
-            transform: scale(1.02);
-        }
-        .nav-links a {
-            font-family: 'Orbitron', monospace;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-        }
-        .btn {
-            font-family: 'Orbitron', monospace;
-            font-weight: 600;
-            letter-spacing: 0.8px;
-            backdrop-filter: blur(4px);
-        }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #111; }
-        ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #8b5cf6, #ec4899); border-radius: 10px; }
-        
-        /* Navbar */
-        .navbar { position: fixed; top: 0; left: 0; width: 100%; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; transition: all 0.3s; background: transparent; }
-        .navbar.scrolled { background: rgba(0,0,0,0.8); backdrop-filter: blur(12px); }
-        .nav-links { display: flex; gap: 2rem; }
-        .nav-links a { color: #ccc; text-decoration: none; font-weight: 500; transition: 0.3s; }
-        .nav-links a:hover, .nav-links a.active { color: #c084fc; text-shadow: 0 0 5px #c084fc; }
-        .menu-icon { display: none; font-size: 1.8rem; cursor: pointer; }
-        
-        /* Sections */
-        section { min-height: 100vh; padding: 100px 5% 80px; position: relative; z-index: 2; }
-        .container { max-width: 1200px; margin: 0 auto; }
-        .skills-grid, .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; }
-        .skill-card, .project-card { background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 1.5rem; padding: 1.5rem; text-align: center; transition: all 0.3s; }
-        .skill-card:hover, .project-card:hover { transform: translateY(-8px); border-color: rgba(139, 92, 246, 0.8); box-shadow: 0 0 25px rgba(139, 92, 246, 0.4); }
-        .skill-card i { font-size: 3rem; margin-bottom: 0.8rem; }
-        .project-card img { width: 100%; height: 160px; object-fit: cover; border-radius: 1rem; margin-bottom: 1rem; }
-        .btn { display: inline-block; padding: 0.8rem 2rem; background: linear-gradient(135deg, #7c3aed, #db2777); border-radius: 2rem; font-weight: 600; text-decoration: none; color: white; transition: 0.3s; border: none; cursor: pointer; }
-        .btn-outline { background: transparent; border: 1px solid #a855f7; }
-        .btn-outline:hover { background: rgba(168, 85, 247, 0.2); transform: scale(1.02); }
-        .profile-img { width: 150px; height: 150px; margin: 0 auto 1.5rem; border-radius: 50%; background: linear-gradient(135deg, #a855f7, #ec4899); padding: 3px; cursor: pointer; transition: 0.3s; }
-        .profile-img:hover { transform: scale(1.02); }
-        .profile-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; background: black; pointer-events: none; }
-        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
-        .info-card, .form-card { background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 1.5rem; padding: 2rem; }
-        .info-item { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
-        .info-item i { font-size: 1.8rem; color: #c084fc; }
-        input, textarea { width: 100%; padding: 0.8rem; margin-bottom: 1rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 0.8rem; color: white; font-family: inherit; }
-        input:focus, textarea:focus { outline: none; border-color: #a855f7; }
-        footer { text-align: center; padding: 2rem; border-top: 1px solid rgba(255,255,255,0.1); }
-        
-        /* Admin panel - centré et responsive */
-        .admin-panel {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90%;
-            max-width: 550px;
-            max-height: 85vh;
-            overflow-y: auto;
-            background: #0a0a0a;
-            border: 2px solid #a855f7;
-            border-radius: 1.5rem;
-            padding: 1.5rem;
-            z-index: 1000;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 0 40px rgba(168,85,247,0.6);
-            color: white;
-        }
-        .admin-panel h3 { margin-bottom: 1rem; font-size: 1.6rem; text-align: center; }
-        .admin-panel input, .admin-panel textarea { width: 100%; margin-bottom: 0.8rem; background: #1e1e2f; border: 1px solid #a855f7; border-radius: 0.8rem; color: white; }
-        .admin-panel button { margin-top: 0.5rem; }
-        .close-admin { position: absolute; top: 12px; right: 18px; font-size: 1.8rem; cursor: pointer; color: #ccc; transition: 0.2s; }
-        .close-admin:hover { color: #ec4899; }
-        #admin-projects-list { margin-top: 1rem; max-height: 200px; overflow-y: auto; background: #111; padding: 0.5rem; border-radius: 0.8rem; }
-        #admin-projects-list div { display: flex; justify-content: space-between; align-items: center; background: #1e1e2f; margin-bottom: 6px; padding: 6px 10px; border-radius: 8px; }
-        
-        @media (max-width: 768px) {
-            .nav-links { display: none; flex-direction: column; background: rgba(0,0,0,0.95); position: absolute; top: 70px; right: 20px; padding: 1rem; border-radius: 1rem; gap: 1rem; }
-            .nav-links.open { display: flex; }
-            .menu-icon { display: block; }
-            .contact-grid { grid-template-columns: 1fr; }
-            h1 { font-size: 2.5rem; }
-            h2 { font-size: 2rem; }
-            .admin-panel { width: 95%; padding: 1rem; }
-        }
-        .cursor-dot, .cursor-ring { position: fixed; border-radius: 50%; pointer-events: none; z-index: 9999; }
-        .cursor-dot { width: 6px; height: 6px; background: #c084fc; }
-        .cursor-ring { width: 32px; height: 32px; border: 2px solid #a855f7; transition: 0.1s; }
-        #typed-text { border-right: 2px solid #c084fc; white-space: nowrap; overflow: hidden; font-family: 'Orbitron', monospace; font-weight: 500; }
-        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; } /* évite les interférences */
-    </style>
-</head>
-<body>
-    <canvas id="bg-canvas"></canvas>
-    <div class="cursor-dot"></div>
-    <div class="cursor-ring"></div>
+          from_name: formData.name,
+          from_email: formData.email,
+          message: formData.message,
+          to_name: 'Loïc Brayane',
+        },
+        'YOUR_PUBLIC_KEY'       // Ex: 'user_abc123'
+      )
+      setIsSent(true)
+      setFormData({ name: '', email: '', message: '' })
+      setTimeout(() => setIsSent(false), 5000)
+    } catch (err) {
+      setError("Une erreur s'est produite. Veuillez réessayer.")
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
-    <!-- Admin Panel (double-clic sur LBY) -->
-    <div id="admin-panel" class="admin-panel">
-        <span class="close-admin" id="close-admin">&times;</span>
-        <h3><i class="fas fa-lock"></i> Admin - Gestion des projets</h3>
-        <input type="text" id="proj-name" placeholder="Nom du projet" required>
-        <input type="text" id="proj-type" placeholder="Type (ex: Web, IA...)" required>
-        <textarea id="proj-desc" placeholder="Description" rows="2" required></textarea>
-        <input type="text" id="proj-img" placeholder="URL de l'image" value="https://images.unsplash.com/photo-1557821552-17105176677c?w=400&h=200&fit=crop">
-        <input type="text" id="proj-link" placeholder="Lien du projet" value="#">
-        <button id="add-project-btn" class="btn">Ajouter / Modifier</button>
-        <button id="cancel-edit" class="btn-outline" style="margin-top:0.5rem;">Annuler édition</button>
-        <div id="admin-projects-list"></div>
-        <p id="admin-msg" style="margin-top: 0.8rem; font-size: 0.85rem; text-align:center;"></p>
-    </div>
-
-    <nav class="navbar" id="navbar">
-        <div class="logo" id="secret-logo">LBY</div>
-        <div class="menu-icon" id="menu-icon"><i class="fas fa-bars"></i></div>
-        <div class="nav-links" id="nav-links">
-            <a href="#hero" class="nav-link">Accueil</a>
-            <a href="#university" class="nav-link">Université</a>
-            <a href="#skills" class="nav-link">Compétences</a>
-            <a href="#about" class="nav-link">À propos</a>
-            <a href="#projects" class="nav-link">Projets</a>
-            <a href="#contact" class="nav-link">Contact</a>
-        </div>
-    </nav>
-
-    <section id="hero">
-        <div class="container" style="text-align: center; margin-top: 10vh;">
-            <div class="profile-img" id="profile-img-click">
-                <img src="https://via.placeholder.com/150/1a1a2e/ffffff?text=LOIC" alt="Photo de profil" id="profile-pic">
-            </div>
-            <h1>Loïc Brayane</h1>
-            <div style="font-size: 1.5rem; color: #ccc; height: 3rem; margin-top: 1rem;"><span id="typed-text"></span></div>
-            <div style="margin-top: 2rem;"><a href="#contact" class="btn">Me contacter</a> <a href="#projects" class="btn btn-outline">Voir projets</a></div>
-        </div>
-    </section>
-
-    <section id="university">
-        <div class="container">
-            <div class="section-title-wrapper"><h2>Université</h2></div>
-            <div style="background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); border-radius: 2rem; padding: 2rem; text-align: center;">
-                <i class="fas fa-university" style="font-size: 4rem; color: #c084fc;"></i>
-                <h3 style="font-size: 2rem; margin: 1rem 0;">IUT DE DOUALA</h3>
-                <p>BUT Informatique – 2024-2027</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="skills">
-        <div class="container">
-            <div class="section-title-wrapper"><h2>Compétences</h2></div>
-            <div class="skills-grid">
-                <div class="skill-card"><i class="fab fa-python" style="color:#3776AB;"></i><h3>PYTHON</h3></div>
-                <div class="skill-card"><i class="fab fa-html5" style="color:#E34F26;"></i><h3>HTML5</h3></div>
-                <div class="skill-card"><i class="fab fa-css3-alt" style="color:#1572B6;"></i><h3>CSS3</h3></div>
-                <div class="skill-card"><i class="fas fa-paintbrush" style="color:#FF6B6B;"></i><h3>UI/UX</h3></div>
-                <div class="skill-card"><i class="fab fa-js" style="color:#F7DF1E;"></i><h3>JAVASCRIPT</h3></div>
-                <div class="skill-card"><i class="fas fa-database" style="color:#4479A1;"></i><h3>BASE DE DONNÉES</h3></div>
-                <div class="skill-card"><i class="fas fa-cloud" style="color:#4285F4;"></i><h3>CLOUD COMPUTING</h3></div>
-                <div class="skill-card"><i class="fas fa-server" style="color:#183A61;"></i><h3>VIRTUALISATION</h3></div>
-            </div>
-        </div>
-    </section>
-
-    <section id="about">
-        <div class="container">
-            <div class="section-title-wrapper"><h2>À propos</h2></div>
-            <div style="background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); border-radius: 2rem; padding: 2rem; line-height: 1.6;">
-                <p>Je suis étudiant et passionné par le numérique, la technologie et l'innovation. Je m'intéresse particulièrement au développement web, à la programmation et à la création de solutions numériques capables de répondre à des besoins concrets.</p>
-                <p style="margin-top: 1rem;">Actuellement, je poursuis mes études tout en développant mes compétences dans des domaines tels que le HTML, le CSS, le JavaScript et Python à travers des projets personnels et des exercices pratiques. J'aime apprendre continuellement, explorer de nouvelles technologies et relever des défis qui me permettent de progresser.</p>
-                <p style="margin-top: 1rem;">Je suis une personne curieuse, déterminée et ambitieuse, toujours à la recherche d'opportunités pour acquérir de nouvelles compétences et enrichir mon expérience. Mon objectif est de construire une carrière solide dans le secteur du numérique, de participer à des projets innovants et de contribuer au développement de solutions technologiques utiles et performantes.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="projects">
-        <div class="container">
-            <div class="section-title-wrapper"><h2>Projets</h2></div>
-            <div id="projects-grid" class="projects-grid"></div>
-        </div>
-    </section>
-
-    <section id="contact">
-        <div class="container">
-            <div class="section-title-wrapper"><h2>Contact</h2></div>
-            <div class="contact-grid">
-                <div class="info-card">
-                    <h3>Informations</h3>
-                    <div class="info-item"><i class="fas fa-phone"></i><span>681591969</span></div>
-                    <div class="info-item"><i class="fas fa-envelope"></i><span>youmsiyontzeuloicbrayane@gmail.com</span></div>
+  return (
+    <section id="contact" className="py-20 px-4">
+      <div ref={ref} className="max-w-6xl mx-auto">
+        <motion.h2 initial={{ opacity: 0, y: 50 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6 }} className="text-4xl md:text-5xl font-bold text-center mb-12 bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">Contact</motion.h2>
+        <div className="grid md:grid-cols-2 gap-8">
+          <motion.div initial={{ opacity: 0, x: -50 }} animate={isInView ? { opacity: 1, x: 0 } : {}} transition={{ delay: 0.2, duration: 0.6 }} className="space-y-6">
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur-xl opacity-20 group-hover:opacity-50 transition-opacity" />
+              <div className="relative bg-black/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
+                <h3 className="text-2xl font-bold mb-6">Informations</h3>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-4 group/item"><div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center group-hover/item:bg-purple-500/40 transition-all"><FaPhone className="text-purple-400" /></div><div><p className="text-sm text-gray-400">Téléphone</p><p className="font-semibold">681591969</p></div></div>
+                  <div className="flex items-center gap-4 group/item"><div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center group-hover/item:bg-purple-500/40 transition-all"><FaEnvelope className="text-purple-400" /></div><div><p className="text-sm text-gray-400">Email</p><p className="font-semibold break-all">youmsiyontzeuloicbrayane@gmail.com</p></div></div>
                 </div>
-                <div class="form-card">
-                    <h3>Envoyez-moi un message</h3>
-                    <form id="contact-form">
-                        <input type="text" id="name" placeholder="Votre nom" required>
-                        <input type="email" id="email" placeholder="Votre email" required>
-                        <textarea id="message" rows="4" placeholder="Votre message" required></textarea>
-                        <button type="submit" class="btn" style="width:100%">Envoyer <i class="fas fa-paper-plane"></i></button>
-                        <p id="form-status" style="margin-top:1rem; text-align:center;"></p>
-                    </form>
-                </div>
+              </div>
             </div>
+          </motion.div>
+
+          <motion.div initial={{ opacity: 0, x: 50 }} animate={isInView ? { opacity: 1, x: 0 } : {}} transition={{ delay: 0.4, duration: 0.6 }}>
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur-xl opacity-20 group-hover:opacity-50 transition-opacity" />
+              <form onSubmit={handleSubmit} className="relative bg-black/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30 space-y-4">
+                <h3 className="text-2xl font-bold mb-4">Envoyez-moi un message</h3>
+                <div><input type="text" placeholder="Votre nom" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full px-4 py-3 bg-white/10 rounded-lg border border-purple-500/30 focus:border-purple-500 focus:outline-none transition-all" required /></div>
+                <div><input type="email" placeholder="Votre email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} className="w-full px-4 py-3 bg-white/10 rounded-lg border border-purple-500/30 focus:border-purple-500 focus:outline-none transition-all" required /></div>
+                <div><textarea placeholder="Votre message" rows={4} value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} className="w-full px-4 py-3 bg-white/10 rounded-lg border border-purple-500/30 focus:border-purple-500 focus:outline-none transition-all" required /></div>
+                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} type="submit" disabled={isLoading} className="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg font-semibold flex items-center justify-center gap-2 disabled:opacity-50">
+                  {isLoading ? 'Envoi...' : <>Envoyer <FaPaperPlane /></>}
+                </motion.button>
+                {isSent && <p className="text-green-400 text-center">Message envoyé avec succès !</p>}
+                {error && <p className="text-red-400 text-center">{error}</p>}
+                <p className="text-xs text-gray-500 text-center">* Pour que l'envoi fonctionne, remplace les identifiants EmailJS dans le code.</p>
+              </form>
+            </div>
+          </motion.div>
         </div>
+      </div>
     </section>
+  )
+}
+CONTACT
 
-    <footer><p>&copy; 2025 Loïc Brayane</p></footer>
+echo "✅ Toutes les corrections ont été appliquées avec succès !"
+echo ""
+echo "📦 Installation des dépendances (déjà faites)."
+echo "🚀 Pour lancer le projet : npm run dev"
+echo "🌐 Ouvrir http://localhost:3000"
+echo ""
+echo "⚠️  Pour le formulaire de contact :"
+echo "   1. Crée un compte sur emailjs.com"
+echo "   2. Remplace 'YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', 'YOUR_PUBLIC_KEY' dans app/components/Contact.tsx"
+echo ""
+echo "📷 Pour ta photo de profil : dépose une image 'profile.jpg' dans public/images/"
+echo "✏️ Pour modifier les projets : édite data/projects.json"
+EOF
 
-    <script type="module">
-        import * as THREE from 'three';
-        // Importer EmailJS
-        import emailjs from 'https://cdn.jsdelivr.net/npm/emailjs-com@3.2.0/dist/emailjs.min.js';
-
-        // ---------- CONFIGURATION EMAILJS (À MODIFIER AVEC TES IDENTIFIANTS) ----------
-        // 1. Crée un compte sur https://www.emailjs.com/
-        // 2. Ajoute un service (ex: Gmail) et un template avec les variables : from_name, from_email, message, to_name
-        // 3. Récupère ton USER_ID (Public Key), SERVICE_ID, TEMPLATE_ID
-        const EMAILJS_USER_ID = 'YOUR_USER_ID';      // ex: 'user_abc123'
-        const EMAILJS_SERVICE_ID = 'YOUR_SERVICE_ID'; // ex: 'service_xxxx'
-        const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID'; // ex: 'template_xxxx'
-        
-        // Initialiser EmailJS si l'utilisateur a mis son ID
-        if (EMAILJS_USER_ID !== 'YOUR_USER_ID') {
-            emailjs.init(EMAILJS_USER_ID);
-        }
-        // ---------------------------------------------------------------------------
-
-        // ---------- 3D Background (identique) ----------
-        const canvas = document.getElementById('bg-canvas');
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setClearColor(0x000000, 0);
-        
-        const particlesGeometry = new THREE.BufferGeometry();
-        const count = 1500;
-        const positions = new Float32Array(count * 3);
-        for (let i = 0; i < count * 3; i += 3) {
-            positions[i] = (Math.random() - 0.5) * 200;
-            positions[i+1] = (Math.random() - 0.5) * 100;
-            positions[i+2] = (Math.random() - 0.5) * 80;
-        }
-        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        const particleMat = new THREE.PointsMaterial({ size: 0.2, color: 0x8b5cf6, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
-        const particles = new THREE.Points(particlesGeometry, particleMat);
-        scene.add(particles);
-        
-        const particles2Geo = new THREE.BufferGeometry();
-        const positions2 = new Float32Array(800 * 3);
-        for (let i = 0; i < 800 * 3; i += 3) {
-            positions2[i] = (Math.random() - 0.5) * 180;
-            positions2[i+1] = (Math.random() - 0.5) * 90;
-            positions2[i+2] = (Math.random() - 0.5) * 60;
-        }
-        particles2Geo.setAttribute('position', new THREE.BufferAttribute(positions2, 3));
-        const particleMat2 = new THREE.PointsMaterial({ size: 0.15, color: 0xec4899, transparent: true, opacity: 0.4, blending: THREE.AdditiveBlending });
-        const particles2 = new THREE.Points(particles2Geo, particleMat2);
-        scene.add(particles2);
-        
-        camera.position.z = 30;
-        let mouseX = 0, mouseY = 0;
-        window.addEventListener('mousemove', (e) => {
-            mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-            mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-        });
-        let frame;
-        function animate() {
-            frame = requestAnimationFrame(animate);
-            particles.rotation.y += 0.0005;
-            particles.rotation.x += 0.0003;
-            particles2.rotation.y -= 0.0004;
-            particles2.rotation.x += 0.0002;
-            particles.rotation.x += mouseY * 0.0003;
-            particles.rotation.y += mouseX * 0.0003;
-            renderer.render(scene, camera);
-        }
-        animate();
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        // ---------- Curseur ----------
-        const cursorDot = document.querySelector('.cursor-dot');
-        const cursorRing = document.querySelector('.cursor-ring');
-        document.addEventListener('mousemove', (e) => {
-            cursorDot.style.transform = `translate(${e.clientX - 3}px, ${e.clientY - 3}px)`;
-            cursorRing.style.transform = `translate(${e.clientX - 16}px, ${e.clientY - 16}px)`;
-        });
-
-        // ---------- Texte machine à écrire ----------
-        const roles = ["Étudiant en informatique", "Créateur de solutions numériques", "Passionné d'innovation"];
-        let rIndex = 0, cIndex = 0, deleting = false;
-        const typedSpan = document.getElementById('typed-text');
-        function typeEffect() {
-            const current = roles[rIndex];
-            if (deleting) typedSpan.textContent = current.substring(0, cIndex-1), cIndex--;
-            else typedSpan.textContent = current.substring(0, cIndex+1), cIndex++;
-            if (!deleting && cIndex === current.length) { deleting = true; setTimeout(typeEffect, 2000); return; }
-            if (deleting && cIndex === 0) { deleting = false; rIndex = (rIndex+1) % roles.length; }
-            setTimeout(typeEffect, deleting ? 50 : 100);
-        }
-        typeEffect();
-
-        // ---------- Navigation (correction : éviter les erreurs si l'élément n'existe pas) ----------
-        const navLinks = document.querySelectorAll('.nav-link');
-        const sections = document.querySelectorAll('section');
-        window.addEventListener('scroll', () => {
-            let current = '';
-            sections.forEach(section => {
-                if (scrollY >= section.offsetTop - 100) current = section.id;
-            });
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === `#${current}`) link.classList.add('active');
-            });
-            const navbar = document.getElementById('navbar');
-            if (navbar) navbar.classList.toggle('scrolled', scrollY > 50);
-        });
-        // Gestion des clics sur les ancres
-        document.querySelectorAll('.nav-link, .logo').forEach(el => {
-            el.addEventListener('click', function(e) {
-                e.preventDefault();
-                let targetId = this.getAttribute('href');
-                if (targetId && targetId.startsWith('#')) {
-                    targetId = targetId.substring(1);
-                } else {
-                    targetId = 'hero';
-                }
-                const target = document.getElementById(targetId);
-                if (target) target.scrollIntoView({ behavior: 'smooth' });
-                const mobileMenu = document.getElementById('nav-links');
-                if (mobileMenu) mobileMenu.classList.remove('open');
-            });
-        });
-        const menuIcon = document.getElementById('menu-icon');
-        if (menuIcon) {
-            menuIcon.addEventListener('click', () => {
-                const nav = document.getElementById('nav-links');
-                if (nav) nav.classList.toggle('open');
-            });
-        }
-
-        // ---------- Gestion des projets (localStorage) ----------
-        let projects = [];
-        const STORAGE_KEY = 'portfolio_projects';
-        
-        function loadProjects() {
-            const stored = localStorage.getItem(STORAGE_KEY);
-            if (stored) {
-                projects = JSON.parse(stored);
-            } else {
-                projects = [
-                    { id: '1', name: "Application IA Générative", type: "Intelligence Artificielle", description: "Application web utilisant GPT-4 pour générer du contenu automatique", imageUrl: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=200&fit=crop", link: "#" },
-                    { id: '2', name: "Dashboard Cloud", type: "Cloud Computing", description: "Interface de monitoring pour infrastructure cloud", imageUrl: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&h=200&fit=crop", link: "#" },
-                    { id: '3', name: "E-commerce Moderne", type: "Web Development", description: "Plateforme e-commerce avec paiement Stripe", imageUrl: "https://images.unsplash.com/photo-1557821552-17105176677c?w=400&h=200&fit=crop", link: "#" }
-                ];
-                saveProjects();
-            }
-            renderProjects();
-        }
-        
-        function saveProjects() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
-        }
-        
-        function renderProjects() {
-            const grid = document.getElementById('projects-grid');
-            if (!grid) return;
-            grid.innerHTML = '';
-            projects.forEach(proj => {
-                const card = document.createElement('div');
-                card.className = 'project-card';
-                card.innerHTML = `
-                    <img src="${proj.imageUrl}" onerror="this.src='https://via.placeholder.com/400x200?text=Image+introuvable'">
-                    <span style="color:#c084fc; font-size:0.8rem;">${proj.type}</span>
-                    <h3>${proj.name}</h3>
-                    <p style="font-size:0.9rem; color:#aaa;">${proj.description}</p>
-                    <a href="${proj.link}" target="_blank" class="btn" style="margin-top:1rem; display:inline-block; padding:0.5rem 1rem; font-size:0.8rem;">Voir projet →</a>
-                `;
-                grid.appendChild(card);
-            });
-        }
-        
-        // Admin panel
-        const adminPanel = document.getElementById('admin-panel');
-        const logo = document.getElementById('secret-logo');
-        const closeAdmin = document.getElementById('close-admin');
-        const addBtn = document.getElementById('add-project-btn');
-        const cancelEdit = document.getElementById('cancel-edit');
-        const adminMsg = document.getElementById('admin-msg');
-        let editingId = null;
-        
-        function refreshAdminList() {
-            const listDiv = document.getElementById('admin-projects-list');
-            if (!listDiv) return;
-            listDiv.innerHTML = '<h4 style="margin-bottom:8px;">Projets existants :</h4>';
-            projects.forEach(proj => {
-                const div = document.createElement('div');
-                div.style.cssText = 'display:flex; justify-content:space-between; margin-bottom:8px; background:#222; padding:5px; border-radius:5px;';
-                div.innerHTML = `
-                    <span><strong>${proj.name}</strong> (${proj.type})</span>
-                    <div>
-                        <button data-id="${proj.id}" class="edit-proj" style="background:#3b82f6; border:none; color:white; padding:2px 8px; border-radius:4px;">✏️</button>
-                        <button data-id="${proj.id}" class="delete-proj" style="background:#ef4444; border:none; color:white; padding:2px 8px; border-radius:4px;">🗑️</button>
-                    </div>
-                `;
-                listDiv.appendChild(div);
-            });
-            document.querySelectorAll('.edit-proj').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const id = btn.getAttribute('data-id');
-                    const proj = projects.find(p => p.id === id);
-                    if (proj) {
-                        document.getElementById('proj-name').value = proj.name;
-                        document.getElementById('proj-type').value = proj.type;
-                        document.getElementById('proj-desc').value = proj.description;
-                        document.getElementById('proj-img').value = proj.imageUrl;
-                        document.getElementById('proj-link').value = proj.link;
-                        editingId = id;
-                        addBtn.textContent = 'Modifier le projet';
-                        cancelEdit.style.display = 'inline-block';
-                    }
-                });
-            });
-            document.querySelectorAll('.delete-proj').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const id = btn.getAttribute('data-id');
-                    if (confirm('Supprimer ce projet ?')) {
-                        projects = projects.filter(p => p.id !== id);
-                        saveProjects();
-                        renderProjects();
-                        refreshAdminList();
-                        adminMsg.textContent = 'Projet supprimé';
-                        setTimeout(() => adminMsg.textContent = '', 2000);
-                    }
-                });
-            });
-        }
-        
-        if (logo) {
-            logo.addEventListener('dblclick', () => {
-                adminPanel.style.display = 'block';
-                refreshAdminList();
-            });
-        }
-        if (closeAdmin) {
-            closeAdmin.addEventListener('click', () => adminPanel.style.display = 'none');
-        }
-        if (cancelEdit) {
-            cancelEdit.addEventListener('click', () => {
-                editingId = null;
-                addBtn.textContent = 'Ajouter le projet';
-                cancelEdit.style.display = 'none';
-                document.getElementById('proj-name').value = '';
-                document.getElementById('proj-type').value = '';
-                document.getElementById('proj-desc').value = '';
-                document.getElementById('proj-img').value = 'https://images.unsplash.com/photo-1557821552-17105176677c?w=400&h=200&fit=crop';
-                document.getElementById('proj-link').value = '#';
-            });
-        }
-        
-        if (addBtn) {
-            addBtn.addEventListener('click', () => {
-                const name = document.getElementById('proj-name').value.trim();
-                const type = document.getElementById('proj-type').value.trim();
-                const desc = document.getElementById('proj-desc').value.trim();
-                const img = document.getElementById('proj-img').value.trim();
-                const link = document.getElementById('proj-link').value.trim();
-                if (!name || !type || !desc) {
-                    adminMsg.textContent = 'Nom, type et description requis.';
-                    adminMsg.style.color = 'red';
-                    return;
-                }
-                if (editingId) {
-                    const index = projects.findIndex(p => p.id === editingId);
-                    if (index !== -1) {
-                        projects[index] = { ...projects[index], name, type, description: desc, imageUrl: img || projects[index].imageUrl, link: link || projects[index].link };
-                        editingId = null;
-                        addBtn.textContent = 'Ajouter le projet';
-                        cancelEdit.style.display = 'none';
-                    }
-                } else {
-                    const newId = Date.now().toString();
-                    projects.push({ id: newId, name, type, description: desc, imageUrl: img || "https://via.placeholder.com/400x200?text=Projet", link: link || "#" });
-                }
-                saveProjects();
-                renderProjects();
-                refreshAdminList();
-                adminMsg.textContent = editingId ? 'Projet modifié !' : 'Projet ajouté !';
-                adminMsg.style.color = '#4ade80';
-                setTimeout(() => adminMsg.textContent = '', 2000);
-                document.getElementById('proj-name').value = '';
-                document.getElementById('proj-type').value = '';
-                document.getElementById('proj-desc').value = '';
-                document.getElementById('proj-img').value = 'https://images.unsplash.com/photo-1557821552-17105176677c?w=400&h=200&fit=crop';
-                document.getElementById('proj-link').value = '#';
-            });
-        }
-        
-        // ---------- Photo de profil ----------
-        const profileImg = document.getElementById('profile-pic');
-        const profileClick = document.getElementById('profile-img-click');
-        if (profileClick) {
-            profileClick.addEventListener('click', () => {
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = 'image/*';
-                input.onchange = (e) => {
-                    const file = e.target.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = (ev) => { if (profileImg) profileImg.src = ev.target.result; };
-                        reader.readAsDataURL(file);
-                    }
-                };
-                input.click();
-            });
-        }
-        
-        // ---------- Formulaire de contact (EmailJS réel) ----------
-        const contactForm = document.getElementById('contact-form');
-        const statusP = document.getElementById('form-status');
-        
-        if (contactForm) {
-            contactForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const name = document.getElementById('name').value;
-                const email = document.getElementById('email').value;
-                const message = document.getElementById('message').value;
-                
-                if (!name || !email || !message) {
-                    statusP.textContent = "⚠️ Tous les champs sont requis.";
-                    statusP.style.color = "#f97316";
-                    return;
-                }
-                
-                statusP.textContent = "📧 Envoi en cours...";
-                statusP.style.color = "#c084fc";
-                
-                // Vérifier si EmailJS est configuré
-                if (EMAILJS_USER_ID === 'YOUR_USER_ID' || EMAILJS_SERVICE_ID === 'YOUR_SERVICE_ID' || EMAILJS_TEMPLATE_ID === 'YOUR_TEMPLATE_ID') {
-                    statusP.innerHTML = "⚠️ EmailJS non configuré. Remplace YOUR_USER_ID, YOUR_SERVICE_ID, YOUR_TEMPLATE_ID dans le code (voir commentaires).";
-                    statusP.style.color = "#f97316";
-                    setTimeout(() => statusP.innerHTML = "", 5000);
-                    return;
-                }
-                
-                try {
-                    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-                        from_name: name,
-                        from_email: email,
-                        message: message,
-                        to_name: "Loïc Brayane"
-                    });
-                    statusP.innerHTML = "✅ Message envoyé avec succès !";
-                    statusP.style.color = "#4ade80";
-                    contactForm.reset();
-                    setTimeout(() => statusP.innerHTML = "", 5000);
-                } catch (err) {
-                    console.error(err);
-                    statusP.innerHTML = "❌ Erreur lors de l'envoi. Vérifie ta configuration EmailJS (Service ID, Template ID, User ID).";
-                    statusP.style.color = "#ef4444";
-                }
-            });
-        }
-        
-        // Initialisation des projets
-        loadProjects();
-    </script>
-</body>
-</html>
+chmod +x setup-portfolio.sh
+./setup-portfolio.sh
