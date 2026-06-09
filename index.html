@@ -809,4 +809,110 @@
         window.addEventListener('scroll', () => {
             let current = '';
             sections.forEach(section => {
-                const sectionTop = section.offsetTop
+                const sectionTop = section.offsetTop - 100;
+                if (scrollY >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+        
+        document.querySelectorAll('.nav-links a, .logo').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                let targetId = this.getAttribute('href');
+                if (targetId && targetId.startsWith('#')) {
+                    targetId = targetId.substring(1);
+                } else {
+                    targetId = 'hero';
+                }
+                const target = document.getElementById(targetId);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+                const mobileMenu = document.getElementById('nav-links');
+                if (mobileMenu) mobileMenu.classList.remove('open');
+            });
+        });
+        
+        const menuIcon = document.getElementById('menu-icon');
+        if (menuIcon) {
+            menuIcon.addEventListener('click', () => {
+                const nav = document.getElementById('nav-links');
+                if (nav) nav.classList.toggle('open');
+            });
+        }
+        
+        // ========== FORMULAIRE DE CONTACT (EmailJS réel) ==========
+        const contactForm = document.getElementById('contact-form');
+        const statusP = document.getElementById('form-status');
+        
+        // Charger EmailJS
+        const emailScript = document.createElement('script');
+        emailScript.src = 'https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/emailjs.min.js';
+        emailScript.onload = () => {
+            emailjs.init('rRVVucP8EH8_pQAnI');
+        };
+        document.head.appendChild(emailScript);
+        
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const message = document.getElementById('msg').value;
+                
+                if (!name || !email || !message) {
+                    statusP.textContent = "⚠️ Tous les champs sont requis.";
+                    statusP.style.color = "#f97316";
+                    return;
+                }
+                
+                statusP.textContent = "📧 Envoi en cours...";
+                statusP.style.color = "#c084fc";
+                
+                const templateParams = {
+                    from_name: name,
+                    from_email: email,
+                    message: message,
+                    to_name: "Loïc Brayane"
+                };
+                
+                // Attendre qu'EmailJS soit chargé
+                let attempts = 0;
+                const checkInterval = setInterval(() => {
+                    attempts++;
+                    if (typeof emailjs !== 'undefined') {
+                        clearInterval(checkInterval);
+                        emailjs.send('service_d9862n6', 'template_t9l84tx', templateParams)
+                            .then(() => {
+                                statusP.innerHTML = "✅ Message envoyé avec succès !";
+                                statusP.style.color = "#4ade80";
+                                contactForm.reset();
+                                setTimeout(() => statusP.innerHTML = "", 5000);
+                            })
+                            .catch((err) => {
+                                console.error(err);
+                                statusP.innerHTML = "❌ Erreur d'envoi. Vérifie ta configuration EmailJS.";
+                                statusP.style.color = "#ef4444";
+                            });
+                    } else if (attempts > 50) {
+                        clearInterval(checkInterval);
+                        statusP.innerHTML = "❌ EmailJS non chargé. Vérifie ta connexion internet.";
+                        statusP.style.color = "#ef4444";
+                    }
+                }, 100);
+            });
+        }
+        
+        // Initialisation
+        loadProjects();
+    </script>
+</body>
+</html>
