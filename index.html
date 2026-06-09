@@ -6,6 +6,8 @@
     <title>Loïc Brayane | Portfolio Futuriste</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/emailjs.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -14,13 +16,23 @@
             cursor: none;
         }
         body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             font-family: 'Inter', sans-serif;
             background: #0a0a0a;
             color: white;
             overflow-x: hidden;
+            width: 100%;
         }
         input, button, textarea, a {
             cursor: auto;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
         }
         
         /* Typographie futuriste */
@@ -114,11 +126,7 @@
             padding: 120px 5% 80px;
             position: relative;
             z-index: 2;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
+            width: 100%;
         }
         
         /* Hero */
@@ -337,6 +345,7 @@
             text-align: center;
             padding: 2rem;
             border-top: 1px solid rgba(255,255,255,0.1);
+            width: 100%;
         }
         
         /* Curseur personnalisé */
@@ -515,404 +524,352 @@
     </footer>
 
     <script>
-        // ========== FOND 3D (particules animées) ==========
-        (function() {
-            const canvas = document.getElementById('bg-canvas');
-            if (!canvas) return;
-            
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setClearColor(0x000000, 0);
-            
-            // Particules
-            const particlesGeometry = new THREE.BufferGeometry();
-            const particlesCount = 2000;
-            const posArray = new Float32Array(particlesCount * 3);
-            for (let i = 0; i < particlesCount * 3; i += 3) {
-                posArray[i] = (Math.random() - 0.5) * 200;
-                posArray[i+1] = (Math.random() - 0.5) * 100;
-                posArray[i+2] = (Math.random() - 0.5) * 80;
+        document.addEventListener("DOMContentLoaded", () => {
+
+            // ========== THREE.JS 3D BACKGROUND ==========
+            try {
+                const canvas = document.getElementById('bg-canvas');
+                if (canvas && typeof THREE !== 'undefined') {
+                    const scene = new THREE.Scene();
+                    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+                    renderer.setSize(window.innerWidth, window.innerHeight);
+                    renderer.setClearColor(0x000000, 0);
+                    
+                    const particlesGeometry = new THREE.BufferGeometry();
+                    const particlesCount = 2000;
+                    const posArray = new Float32Array(particlesCount * 3);
+                    for (let i = 0; i < particlesCount * 3; i += 3) {
+                        posArray[i] = (Math.random() - 0.5) * 200;
+                        posArray[i+1] = (Math.random() - 0.5) * 100;
+                        posArray[i+2] = (Math.random() - 0.5) * 80;
+                    }
+                    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+                    const particlesMaterial = new THREE.PointsMaterial({ size: 0.15, color: 0x8b5cf6, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
+                    const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+                    scene.add(particlesMesh);
+                    
+                    const particlesGeometry2 = new THREE.BufferGeometry();
+                    const posArray2 = new Float32Array(1200 * 3);
+                    for (let i = 0; i < 1200 * 3; i += 3) {
+                        posArray2[i] = (Math.random() - 0.5) * 180;
+                        posArray2[i+1] = (Math.random() - 0.5) * 90;
+                        posArray2[i+2] = (Math.random() - 0.5) * 60;
+                    }
+                    particlesGeometry2.setAttribute('position', new THREE.BufferAttribute(posArray2, 3));
+                    const particlesMaterial2 = new THREE.PointsMaterial({ size: 0.1, color: 0xec4899, transparent: true, opacity: 0.4, blending: THREE.AdditiveBlending });
+                    const particlesMesh2 = new THREE.Points(particlesGeometry2, particlesMaterial2);
+                    scene.add(particlesMesh2);
+                    
+                    camera.position.z = 30;
+                    
+                    let mouseX = 0, mouseY = 0;
+                    window.addEventListener('mousemove', (e) => {
+                        mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+                        mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+                    });
+                    
+                    function animate3D() {
+                        requestAnimationFrame(animate3D);
+                        particlesMesh.rotation.y += 0.0008;
+                        particlesMesh.rotation.x += 0.0004;
+                        particlesMesh2.rotation.y -= 0.0006;
+                        particlesMesh2.rotation.x += 0.0003;
+                        particlesMesh.rotation.x += mouseY * 0.0005;
+                        particlesMesh.rotation.y += mouseX * 0.0005;
+                        renderer.render(scene, camera);
+                    }
+                    animate3D();
+                    
+                    window.addEventListener('resize', () => {
+                        camera.aspect = window.innerWidth / window.innerHeight;
+                        camera.updateProjectionMatrix();
+                        renderer.setSize(window.innerWidth, window.innerHeight);
+                    });
+                }
+            } catch(e) { console.error("3D Error:", e); }
+
+            // ========== CURSEUR ==========
+            const cursorDot = document.querySelector('.cursor-dot');
+            const cursorRing = document.querySelector('.cursor-ring');
+
+            document.addEventListener('mousemove', (e) => {
+                if (cursorDot) cursorDot.style.transform = `translate(${e.clientX - 3}px, ${e.clientY - 3}px)`;
+                if (cursorRing) cursorRing.style.transform = `translate(${e.clientX - 16}px, ${e.clientY - 16}px)`;
+            });
+
+            // ========== PROJETS (localStorage) ==========
+            let projects = JSON.parse(localStorage.getItem('portfolio_projects')) || [];
+
+            function saveProjects() {
+                localStorage.setItem('portfolio_projects', JSON.stringify(projects));
             }
-            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-            const particlesMaterial = new THREE.PointsMaterial({ size: 0.15, color: 0x8b5cf6, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
-            const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
-            scene.add(particlesMesh);
-            
-            // Deuxième couche
-            const particlesGeometry2 = new THREE.BufferGeometry();
-            const posArray2 = new Float32Array(1200 * 3);
-            for (let i = 0; i < 1200 * 3; i += 3) {
-                posArray2[i] = (Math.random() - 0.5) * 180;
-                posArray2[i+1] = (Math.random() - 0.5) * 90;
-                posArray2[i+2] = (Math.random() - 0.5) * 60;
+
+            function displayProjects() {
+                const grid = document.getElementById('projects-grid');
+                if (!grid) return;
+                grid.innerHTML = "";
+                if (projects.length === 0) {
+                    projects = [
+                        { id: '1', name: "Application IA Générative", type: "Intelligence Artificielle", description: "Application web utilisant GPT-4 pour générer du contenu automatique", imageUrl: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=200&fit=crop", link: "#" },
+                        { id: '2', name: "Dashboard Cloud", type: "Cloud Computing", description: "Interface de monitoring pour infrastructure cloud", imageUrl: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&h=200&fit=crop", link: "#" },
+                        { id: '3', name: "E-commerce Moderne", type: "Web Development", description: "Plateforme e-commerce avec paiement Stripe", imageUrl: "https://images.unsplash.com/photo-1557821552-17105176677c?w=400&h=200&fit=crop", link: "#" }
+                    ];
+                    saveProjects();
+                }
+                projects.forEach(p => {
+                    const div = document.createElement("div");
+                    div.className = "project-card";
+                    div.innerHTML = `
+                        <img src="${p.imageUrl}" onerror="this.src='https://via.placeholder.com/400x200'">
+                        <span style="color:#c084fc; font-size:0.8rem;">${p.type || 'Projet'}</span>
+                        <h3 style="margin:0.5rem 0;">${p.name}</h3>
+                        <p style="font-size:0.9rem; color:#aaa;">${p.description}</p>
+                        <a href="${p.link || '#'}" target="_blank" class="btn" style="margin-top:1rem; padding:0.5rem 1rem; font-size:0.8rem;">Voir projet →</a>
+                    `;
+                    grid.appendChild(div);
+                });
             }
-            particlesGeometry2.setAttribute('position', new THREE.BufferAttribute(posArray2, 3));
-            const particlesMaterial2 = new THREE.PointsMaterial({ size: 0.1, color: 0xec4899, transparent: true, opacity: 0.4, blending: THREE.AdditiveBlending });
-            const particlesMesh2 = new THREE.Points(particlesGeometry2, particlesMaterial2);
-            scene.add(particlesMesh2);
+
+            // ========== ADMIN PANEL ==========
+            let editingId = null;
             
-            camera.position.z = 30;
+            function refreshAdminList() {
+                const listDiv = document.getElementById('admin-projects-list');
+                if (!listDiv) return;
+                listDiv.innerHTML = '<h4 style="margin-bottom:0.5rem;">📁 Projets existants</h4>';
+                projects.forEach(proj => {
+                    const div = document.createElement('div');
+                    div.innerHTML = `
+                        <span><strong>${proj.name}</strong> (${proj.type})</span>
+                        <div>
+                            <button onclick="editProject('${proj.id}')" style="background:#3b82f6; border:none; color:white; padding:4px 10px; border-radius:4px; cursor:pointer;">✏️</button>
+                            <button onclick="deleteProject('${proj.id}')" style="background:#ef4444; border:none; color:white; padding:4px 10px; border-radius:4px; cursor:pointer; margin-left:5px;">🗑️</button>
+                        </div>
+                    `;
+                    listDiv.appendChild(div);
+                });
+            }
             
-            let mouseX = 0, mouseY = 0;
-            window.addEventListener('mousemove', (e) => {
-                mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-                mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+            window.editProject = function(id) {
+                const proj = projects.find(p => p.id === id);
+                if (proj) {
+                    document.getElementById('proj-name').value = proj.name;
+                    document.getElementById('proj-type').value = proj.type;
+                    document.getElementById('proj-desc').value = proj.description;
+                    document.getElementById('proj-img').value = proj.imageUrl;
+                    document.getElementById('proj-link').value = proj.link;
+                    editingId = id;
+                    document.getElementById('add-project-btn').textContent = 'Modifier le projet';
+                    document.getElementById('cancel-edit').style.display = 'block';
+                }
+            };
+            
+            window.deleteProject = function(id) {
+                if (confirm('Supprimer ce projet ?')) {
+                    projects = projects.filter(p => p.id !== id);
+                    saveProjects();
+                    displayProjects();
+                    refreshAdminList();
+                    const msg = document.getElementById('admin-msg');
+                    if (msg) {
+                        msg.textContent = 'Projet supprimé';
+                        setTimeout(() => msg.textContent = '', 2000);
+                    }
+                }
+            };
+            
+            const adminPanel = document.getElementById('admin-panel');
+            const logo = document.getElementById('secret-logo');
+            const closeAdmin = document.getElementById('close-admin');
+            const addBtn = document.getElementById('add-project-btn');
+            const cancelEditBtn = document.getElementById('cancel-edit');
+            const adminMsg = document.getElementById('admin-msg');
+            
+            if (logo) {
+                logo.addEventListener('dblclick', () => {
+                    if (adminPanel) adminPanel.style.display = 'block';
+                    refreshAdminList();
+                });
+            }
+            
+            if (closeAdmin) {
+                closeAdmin.addEventListener('click', () => {
+                    if (adminPanel) adminPanel.style.display = 'none';
+                });
+            }
+            
+            if (cancelEditBtn) {
+                cancelEditBtn.addEventListener('click', () => {
+                    editingId = null;
+                    if (addBtn) addBtn.textContent = 'Ajouter le projet';
+                    cancelEditBtn.style.display = 'none';
+                    document.getElementById('proj-name').value = '';
+                    document.getElementById('proj-type').value = '';
+                    document.getElementById('proj-desc').value = '';
+                    document.getElementById('proj-img').value = 'https://images.unsplash.com/photo-1557821552-17105176677c?w=400&h=200&fit=crop';
+                    document.getElementById('proj-link').value = '#';
+                });
+            }
+            
+            if (addBtn) {
+                addBtn.addEventListener('click', () => {
+                    const name = document.getElementById('proj-name').value.trim();
+                    const type = document.getElementById('proj-type').value.trim();
+                    const desc = document.getElementById('proj-desc').value.trim();
+                    const img = document.getElementById('proj-img').value.trim();
+                    const link = document.getElementById('proj-link').value.trim();
+                    
+                    if (!name || !type || !desc) {
+                        if (adminMsg) {
+                            adminMsg.textContent = 'Nom, type et description requis';
+                            adminMsg.style.color = 'red';
+                        }
+                        return;
+                    }
+                    
+                    if (editingId) {
+                        const index = projects.findIndex(p => p.id === editingId);
+                        if (index !== -1) {
+                            projects[index] = { ...projects[index], name, type, description: desc, imageUrl: img || projects[index].imageUrl, link: link || projects[index].link };
+                            editingId = null;
+                            addBtn.textContent = 'Ajouter le projet';
+                            if (cancelEditBtn) cancelEditBtn.style.display = 'none';
+                        }
+                    } else {
+                        const newId = Date.now().toString();
+                        projects.push({ id: newId, name, type, description: desc, imageUrl: img || "https://via.placeholder.com/400x200?text=Projet", link: link || "#" });
+                    }
+                    
+                    saveProjects();
+                    displayProjects();
+                    refreshAdminList();
+                    if (adminMsg) {
+                        adminMsg.textContent = editingId ? 'Projet modifié !' : 'Projet ajouté !';
+                        adminMsg.style.color = '#4ade80';
+                        setTimeout(() => adminMsg.textContent = '', 2000);
+                    }
+                    
+                    document.getElementById('proj-name').value = '';
+                    document.getElementById('proj-type').value = '';
+                    document.getElementById('proj-desc').value = '';
+                    document.getElementById('proj-img').value = 'https://images.unsplash.com/photo-1557821552-17105176677c?w=400&h=200&fit=crop';
+                    document.getElementById('proj-link').value = '#';
+                });
+            }
+
+            // ========== TYPEWRITER ==========
+            const roles = ["Étudiant en informatique", "Créateur de solutions numériques", "Passionné d'innovation"];
+            const typed = document.getElementById("typed-text");
+            let i = 0, j = 0, del = false;
+            function type() {
+                if (!typed) return;
+                let word = roles[i];
+                typed.textContent = word.substring(0, j);
+                if (!del && j < word.length) { j++; }
+                else if (del && j > 0) { j--; }
+                if (j === word.length) del = true;
+                if (j === 0 && del) { del = false; i = (i + 1) % roles.length; }
+                setTimeout(type, del ? 60 : 120);
+            }
+            type();
+
+            // ========== NAVIGATION ==========
+            const links = document.querySelectorAll(".nav-links a");
+            window.addEventListener("scroll", () => {
+                let scrollPos = window.scrollY;
+                document.querySelectorAll("section").forEach(sec => {
+                    if (scrollPos >= sec.offsetTop - 120) {
+                        links.forEach(l => l.classList.remove("active"));
+                        const active = document.querySelector(`a[href="#${sec.id}"]`);
+                        if (active) active.classList.add("active");
+                    }
+                });
             });
             
-            let frameId;
-            function animate3D() {
-                frameId = requestAnimationFrame(animate3D);
-                particlesMesh.rotation.y += 0.0008;
-                particlesMesh.rotation.x += 0.0004;
-                particlesMesh2.rotation.y -= 0.0006;
-                particlesMesh2.rotation.x += 0.0003;
-                particlesMesh.rotation.x += mouseY * 0.0005;
-                particlesMesh.rotation.y += mouseX * 0.0005;
-                renderer.render(scene, camera);
-            }
-            animate3D();
-            
-            window.addEventListener('resize', () => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
+            // Smooth scroll sur les liens
+            document.querySelectorAll('.nav-links a, .logo').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    let targetId = this.getAttribute('href');
+                    if (targetId && targetId.startsWith('#')) targetId = targetId.substring(1);
+                    else targetId = 'hero';
+                    const target = document.getElementById(targetId);
+                    if (target) target.scrollIntoView({ behavior: 'smooth' });
+                });
             });
-        })();
-        
-        // ========== CURSEUR PERSONNALISÉ ==========
-        const cursorDot = document.querySelector('.cursor-dot');
-        const cursorRing = document.querySelector('.cursor-ring');
-        document.addEventListener('mousemove', (e) => {
-            if (cursorDot) cursorDot.style.transform = `translate(${e.clientX - 3}px, ${e.clientY - 3}px)`;
-            if (cursorRing) cursorRing.style.transform = `translate(${e.clientX - 16}px, ${e.clientY - 16}px)`;
-        });
-        
-        // ========== TEXTE MACHINE À ÉCRIRE ==========
-        const roles = ["Étudiant en informatique", "Créateur de solutions numériques", "Passionné d'innovation"];
-        let roleIndex = 0, charIndex = 0, isDeleting = false;
-        const typedSpan = document.getElementById('typed-text');
-        
-        function typeEffect() {
-            if (!typedSpan) return;
-            const current = roles[roleIndex];
-            if (isDeleting) {
-                typedSpan.textContent = current.substring(0, charIndex - 1);
-                charIndex--;
-            } else {
-                typedSpan.textContent = current.substring(0, charIndex + 1);
-                charIndex++;
+
+            // ========== MOBILE MENU ==========
+            const menu = document.getElementById("menu-icon");
+            const nav = document.getElementById("nav-links");
+            if (menu && nav) {
+                menu.addEventListener("click", () => { nav.classList.toggle("open"); });
             }
-            
-            if (!isDeleting && charIndex === current.length) {
-                isDeleting = true;
-                setTimeout(typeEffect, 2000);
-                return;
+
+            // ========== PHOTO DE PROFIL ==========
+            const profileClick = document.getElementById('profile-click');
+            const profilePic = document.getElementById('profile-pic');
+            if (profileClick && profilePic) {
+                profileClick.addEventListener('click', () => {
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.accept = 'image/*';
+                    input.onchange = (e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = (ev) => { profilePic.src = ev.target.result; };
+                            reader.readAsDataURL(file);
+                        }
+                    };
+                    input.click();
+                });
             }
-            
-            if (isDeleting && charIndex === 0) {
-                isDeleting = false;
-                roleIndex = (roleIndex + 1) % roles.length;
+
+            // ========== CONTACT EMAIL (EmailJS) ==========
+            const form = document.getElementById("contact-form");
+            if (form && typeof emailjs !== 'undefined') {
+                emailjs.init('rRVVucP8EH8_pQAnI');
+                form.addEventListener("submit", async (e) => {
+                    e.preventDefault();
+                    const status = document.getElementById("form-status");
+                    const name = document.getElementById("name").value;
+                    const email = document.getElementById("email").value;
+                    const message = document.getElementById("msg").value;
+                    
+                    if (!name || !email || !message) {
+                        status.textContent = "⚠️ Tous les champs sont requis";
+                        status.style.color = "#f97316";
+                        return;
+                    }
+                    
+                    status.textContent = "📧 Envoi en cours...";
+                    status.style.color = "#c084fc";
+                    
+                    try {
+                        await emailjs.send("service_d9862n6", "template_t9l84tx", {
+                            from_name: name,
+                            from_email: email,
+                            message: message,
+                            to_name: "Loïc Brayane"
+                        });
+                        status.textContent = "✅ Message envoyé avec succès !";
+                        status.style.color = "#4ade80";
+                        form.reset();
+                        setTimeout(() => status.textContent = "", 5000);
+                    } catch (err) {
+                        status.textContent = "❌ Erreur lors de l'envoi";
+                        status.style.color = "#ef4444";
+                        console.error(err);
+                    }
+                });
+            } else if (form) {
+                console.error("EmailJS non chargé");
             }
-            
-            setTimeout(typeEffect, isDeleting ? 50 : 100);
-        }
-        typeEffect();
-        
-        // ========== GESTION DES PROJETS (localStorage) ==========
-        let projects = [];
-        let editingId = null;
-        
-        function loadProjects() {
-            const stored = localStorage.getItem('portfolio_projects');
-            if (stored) {
-                projects = JSON.parse(stored);
-            } else {
-                projects = [
-                    { id: '1', name: "Application IA Générative", type: "Intelligence Artificielle", description: "Application web utilisant GPT-4 pour générer du contenu automatique", imageUrl: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=200&fit=crop", link: "#" },
-                    { id: '2', name: "Dashboard Cloud", type: "Cloud Computing", description: "Interface de monitoring pour infrastructure cloud", imageUrl: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&h=200&fit=crop", link: "#" },
-                    { id: '3', name: "E-commerce Moderne", type: "Web Development", description: "Plateforme e-commerce avec paiement Stripe", imageUrl: "https://images.unsplash.com/photo-1557821552-17105176677c?w=400&h=200&fit=crop", link: "#" }
-                ];
-                saveProjects();
-            }
+
+            // ========== INITIALISATION AFFICHAGE PROJETS ==========
             displayProjects();
-        }
-        
-        function saveProjects() {
-            localStorage.setItem('portfolio_projects', JSON.stringify(projects));
-        }
-        
-        function displayProjects() {
-            const grid = document.getElementById('projects-grid');
-            if (!grid) return;
-            grid.innerHTML = '';
-            projects.forEach(proj => {
-                const card = document.createElement('div');
-                card.className = 'project-card';
-                card.innerHTML = `
-                    <img src="${proj.imageUrl}" onerror="this.src='https://via.placeholder.com/400x200?text=Image'">
-                    <span style="color:#c084fc; font-size:0.8rem;">${proj.type}</span>
-                    <h3 style="font-size:1.2rem; margin:0.5rem 0;">${proj.name}</h3>
-                    <p style="font-size:0.9rem; color:#aaa;">${proj.description}</p>
-                    <a href="${proj.link}" target="_blank" class="btn" style="margin-top:1rem; padding:0.5rem 1rem; font-size:0.8rem;">Voir projet →</a>
-                `;
-                grid.appendChild(card);
-            });
-        }
-        
-        function refreshAdminList() {
-            const listDiv = document.getElementById('admin-projects-list');
-            if (!listDiv) return;
-            listDiv.innerHTML = '<h4 style="margin-bottom:0.5rem;">📁 Projets existants</h4>';
-            projects.forEach(proj => {
-                const div = document.createElement('div');
-                div.innerHTML = `
-                    <span><strong>${proj.name}</strong> (${proj.type})</span>
-                    <div>
-                        <button onclick="editProject('${proj.id}')" style="background:#3b82f6; border:none; color:white; padding:4px 10px; border-radius:4px; cursor:pointer;">✏️</button>
-                        <button onclick="deleteProject('${proj.id}')" style="background:#ef4444; border:none; color:white; padding:4px 10px; border-radius:4px; cursor:pointer; margin-left:5px;">🗑️</button>
-                    </div>
-                `;
-                listDiv.appendChild(div);
-            });
-        }
-        
-        window.editProject = function(id) {
-            const proj = projects.find(p => p.id === id);
-            if (proj) {
-                document.getElementById('proj-name').value = proj.name;
-                document.getElementById('proj-type').value = proj.type;
-                document.getElementById('proj-desc').value = proj.description;
-                document.getElementById('proj-img').value = proj.imageUrl;
-                document.getElementById('proj-link').value = proj.link;
-                editingId = id;
-                document.getElementById('add-project-btn').textContent = 'Modifier le projet';
-                document.getElementById('cancel-edit').style.display = 'block';
-            }
-        };
-        
-        window.deleteProject = function(id) {
-            if (confirm('Supprimer ce projet ?')) {
-                projects = projects.filter(p => p.id !== id);
-                saveProjects();
-                displayProjects();
-                refreshAdminList();
-                document.getElementById('admin-msg').textContent = 'Projet supprimé';
-                setTimeout(() => document.getElementById('admin-msg').textContent = '', 2000);
-            }
-        };
-        
-        // Admin panel événements
-        const adminPanel = document.getElementById('admin-panel');
-        const logo = document.getElementById('secret-logo');
-        const closeAdmin = document.getElementById('close-admin');
-        const addBtn = document.getElementById('add-project-btn');
-        const cancelEditBtn = document.getElementById('cancel-edit');
-        const adminMsg = document.getElementById('admin-msg');
-        
-        if (logo) {
-            logo.addEventListener('dblclick', () => {
-                adminPanel.style.display = 'block';
-                refreshAdminList();
-            });
-        }
-        
-        if (closeAdmin) {
-            closeAdmin.addEventListener('click', () => {
-                adminPanel.style.display = 'none';
-            });
-        }
-        
-        if (cancelEditBtn) {
-            cancelEditBtn.addEventListener('click', () => {
-                editingId = null;
-                document.getElementById('add-project-btn').textContent = 'Ajouter le projet';
-                cancelEditBtn.style.display = 'none';
-                document.getElementById('proj-name').value = '';
-                document.getElementById('proj-type').value = '';
-                document.getElementById('proj-desc').value = '';
-                document.getElementById('proj-img').value = 'https://images.unsplash.com/photo-1557821552-17105176677c?w=400&h=200&fit=crop';
-                document.getElementById('proj-link').value = '#';
-            });
-        }
-        
-        if (addBtn) {
-            addBtn.addEventListener('click', () => {
-                const name = document.getElementById('proj-name').value.trim();
-                const type = document.getElementById('proj-type').value.trim();
-                const desc = document.getElementById('proj-desc').value.trim();
-                const img = document.getElementById('proj-img').value.trim();
-                const link = document.getElementById('proj-link').value.trim();
-                
-                if (!name || !type || !desc) {
-                    adminMsg.textContent = 'Nom, type et description requis';
-                    adminMsg.style.color = 'red';
-                    return;
-                }
-                
-                if (editingId) {
-                    const index = projects.findIndex(p => p.id === editingId);
-                    if (index !== -1) {
-                        projects[index] = { ...projects[index], name, type, description: desc, imageUrl: img || projects[index].imageUrl, link: link || projects[index].link };
-                        editingId = null;
-                        addBtn.textContent = 'Ajouter le projet';
-                        cancelEditBtn.style.display = 'none';
-                    }
-                } else {
-                    const newId = Date.now().toString();
-                    projects.push({ id: newId, name, type, description: desc, imageUrl: img || "https://via.placeholder.com/400x200?text=Projet", link: link || "#" });
-                }
-                
-                saveProjects();
-                displayProjects();
-                refreshAdminList();
-                adminMsg.textContent = editingId ? 'Projet modifié !' : 'Projet ajouté !';
-                adminMsg.style.color = '#4ade80';
-                setTimeout(() => adminMsg.textContent = '', 2000);
-                
-                document.getElementById('proj-name').value = '';
-                document.getElementById('proj-type').value = '';
-                document.getElementById('proj-desc').value = '';
-                document.getElementById('proj-img').value = 'https://images.unsplash.com/photo-1557821552-17105176677c?w=400&h=200&fit=crop';
-                document.getElementById('proj-link').value = '#';
-            });
-        }
-        
-        // ========== PHOTO DE PROFIL ==========
-        const profileClick = document.getElementById('profile-click');
-        const profilePic = document.getElementById('profile-pic');
-        
-        if (profileClick) {
-            profileClick.addEventListener('click', () => {
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = 'image/*';
-                input.onchange = (e) => {
-                    const file = e.target.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = (ev) => {
-                            profilePic.src = ev.target.result;
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                };
-                input.click();
-            });
-        }
-        
-        // ========== NAVIGATION ==========
-        const navLinks = document.querySelectorAll('.nav-links a');
-        const sections = document.querySelectorAll('section');
-        
-        window.addEventListener('scroll', () => {
-            let current = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop - 100;
-                if (scrollY >= sectionTop) {
-                    current = section.getAttribute('id');
-                }
-            });
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === `#${current}`) {
-                    link.classList.add('active');
-                }
-            });
         });
-        
-        document.querySelectorAll('.nav-links a, .logo').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                let targetId = this.getAttribute('href');
-                if (targetId && targetId.startsWith('#')) {
-                    targetId = targetId.substring(1);
-                } else {
-                    targetId = 'hero';
-                }
-                const target = document.getElementById(targetId);
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
-                }
-                const mobileMenu = document.getElementById('nav-links');
-                if (mobileMenu) mobileMenu.classList.remove('open');
-            });
-        });
-        
-        const menuIcon = document.getElementById('menu-icon');
-        if (menuIcon) {
-            menuIcon.addEventListener('click', () => {
-                const nav = document.getElementById('nav-links');
-                if (nav) nav.classList.toggle('open');
-            });
-        }
-        
-        // ========== FORMULAIRE DE CONTACT (EmailJS réel) ==========
-        const contactForm = document.getElementById('contact-form');
-        const statusP = document.getElementById('form-status');
-        
-        // Charger EmailJS
-        const emailScript = document.createElement('script');
-        emailScript.src = 'https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/emailjs.min.js';
-        emailScript.onload = () => {
-            emailjs.init('rRVVucP8EH8_pQAnI');
-        };
-        document.head.appendChild(emailScript);
-        
-        if (contactForm) {
-            contactForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const name = document.getElementById('name').value;
-                const email = document.getElementById('email').value;
-                const message = document.getElementById('msg').value;
-                
-                if (!name || !email || !message) {
-                    statusP.textContent = "⚠️ Tous les champs sont requis.";
-                    statusP.style.color = "#f97316";
-                    return;
-                }
-                
-                statusP.textContent = "📧 Envoi en cours...";
-                statusP.style.color = "#c084fc";
-                
-                const templateParams = {
-                    from_name: name,
-                    from_email: email,
-                    message: message,
-                    to_name: "Loïc Brayane"
-                };
-                
-                // Attendre qu'EmailJS soit chargé
-                let attempts = 0;
-                const checkInterval = setInterval(() => {
-                    attempts++;
-                    if (typeof emailjs !== 'undefined') {
-                        clearInterval(checkInterval);
-                        emailjs.send('service_d9862n6', 'template_t9l84tx', templateParams)
-                            .then(() => {
-                                statusP.innerHTML = "✅ Message envoyé avec succès !";
-                                statusP.style.color = "#4ade80";
-                                contactForm.reset();
-                                setTimeout(() => statusP.innerHTML = "", 5000);
-                            })
-                            .catch((err) => {
-                                console.error(err);
-                                statusP.innerHTML = "❌ Erreur d'envoi. Vérifie ta configuration EmailJS.";
-                                statusP.style.color = "#ef4444";
-                            });
-                    } else if (attempts > 50) {
-                        clearInterval(checkInterval);
-                        statusP.innerHTML = "❌ EmailJS non chargé. Vérifie ta connexion internet.";
-                        statusP.style.color = "#ef4444";
-                    }
-                }, 100);
-            });
-        }
-        
-        // Initialisation
-        loadProjects();
     </script>
 </body>
 </html>
