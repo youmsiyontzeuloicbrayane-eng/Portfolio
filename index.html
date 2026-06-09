@@ -23,7 +23,7 @@
         }
         html, body {
             width: 100%;
-            overflow-x: hidden; /* ← Supprime tout scroll horizontal */
+            overflow-x: hidden;
             position: relative;
         }
         body {
@@ -36,7 +36,7 @@
             cursor: auto;
         }
 
-        /* ---------- TYPOGRAPHIE FUTURISTE ---------- */
+        /* TYPOGRAPHIE FUTURISTE */
         h1, h2, h3, .logo {
             font-family: 'Orbitron', monospace;
             letter-spacing: 1px;
@@ -299,7 +299,7 @@
             border-top: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* ADMIN PANEL - CENTRÉ */
+        /* ADMIN PANEL */
         .admin-panel {
             display: none;
             position: fixed;
@@ -365,7 +365,6 @@
             border-radius: 8px;
         }
 
-        /* MEDIA QUERIES */
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
@@ -399,7 +398,6 @@
             }
         }
 
-        /* CURSEUR */
         .cursor-dot, .cursor-ring {
             position: fixed;
             border-radius: 50%;
@@ -417,8 +415,6 @@
             border: 2px solid #a855f7;
             transition: 0.1s;
         }
-
-        /* TEXTE MACHINE À ÉCRIRE */
         #typed-text {
             border-right: 2px solid #c084fc;
             white-space: nowrap;
@@ -426,8 +422,6 @@
             font-family: 'Orbitron', monospace;
             font-weight: 500;
         }
-
-        /* CANVAS 3D - fond animé */
         #bg-canvas {
             position: fixed;
             top: 0;
@@ -555,360 +549,5 @@
 
     <script type="module">
         import * as THREE from 'three';
-        // Importer EmailJS (service réel)
-        import emailjs from 'https://cdn.jsdelivr.net/npm/emailjs-com@3.2.0/dist/emailjs.min.js';
-
-        // ========== CONFIGURATION EMAILJS ==========
-        // 🔴 TU DOIS REMPLACER CES TROIS VALEURS PAR LES TIENNES (inscription gratuite sur emailjs.com)
-        const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY';     // ex: 'user_abc123'
-        const EMAILJS_SERVICE_ID = 'YOUR_SERVICE_ID';    // ex: 'service_gmail'
-        const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';  // ex: 'template_xyz789'
-        // ===========================================
-
-        // Initialisation si la clé publique est fournie
-        if (EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY') {
-            emailjs.init(EMAILJS_PUBLIC_KEY);
-        }
-
-        // ---------- 3D Background ----------
-        const canvas = document.getElementById('bg-canvas');
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setClearColor(0x000000, 0);
-        const particlesGeometry = new THREE.BufferGeometry();
-        const count = 1500;
-        const positions = new Float32Array(count * 3);
-        for (let i = 0; i < count * 3; i += 3) {
-            positions[i] = (Math.random() - 0.5) * 200;
-            positions[i+1] = (Math.random() - 0.5) * 100;
-            positions[i+2] = (Math.random() - 0.5) * 80;
-        }
-        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        const particleMat = new THREE.PointsMaterial({ size: 0.2, color: 0x8b5cf6, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
-        const particles = new THREE.Points(particlesGeometry, particleMat);
-        scene.add(particles);
-        
-        const particles2Geo = new THREE.BufferGeometry();
-        const positions2 = new Float32Array(800 * 3);
-        for (let i = 0; i < 800 * 3; i += 3) {
-            positions2[i] = (Math.random() - 0.5) * 180;
-            positions2[i+1] = (Math.random() - 0.5) * 90;
-            positions2[i+2] = (Math.random() - 0.5) * 60;
-        }
-        particles2Geo.setAttribute('position', new THREE.BufferAttribute(positions2, 3));
-        const particleMat2 = new THREE.PointsMaterial({ size: 0.15, color: 0xec4899, transparent: true, opacity: 0.4, blending: THREE.AdditiveBlending });
-        const particles2 = new THREE.Points(particles2Geo, particleMat2);
-        scene.add(particles2);
-        
-        camera.position.z = 30;
-        let mouseX = 0, mouseY = 0;
-        window.addEventListener('mousemove', (e) => {
-            mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-            mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-        });
-        let frame;
-        function animate() {
-            frame = requestAnimationFrame(animate);
-            particles.rotation.y += 0.0005;
-            particles.rotation.x += 0.0003;
-            particles2.rotation.y -= 0.0004;
-            particles2.rotation.x += 0.0002;
-            particles.rotation.x += mouseY * 0.0003;
-            particles.rotation.y += mouseX * 0.0003;
-            renderer.render(scene, camera);
-        }
-        animate();
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        // ---------- Curseur ----------
-        const cursorDot = document.querySelector('.cursor-dot');
-        const cursorRing = document.querySelector('.cursor-ring');
-        document.addEventListener('mousemove', (e) => {
-            cursorDot.style.transform = `translate(${e.clientX - 3}px, ${e.clientY - 3}px)`;
-            cursorRing.style.transform = `translate(${e.clientX - 16}px, ${e.clientY - 16}px)`;
-        });
-
-        // ---------- Texte machine à écrire ----------
-        const roles = ["Étudiant en informatique", "Créateur de solutions numériques", "Passionné d'innovation"];
-        let rIndex = 0, cIndex = 0, deleting = false;
-        const typedSpan = document.getElementById('typed-text');
-        function typeEffect() {
-            const current = roles[rIndex];
-            if (deleting) typedSpan.textContent = current.substring(0, cIndex-1), cIndex--;
-            else typedSpan.textContent = current.substring(0, cIndex+1), cIndex++;
-            if (!deleting && cIndex === current.length) { deleting = true; setTimeout(typeEffect, 2000); return; }
-            if (deleting && cIndex === 0) { deleting = false; rIndex = (rIndex+1) % roles.length; }
-            setTimeout(typeEffect, deleting ? 50 : 100);
-        }
-        typeEffect();
-
-        // ---------- Navigation (ancres fluides) ----------
-        const navLinks = document.querySelectorAll('.nav-link');
-        const sections = document.querySelectorAll('section');
-        window.addEventListener('scroll', () => {
-            let current = '';
-            sections.forEach(section => {
-                if (scrollY >= section.offsetTop - 100) current = section.id;
-            });
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === `#${current}`) link.classList.add('active');
-            });
-            const navbar = document.getElementById('navbar');
-            if (navbar) navbar.classList.toggle('scrolled', scrollY > 50);
-        });
-
-        document.querySelectorAll('.nav-link, .logo').forEach(el => {
-            el.addEventListener('click', function(e) {
-                e.preventDefault();
-                let targetId = this.getAttribute('href');
-                if (targetId && targetId.startsWith('#')) targetId = targetId.substring(1);
-                else targetId = 'hero';
-                const target = document.getElementById(targetId);
-                if (target) target.scrollIntoView({ behavior: 'smooth' });
-                const mobileMenu = document.getElementById('nav-links');
-                if (mobileMenu) mobileMenu.classList.remove('open');
-            });
-        });
-        const menuIcon = document.getElementById('menu-icon');
-        if (menuIcon) {
-            menuIcon.addEventListener('click', () => {
-                const nav = document.getElementById('nav-links');
-                if (nav) nav.classList.toggle('open');
-            });
-        }
-
-        // ---------- Gestion des projets (localStorage) ----------
-        let projects = [];
-        const STORAGE_KEY = 'portfolio_projects';
-        
-        function loadProjects() {
-            const stored = localStorage.getItem(STORAGE_KEY);
-            if (stored) {
-                projects = JSON.parse(stored);
-            } else {
-                projects = [
-                    { id: '1', name: "Application IA Générative", type: "Intelligence Artificielle", description: "Application web utilisant GPT-4 pour générer du contenu automatique", imageUrl: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=200&fit=crop", link: "#" },
-                    { id: '2', name: "Dashboard Cloud", type: "Cloud Computing", description: "Interface de monitoring pour infrastructure cloud", imageUrl: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&h=200&fit=crop", link: "#" },
-                    { id: '3', name: "E-commerce Moderne", type: "Web Development", description: "Plateforme e-commerce avec paiement Stripe", imageUrl: "https://images.unsplash.com/photo-1557821552-17105176677c?w=400&h=200&fit=crop", link: "#" }
-                ];
-                saveProjects();
-            }
-            renderProjects();
-        }
-        
-        function saveProjects() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
-        }
-        
-        function renderProjects() {
-            const grid = document.getElementById('projects-grid');
-            if (!grid) return;
-            grid.innerHTML = '';
-            projects.forEach(proj => {
-                const card = document.createElement('div');
-                card.className = 'project-card';
-                card.innerHTML = `
-                    <img src="${proj.imageUrl}" onerror="this.src='https://via.placeholder.com/400x200?text=Image+introuvable'">
-                    <span style="color:#c084fc; font-size:0.8rem;">${proj.type}</span>
-                    <h3>${proj.name}</h3>
-                    <p style="font-size:0.9rem; color:#aaa;">${proj.description}</p>
-                    <a href="${proj.link}" target="_blank" class="btn" style="margin-top:1rem; display:inline-block; padding:0.5rem 1rem; font-size:0.8rem;">Voir projet →</a>
-                `;
-                grid.appendChild(card);
-            });
-        }
-        
-        // Admin panel
-        const adminPanel = document.getElementById('admin-panel');
-        const logo = document.getElementById('secret-logo');
-        const closeAdmin = document.getElementById('close-admin');
-        const addBtn = document.getElementById('add-project-btn');
-        const cancelEdit = document.getElementById('cancel-edit');
-        const adminMsg = document.getElementById('admin-msg');
-        let editingId = null;
-        
-        function refreshAdminList() {
-            const listDiv = document.getElementById('admin-projects-list');
-            if (!listDiv) return;
-            listDiv.innerHTML = '<h4 style="margin-bottom:8px;">Projets existants :</h4>';
-            projects.forEach(proj => {
-                const div = document.createElement('div');
-                div.style.cssText = 'display:flex; justify-content:space-between; margin-bottom:8px; background:#222; padding:5px; border-radius:5px;';
-                div.innerHTML = `
-                    <span><strong>${proj.name}</strong> (${proj.type})</span>
-                    <div>
-                        <button data-id="${proj.id}" class="edit-proj" style="background:#3b82f6; border:none; color:white; padding:2px 8px; border-radius:4px;">✏️</button>
-                        <button data-id="${proj.id}" class="delete-proj" style="background:#ef4444; border:none; color:white; padding:2px 8px; border-radius:4px;">🗑️</button>
-                    </div>
-                `;
-                listDiv.appendChild(div);
-            });
-            document.querySelectorAll('.edit-proj').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const id = btn.getAttribute('data-id');
-                    const proj = projects.find(p => p.id === id);
-                    if (proj) {
-                        document.getElementById('proj-name').value = proj.name;
-                        document.getElementById('proj-type').value = proj.type;
-                        document.getElementById('proj-desc').value = proj.description;
-                        document.getElementById('proj-img').value = proj.imageUrl;
-                        document.getElementById('proj-link').value = proj.link;
-                        editingId = id;
-                        addBtn.textContent = 'Modifier le projet';
-                        cancelEdit.style.display = 'inline-block';
-                    }
-                });
-            });
-            document.querySelectorAll('.delete-proj').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const id = btn.getAttribute('data-id');
-                    if (confirm('Supprimer ce projet ?')) {
-                        projects = projects.filter(p => p.id !== id);
-                        saveProjects();
-                        renderProjects();
-                        refreshAdminList();
-                        adminMsg.textContent = 'Projet supprimé';
-                        setTimeout(() => adminMsg.textContent = '', 2000);
-                    }
-                });
-            });
-        }
-        
-        if (logo) {
-            logo.addEventListener('dblclick', () => {
-                adminPanel.style.display = 'block';
-                refreshAdminList();
-            });
-        }
-        if (closeAdmin) {
-            closeAdmin.addEventListener('click', () => adminPanel.style.display = 'none');
-        }
-        if (cancelEdit) {
-            cancelEdit.addEventListener('click', () => {
-                editingId = null;
-                addBtn.textContent = 'Ajouter le projet';
-                cancelEdit.style.display = 'none';
-                document.getElementById('proj-name').value = '';
-                document.getElementById('proj-type').value = '';
-                document.getElementById('proj-desc').value = '';
-                document.getElementById('proj-img').value = 'https://images.unsplash.com/photo-1557821552-17105176677c?w=400&h=200&fit=crop';
-                document.getElementById('proj-link').value = '#';
-            });
-        }
-        
-        if (addBtn) {
-            addBtn.addEventListener('click', () => {
-                const name = document.getElementById('proj-name').value.trim();
-                const type = document.getElementById('proj-type').value.trim();
-                const desc = document.getElementById('proj-desc').value.trim();
-                const img = document.getElementById('proj-img').value.trim();
-                const link = document.getElementById('proj-link').value.trim();
-                if (!name || !type || !desc) {
-                    adminMsg.textContent = 'Nom, type et description requis.';
-                    adminMsg.style.color = 'red';
-                    return;
-                }
-                if (editingId) {
-                    const index = projects.findIndex(p => p.id === editingId);
-                    if (index !== -1) {
-                        projects[index] = { ...projects[index], name, type, description: desc, imageUrl: img || projects[index].imageUrl, link: link || projects[index].link };
-                        editingId = null;
-                        addBtn.textContent = 'Ajouter le projet';
-                        cancelEdit.style.display = 'none';
-                    }
-                } else {
-                    const newId = Date.now().toString();
-                    projects.push({ id: newId, name, type, description: desc, imageUrl: img || "https://via.placeholder.com/400x200?text=Projet", link: link || "#" });
-                }
-                saveProjects();
-                renderProjects();
-                refreshAdminList();
-                adminMsg.textContent = editingId ? 'Projet modifié !' : 'Projet ajouté !';
-                adminMsg.style.color = '#4ade80';
-                setTimeout(() => adminMsg.textContent = '', 2000);
-                document.getElementById('proj-name').value = '';
-                document.getElementById('proj-type').value = '';
-                document.getElementById('proj-desc').value = '';
-                document.getElementById('proj-img').value = 'https://images.unsplash.com/photo-1557821552-17105176677c?w=400&h=200&fit=crop';
-                document.getElementById('proj-link').value = '#';
-            });
-        }
-        
-        // ---------- Photo de profil (upload) ----------
-        const profileImg = document.getElementById('profile-pic');
-        const profileClick = document.getElementById('profile-img-click');
-        if (profileClick) {
-            profileClick.addEventListener('click', () => {
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = 'image/*';
-                input.onchange = (e) => {
-                    const file = e.target.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = (ev) => { if (profileImg) profileImg.src = ev.target.result; };
-                        reader.readAsDataURL(file);
-                    }
-                };
-                input.click();
-            });
-        }
-        
-        // ---------- FORMULAIRE DE CONTACT (EmailJS réel) ----------
-        const contactForm = document.getElementById('contact-form');
-        const statusP = document.getElementById('form-status');
-        
-        if (contactForm) {
-            contactForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const name = document.getElementById('name').value;
-                const email = document.getElementById('email').value;
-                const message = document.getElementById('message').value;
-                
-                if (!name || !email || !message) {
-                    statusP.textContent = "⚠️ Tous les champs sont requis.";
-                    statusP.style.color = "#f97316";
-                    return;
-                }
-                
-                statusP.textContent = "📧 Envoi en cours...";
-                statusP.style.color = "#c084fc";
-                
-                // Vérifier si EmailJS est configuré
-                if (EMAILJS_PUBLIC_KEY === 'YOUR_PUBLIC_KEY' || EMAILJS_SERVICE_ID === 'YOUR_SERVICE_ID' || EMAILJS_TEMPLATE_ID === 'YOUR_TEMPLATE_ID') {
-                    statusP.innerHTML = "⚠️ EmailJS non configuré. Remplace les clés dans le code (voir commentaires).";
-                    statusP.style.color = "#f97316";
-                    setTimeout(() => statusP.innerHTML = "", 6000);
-                    return;
-                }
-                
-                try {
-                    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-                        from_name: name,
-                        from_email: email,
-                        message: message,
-                        to_name: "Loïc Brayane"
-                    });
-                    statusP.innerHTML = "✅ Message envoyé avec succès !";
-                    statusP.style.color = "#4ade80";
-                    contactForm.reset();
-                    setTimeout(() => statusP.innerHTML = "", 5000);
-                } catch (err) {
-                    console.error(err);
-                    statusP.innerHTML = "❌ Erreur d'envoi. Vérifie Service ID, Template ID et Public Key.";
-                    statusP.style.color = "#ef4444";
-                }
-            });
-        }
-        
-        loadProjects();
-    </script>
-</body>
-</html>
+        // Import EmailJS (bibliothèque officielle)
+        import emailjs from 'https://cdn.jsdelivr.net/npm/
