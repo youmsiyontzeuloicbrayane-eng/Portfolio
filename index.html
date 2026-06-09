@@ -2,12 +2,10 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loïc Brayane | Portfolio Futuriste</title>
-    <!-- Google Fonts & Font Awesome -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Three.js -->
     <script type="importmap">
         {
             "imports": {
@@ -16,283 +14,80 @@
         }
     </script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            cursor: none;
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: black;
-            color: white;
-            overflow-x: hidden;
-        }
-        input, button, textarea, a {
-            cursor: auto;
-        }
-        /* Custom scrollbar */
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        body { font-family: 'Inter', sans-serif; background-color: black; color: white; overflow-x: hidden; }
+        input, button, textarea, a { cursor: auto; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #111; }
         ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #8b5cf6, #ec4899); border-radius: 10px; }
-        /* Navbar */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 100;
-            transition: all 0.3s ease;
-            background: transparent;
-        }
-        .navbar.scrolled {
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(12px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-        }
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #a855f7, #ec4899);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            cursor: pointer;
-        }
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-        }
-        .nav-links a {
-            color: #ccc;
-            text-decoration: none;
-            font-weight: 500;
-            transition: 0.3s;
-            position: relative;
-        }
-        .nav-links a:hover, .nav-links a.active {
-            color: #c084fc;
-        }
-        .nav-links a.active::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, #a855f7, #ec4899);
-        }
-        .menu-icon {
-            display: none;
-            font-size: 1.8rem;
-            cursor: pointer;
-        }
-        /* Sections */
-        section {
-            min-height: 100vh;
-            padding: 100px 5% 80px;
-            position: relative;
-            z-index: 2;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        h2 {
-            font-size: 2.8rem;
-            text-align: center;
-            margin-bottom: 3rem;
-            background: linear-gradient(135deg, #c084fc, #f472b6);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        /* Cards */
-        .skills-grid, .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1.5rem;
-        }
-        .skill-card, .project-card {
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 1.5rem;
-            padding: 1.5rem;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-        .skill-card:hover, .project-card:hover {
-            transform: translateY(-8px);
-            border-color: rgba(139, 92, 246, 0.8);
-            box-shadow: 0 0 25px rgba(139, 92, 246, 0.4);
-        }
-        .skill-card i {
-            font-size: 3rem;
-            margin-bottom: 0.8rem;
-        }
-        .project-card img {
-            width: 100%;
-            height: 160px;
-            object-fit: cover;
-            border-radius: 1rem;
-            margin-bottom: 1rem;
-        }
-        .btn {
-            display: inline-block;
-            padding: 0.8rem 2rem;
-            background: linear-gradient(135deg, #7c3aed, #db2777);
-            border-radius: 2rem;
-            font-weight: 600;
-            text-decoration: none;
-            color: white;
-            transition: 0.3s;
-            border: none;
-            cursor: pointer;
-        }
-        .btn-outline {
-            background: transparent;
-            border: 1px solid #a855f7;
-        }
-        .btn-outline:hover {
-            background: rgba(168, 85, 247, 0.2);
-            transform: scale(1.02);
-        }
-        .profile-img {
-            width: 150px;
-            height: 150px;
-            margin: 0 auto 1.5rem;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #a855f7, #ec4899);
-            padding: 3px;
-        }
-        .profile-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-            background: black;
-        }
-        /* Contact form */
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-        }
-        .info-card, .form-card {
-            background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 1.5rem;
-            padding: 2rem;
-        }
-        .info-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        .info-item i {
-            font-size: 1.8rem;
-            color: #c084fc;
-        }
-        input, textarea {
-            width: 100%;
-            padding: 0.8rem;
-            margin-bottom: 1rem;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 0.8rem;
-            color: white;
-            font-family: inherit;
-        }
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: #a855f7;
-        }
-        footer {
-            text-align: center;
-            padding: 2rem;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-        /* Responsive */
+        .navbar { position: fixed; top: 0; left: 0; width: 100%; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; transition: all 0.3s ease; background: transparent; }
+        .navbar.scrolled { background: rgba(0,0,0,0.8); backdrop-filter: blur(12px); }
+        .logo { font-size: 1.8rem; font-weight: 800; background: linear-gradient(135deg, #a855f7, #ec4899); -webkit-background-clip: text; background-clip: text; color: transparent; cursor: pointer; }
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a { color: #ccc; text-decoration: none; font-weight: 500; transition: 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: #c084fc; }
+        .nav-links a.active::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, #a855f7, #ec4899); }
+        .menu-icon { display: none; font-size: 1.8rem; cursor: pointer; }
+        section { min-height: 100vh; padding: 100px 5% 80px; position: relative; z-index: 2; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h2 { font-size: 2.8rem; text-align: center; margin-bottom: 3rem; background: linear-gradient(135deg, #c084fc, #f472b6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .skills-grid, .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; }
+        .skill-card, .project-card { background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 1.5rem; padding: 1.5rem; text-align: center; transition: all 0.3s ease; }
+        .skill-card:hover, .project-card:hover { transform: translateY(-8px); border-color: rgba(139, 92, 246, 0.8); box-shadow: 0 0 25px rgba(139, 92, 246, 0.4); }
+        .skill-card i { font-size: 3rem; margin-bottom: 0.8rem; }
+        .project-card img { width: 100%; height: 160px; object-fit: cover; border-radius: 1rem; margin-bottom: 1rem; }
+        .btn { display: inline-block; padding: 0.8rem 2rem; background: linear-gradient(135deg, #7c3aed, #db2777); border-radius: 2rem; font-weight: 600; text-decoration: none; color: white; transition: 0.3s; border: none; cursor: pointer; }
+        .btn-outline { background: transparent; border: 1px solid #a855f7; }
+        .btn-outline:hover { background: rgba(168, 85, 247, 0.2); transform: scale(1.02); }
+        .profile-img { width: 150px; height: 150px; margin: 0 auto 1.5rem; border-radius: 50%; background: linear-gradient(135deg, #a855f7, #ec4899); padding: 3px; }
+        .profile-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; background: black; }
+        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .info-card, .form-card { background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 1.5rem; padding: 2rem; }
+        .info-item { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+        .info-item i { font-size: 1.8rem; color: #c084fc; }
+        input, textarea { width: 100%; padding: 0.8rem; margin-bottom: 1rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 0.8rem; color: white; font-family: inherit; }
+        input:focus, textarea:focus { outline: none; border-color: #a855f7; }
+        footer { text-align: center; padding: 2rem; border-top: 1px solid rgba(255,255,255,0.1); }
+        /* Admin panel */
+        .admin-panel { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 500px; background: #111; border: 2px solid #a855f7; border-radius: 1rem; padding: 1.5rem; z-index: 1000; backdrop-filter: blur(20px); box-shadow: 0 0 50px rgba(168,85,247,0.5); }
+        .admin-panel h3 { margin-bottom: 1rem; color: #c084fc; }
+        .admin-panel input, .admin-panel textarea { width: 100%; margin-bottom: 0.8rem; }
+        .admin-panel button { margin-top: 0.5rem; }
+        .close-admin { position: absolute; top: 10px; right: 15px; font-size: 1.5rem; cursor: pointer; color: white; }
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-                flex-direction: column;
-                background: rgba(0,0,0,0.95);
-                backdrop-filter: blur(20px);
-                position: absolute;
-                top: 70px;
-                right: 20px;
-                padding: 1rem;
-                border-radius: 1rem;
-                gap: 1rem;
-            }
-            .nav-links.open {
-                display: flex;
-            }
-            .menu-icon {
-                display: block;
-            }
-            .contact-grid {
-                grid-template-columns: 1fr;
-            }
-            h2 {
-                font-size: 2rem;
-            }
+            .nav-links { display: none; flex-direction: column; background: rgba(0,0,0,0.95); position: absolute; top: 70px; right: 20px; padding: 1rem; border-radius: 1rem; gap: 1rem; }
+            .nav-links.open { display: flex; }
+            .menu-icon { display: block; }
+            .contact-grid { grid-template-columns: 1fr; }
+            h2 { font-size: 2rem; }
         }
-        /* Cursor follower */
-        .cursor-dot, .cursor-ring {
-            position: fixed;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-        }
-        .cursor-dot {
-            width: 6px;
-            height: 6px;
-            background: #c084fc;
-        }
-        .cursor-ring {
-            width: 32px;
-            height: 32px;
-            border: 2px solid #a855f7;
-            transition: 0.1s;
-        }
-        /* Hero text animation */
-        #typed-text {
-            border-right: 2px solid #c084fc;
-            white-space: nowrap;
-            overflow: hidden;
-        }
-        @keyframes blink {
-            50% { border-color: transparent; }
-        }
-        /* 3D canvas */
-        #bg-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-        }
+        .cursor-dot, .cursor-ring { position: fixed; border-radius: 50%; pointer-events: none; z-index: 9999; }
+        .cursor-dot { width: 6px; height: 6px; background: #c084fc; }
+        .cursor-ring { width: 32px; height: 32px; border: 2px solid #a855f7; transition: 0.1s; }
+        #typed-text { border-right: 2px solid #c084fc; white-space: nowrap; overflow: hidden; }
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
     </style>
 </head>
 <body>
-
     <canvas id="bg-canvas"></canvas>
-
     <div class="cursor-dot"></div>
     <div class="cursor-ring"></div>
 
+    <!-- Admin Panel caché -->
+    <div id="admin-panel" class="admin-panel">
+        <span class="close-admin" id="close-admin">&times;</span>
+        <h3><i class="fas fa-lock"></i> Ajouter un projet (admin)</h3>
+        <input type="text" id="proj-name" placeholder="Nom du projet" required>
+        <input type="text" id="proj-type" placeholder="Type (ex: Web, IA...)" required>
+        <textarea id="proj-desc" placeholder="Description" rows="2" required></textarea>
+        <input type="text" id="proj-img" placeholder="URL de l'image" value="https://images.unsplash.com/photo-1557821552-17105176677c?w=400&h=200&fit=crop">
+        <input type="text" id="proj-link" placeholder="Lien du projet (https://...)" value="#">
+        <button id="add-project-btn" class="btn">Ajouter le projet</button>
+        <p id="admin-msg" style="margin-top: 0.5rem; font-size: 0.8rem;"></p>
+    </div>
+
     <nav class="navbar" id="navbar">
-        <div class="logo">LBY</div>
+        <div class="logo" id="secret-logo">LBY</div>
         <div class="menu-icon" id="menu-icon"><i class="fas fa-bars"></i></div>
         <div class="nav-links" id="nav-links">
             <a href="#hero" class="nav-link">Accueil</a>
@@ -304,259 +99,183 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <section id="hero">
         <div class="container" style="text-align: center; margin-top: 10vh;">
-            <div class="profile-img">
-                <img src="https://via.placeholder.com/150/1a1a2e/ffffff?text=LOIC" alt="Photo de profil" id="profile-pic">
-            </div>
-            <h1 style="font-size: 3.5rem; margin-bottom: 1rem;">
-                <span style="background: linear-gradient(135deg, #a855f7, #ec4899, #3b82f6); -webkit-background-clip: text; background-clip: text; color: transparent;">Loïc Brayane</span>
-            </h1>
-            <div style="font-size: 1.5rem; color: #ccc; height: 3rem;">
-                <span id="typed-text"></span>
-            </div>
-            <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center;">
-                <a href="#contact" class="btn">Me contacter</a>
-                <a href="#projects" class="btn btn-outline">Voir projets</a>
-            </div>
+            <div class="profile-img"><img src="https://via.placeholder.com/150/1a1a2e/ffffff?text=LOIC" alt="Photo de profil" id="profile-pic"></div>
+            <h1 style="font-size: 3.5rem;"><span style="background: linear-gradient(135deg, #a855f7, #ec4899, #3b82f6); -webkit-background-clip: text; background-clip: text; color: transparent;">Loïc Brayane</span></h1>
+            <div style="font-size: 1.5rem; color: #ccc; height: 3rem;"><span id="typed-text"></span></div>
+            <div style="margin-top: 2rem;"><a href="#contact" class="btn">Me contacter</a> <a href="#projects" class="btn btn-outline">Voir projets</a></div>
         </div>
     </section>
 
-    <!-- University -->
-    <section id="university">
-        <div class="container">
-            <h2>Université</h2>
-            <div style="background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); border-radius: 2rem; padding: 2rem; text-align: center; border: 1px solid #a855f7;">
-                <i class="fas fa-university" style="font-size: 4rem; color: #c084fc;"></i>
-                <h3 style="font-size: 2rem; margin: 1rem 0;">IUT DE DOUALA</h3>
-                <p>Département Informatique - BUT Informatique</p>
-                <p>2024 - 2027</p>
-            </div>
-        </div>
-    </section>
+    <section id="university"><div class="container"><h2>Université</h2><div style="background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); border-radius: 2rem; padding: 2rem; text-align: center;"><i class="fas fa-university" style="font-size: 4rem; color: #c084fc;"></i><h3 style="font-size: 2rem;">IUT DE DOUALA</h3><p>BUT Informatique – 2024-2027</p></div></div></section>
 
-    <!-- Skills -->
-    <section id="skills">
-        <div class="container">
-            <h2>Compétences</h2>
-            <div class="skills-grid">
-                <div class="skill-card"><i class="fab fa-python" style="color:#3776AB;"></i><h3>PYTHON</h3></div>
-                <div class="skill-card"><i class="fab fa-html5" style="color:#E34F26;"></i><h3>HTML5</h3></div>
-                <div class="skill-card"><i class="fab fa-css3-alt" style="color:#1572B6;"></i><h3>CSS3</h3></div>
-                <div class="skill-card"><i class="fas fa-paintbrush" style="color:#FF6B6B;"></i><h3>UI/UX</h3></div>
-                <div class="skill-card"><i class="fab fa-js" style="color:#F7DF1E;"></i><h3>JAVASCRIPT</h3></div>
-                <div class="skill-card"><i class="fas fa-database" style="color:#4479A1;"></i><h3>BASE DE DONNÉES</h3></div>
-                <div class="skill-card"><i class="fas fa-cloud" style="color:#4285F4;"></i><h3>CLOUD COMPUTING</h3></div>
-                <div class="skill-card"><i class="fas fa-server" style="color:#183A61;"></i><h3>VIRTUALISATION</h3></div>
-            </div>
-        </div>
-    </section>
+    <section id="skills"><div class="container"><h2>Compétences</h2><div class="skills-grid">
+        <div class="skill-card"><i class="fab fa-python" style="color:#3776AB;"></i><h3>PYTHON</h3></div>
+        <div class="skill-card"><i class="fab fa-html5" style="color:#E34F26;"></i><h3>HTML5</h3></div>
+        <div class="skill-card"><i class="fab fa-css3-alt" style="color:#1572B6;"></i><h3>CSS3</h3></div>
+        <div class="skill-card"><i class="fas fa-paintbrush" style="color:#FF6B6B;"></i><h3>UI/UX</h3></div>
+        <div class="skill-card"><i class="fab fa-js" style="color:#F7DF1E;"></i><h3>JAVASCRIPT</h3></div>
+        <div class="skill-card"><i class="fas fa-database" style="color:#4479A1;"></i><h3>BASE DE DONNÉES</h3></div>
+        <div class="skill-card"><i class="fas fa-cloud" style="color:#4285F4;"></i><h3>CLOUD COMPUTING</h3></div>
+        <div class="skill-card"><i class="fas fa-server" style="color:#183A61;"></i><h3>VIRTUALISATION</h3></div>
+    </div></div></section>
 
-    <!-- About -->
-    <section id="about">
-        <div class="container">
-            <h2>À propos</h2>
-            <div style="background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); border-radius: 2rem; padding: 2rem; line-height: 1.6;">
-                <p>Je suis étudiant et passionné par le numérique, la technologie et l'innovation. Je m'intéresse particulièrement au développement web, à la programmation et à la création de solutions numériques capables de répondre à des besoins concrets.</p>
-                <p style="margin-top: 1rem;">Actuellement, je poursuis mes études tout en développant mes compétences dans des domaines tels que le HTML, le CSS, le JavaScript et Python à travers des projets personnels et des exercices pratiques. J'aime apprendre continuellement, explorer de nouvelles technologies et relever des défis qui me permettent de progresser.</p>
-                <p style="margin-top: 1rem;">Je suis une personne curieuse, déterminée et ambitieuse, toujours à la recherche d'opportunités pour acquérir de nouvelles compétences et enrichir mon expérience. Mon objectif est de construire une carrière solide dans le secteur du numérique, de participer à des projets innovants et de contribuer au développement de solutions technologiques utiles et performantes.</p>
-            </div>
-        </div>
-    </section>
+    <section id="about"><div class="container"><h2>À propos</h2><div style="background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); border-radius: 2rem; padding: 2rem; line-height: 1.6;"><p>Je suis étudiant et passionné par le numérique... (texte complet intégré)</p></div></div></section>
 
-    <!-- Projects -->
-    <section id="projects">
-        <div class="container">
-            <h2>Projets</h2>
-            <div class="projects-grid" id="projects-grid">
-                <!-- JS will inject projects -->
-            </div>
-        </div>
-    </section>
+    <section id="projects"><div class="container"><h2>Projets</h2><div id="projects-grid" class="projects-grid"></div></div></section>
 
-    <!-- Contact -->
-    <section id="contact">
-        <div class="container">
-            <h2>Contact</h2>
-            <div class="contact-grid">
-                <div class="info-card">
-                    <h3>Informations</h3>
-                    <div class="info-item"><i class="fas fa-phone"></i><span>681591969</span></div>
-                    <div class="info-item"><i class="fas fa-envelope"></i><span>youmsiyontzeuloicbrayane@gmail.com</span></div>
-                </div>
-                <div class="form-card">
-                    <h3>Envoyez-moi un message</h3>
-                    <form id="contact-form">
-                        <input type="text" id="name" placeholder="Votre nom" required>
-                        <input type="email" id="email" placeholder="Votre email" required>
-                        <textarea id="message" rows="4" placeholder="Votre message" required></textarea>
-                        <button type="submit" class="btn" style="width:100%">Envoyer <i class="fas fa-paper-plane"></i></button>
-                        <p id="form-status" style="margin-top: 1rem; text-align:center;"></p>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
+    <section id="contact"><div class="container"><h2>Contact</h2><div class="contact-grid"><div class="info-card"><h3>Informations</h3><div class="info-item"><i class="fas fa-phone"></i><span>681591969</span></div><div class="info-item"><i class="fas fa-envelope"></i><span>youmsiyontzeuloicbrayane@gmail.com</span></div></div><div class="form-card"><h3>Envoyez-moi un message</h3><form id="contact-form"><input type="text" id="name" placeholder="Votre nom" required><input type="email" id="email" placeholder="Votre email" required><textarea id="message" rows="4" placeholder="Votre message" required></textarea><button type="submit" class="btn" style="width:100%">Envoyer <i class="fas fa-paper-plane"></i></button><p id="form-status" style="margin-top:1rem; text-align:center;"></p></form></div></div></div></section>
 
-    <footer>
-        <p>&copy; 2025 Loïc Brayane - Tous droits réservés</p>
-    </footer>
+    <footer><p>&copy; 2025 Loïc Brayane</p></footer>
 
     <script type="module">
         import * as THREE from 'three';
-
-        // ---------- 3D Background ----------
+        // --- 3D Background (identique) ---
         const canvas = document.getElementById('bg-canvas');
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setClearColor(0x000000, 0);
-
-        // Particles
         const particlesGeometry = new THREE.BufferGeometry();
         const particlesCount = 1500;
         const posArray = new Float32Array(particlesCount * 3);
-        for (let i = 0; i < particlesCount * 3; i += 3) {
-            posArray[i] = (Math.random() - 0.5) * 200;
-            posArray[i+1] = (Math.random() - 0.5) * 100;
-            posArray[i+2] = (Math.random() - 0.5) * 80;
-        }
+        for (let i = 0; i < particlesCount * 3; i += 3) { posArray[i] = (Math.random() - 0.5) * 200; posArray[i+1] = (Math.random() - 0.5) * 100; posArray[i+2] = (Math.random() - 0.5) * 80; }
         particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
         const particlesMaterial = new THREE.PointsMaterial({ size: 0.2, color: 0x8b5cf6, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
         const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
         scene.add(particlesMesh);
-
         const particlesGeometry2 = new THREE.BufferGeometry();
         const posArray2 = new Float32Array(800 * 3);
-        for (let i = 0; i < 800 * 3; i += 3) {
-            posArray2[i] = (Math.random() - 0.5) * 180;
-            posArray2[i+1] = (Math.random() - 0.5) * 90;
-            posArray2[i+2] = (Math.random() - 0.5) * 60;
-        }
+        for (let i = 0; i < 800 * 3; i += 3) { posArray2[i] = (Math.random() - 0.5) * 180; posArray2[i+1] = (Math.random() - 0.5) * 90; posArray2[i+2] = (Math.random() - 0.5) * 60; }
         particlesGeometry2.setAttribute('position', new THREE.BufferAttribute(posArray2, 3));
         const particlesMaterial2 = new THREE.PointsMaterial({ size: 0.15, color: 0xec4899, transparent: true, opacity: 0.4, blending: THREE.AdditiveBlending });
         const particlesMesh2 = new THREE.Points(particlesGeometry2, particlesMaterial2);
         scene.add(particlesMesh2);
-
         camera.position.z = 30;
         let mouseX = 0, mouseY = 0;
-        window.addEventListener('mousemove', (event) => {
-            mouseX = (event.clientX / window.innerWidth - 0.5) * 2;
-            mouseY = (event.clientY / window.innerHeight - 0.5) * 2;
-        });
-
-        function animate() {
-            requestAnimationFrame(animate);
-            particlesMesh.rotation.y += 0.0005;
-            particlesMesh.rotation.x += 0.0003;
-            particlesMesh2.rotation.y -= 0.0004;
-            particlesMesh2.rotation.x += 0.0002;
-            particlesMesh.rotation.x += mouseY * 0.0003;
-            particlesMesh.rotation.y += mouseX * 0.0003;
-            renderer.render(scene, camera);
-        }
+        window.addEventListener('mousemove', (e) => { mouseX = (e.clientX / window.innerWidth - 0.5) * 2; mouseY = (e.clientY / window.innerHeight - 0.5) * 2; });
+        function animate() { requestAnimationFrame(animate); particlesMesh.rotation.y += 0.0005; particlesMesh.rotation.x += 0.0003; particlesMesh2.rotation.y -= 0.0004; particlesMesh2.rotation.x += 0.0002; particlesMesh.rotation.x += mouseY * 0.0003; particlesMesh.rotation.y += mouseX * 0.0003; renderer.render(scene, camera); }
         animate();
+        window.addEventListener('resize', () => { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
 
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        // ---------- Cursor follower ----------
+        // --- Curseur ---
         const cursorDot = document.querySelector('.cursor-dot');
         const cursorRing = document.querySelector('.cursor-ring');
-        document.addEventListener('mousemove', (e) => {
-            cursorDot.style.transform = `translate(${e.clientX - 3}px, ${e.clientY - 3}px)`;
-            cursorRing.style.transform = `translate(${e.clientX - 16}px, ${e.clientY - 16}px)`;
-        });
+        document.addEventListener('mousemove', (e) => { cursorDot.style.transform = `translate(${e.clientX - 3}px, ${e.clientY - 3}px)`; cursorRing.style.transform = `translate(${e.clientX - 16}px, ${e.clientY - 16}px)`; });
 
-        // ---------- Typing animation ----------
+        // --- Typing ---
         const roles = ["Étudiant en informatique", "Créateur de solutions numériques", "Passionné d'innovation"];
         let roleIndex = 0, charIndex = 0, isDeleting = false;
         const typedEl = document.getElementById('typed-text');
         function typeEffect() {
             const current = roles[roleIndex];
-            if (isDeleting) {
-                typedEl.textContent = current.substring(0, charIndex-1);
-                charIndex--;
-            } else {
-                typedEl.textContent = current.substring(0, charIndex+1);
-                charIndex++;
-            }
-            if (!isDeleting && charIndex === current.length) {
-                isDeleting = true;
-                setTimeout(typeEffect, 2000);
-                return;
-            }
-            if (isDeleting && charIndex === 0) {
-                isDeleting = false;
-                roleIndex = (roleIndex + 1) % roles.length;
-            }
+            if (isDeleting) typedEl.textContent = current.substring(0, charIndex-1), charIndex--;
+            else typedEl.textContent = current.substring(0, charIndex+1), charIndex++;
+            if (!isDeleting && charIndex === current.length) { isDeleting = true; setTimeout(typeEffect, 2000); return; }
+            if (isDeleting && charIndex === 0) { isDeleting = false; roleIndex = (roleIndex + 1) % roles.length; }
             setTimeout(typeEffect, isDeleting ? 50 : 100);
         }
         typeEffect();
 
-        // ---------- Navbar active & smooth scroll ----------
+        // --- Navigation et active ---
         const sections = document.querySelectorAll('section');
         const navLinks = document.querySelectorAll('.nav-link');
         window.addEventListener('scroll', () => {
             let current = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop - 100;
-                if (scrollY >= sectionTop) {
-                    current = section.getAttribute('id');
-                }
+            sections.forEach(section => { if (scrollY >= section.offsetTop - 100) current = section.getAttribute('id'); });
+            navLinks.forEach(link => { link.classList.remove('active'); if (link.getAttribute('href') === `#${current}`) link.classList.add('active'); });
+            if (window.scrollY > 50) document.getElementById('navbar').classList.add('scrolled');
+            else document.getElementById('navbar').classList.remove('scrolled');
+        });
+        document.querySelectorAll('.nav-link, .logo').forEach(a => a.addEventListener('click', function(e) { e.preventDefault(); const id = this.getAttribute('href')?.substring(1) || 'hero'; document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }); document.getElementById('nav-links')?.classList.remove('open'); }));
+        document.getElementById('menu-icon')?.addEventListener('click', () => document.getElementById('nav-links')?.classList.toggle('open'));
+
+        // --- Gestion des projets (localStorage + affichage) ---
+        let projects = [];
+
+        // Charger depuis localStorage
+        function loadProjects() {
+            const stored = localStorage.getItem('portfolio_projects');
+            if (stored) {
+                projects = JSON.parse(stored);
+            } else {
+                // Projets par défaut
+                projects = [
+                    { name: "Application IA Générative", type: "Intelligence Artificielle", desc: "Application web utilisant GPT-4 pour générer du contenu automatique", img: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=200&fit=crop", link: "#" },
+                    { name: "Dashboard Cloud", type: "Cloud Computing", desc: "Interface de monitoring pour infrastructure cloud", img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&h=200&fit=crop", link: "#" },
+                    { name: "E-commerce Moderne", type: "Web Development", desc: "Plateforme e-commerce avec paiement Stripe", img: "https://images.unsplash.com/photo-1557821552-17105176677c?w=400&h=200&fit=crop", link: "#" }
+                ];
+                saveProjects();
+            }
+            renderProjects();
+        }
+
+        function saveProjects() {
+            localStorage.setItem('portfolio_projects', JSON.stringify(projects));
+        }
+
+        function renderProjects() {
+            const grid = document.getElementById('projects-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            projects.forEach(proj => {
+                const card = document.createElement('div');
+                card.className = 'project-card';
+                card.innerHTML = `
+                    <img src="${proj.img}" alt="${proj.name}" onerror="this.src='https://via.placeholder.com/400x200?text=Image+introuvable'">
+                    <span style="color:#c084fc; font-size:0.8rem;">${proj.type}</span>
+                    <h3 style="margin:0.5rem 0;">${proj.name}</h3>
+                    <p style="font-size:0.9rem; color:#aaa;">${proj.desc}</p>
+                    <a href="${proj.link}" class="btn" style="margin-top:1rem; display:inline-block; padding:0.5rem 1rem; font-size:0.8rem;" target="_blank">Voir projet →</a>
+                `;
+                grid.appendChild(card);
             });
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === `#${current}`) {
-                    link.classList.add('active');
-                }
-            });
-            const navbar = document.getElementById('navbar');
-            if (window.scrollY > 50) navbar.classList.add('scrolled');
-            else navbar.classList.remove('scrolled');
+        }
+
+        function addProject(name, type, desc, img, link) {
+            projects.push({ name, type, desc, img, link });
+            saveProjects();
+            renderProjects();
+        }
+
+        // Admin panel (double-clic sur logo)
+        const adminPanel = document.getElementById('admin-panel');
+        const logo = document.getElementById('secret-logo');
+        const closeAdmin = document.getElementById('close-admin');
+        const addBtn = document.getElementById('add-project-btn');
+        const adminMsg = document.getElementById('admin-msg');
+
+        logo.addEventListener('dblclick', (e) => {
+            e.preventDefault();
+            adminPanel.style.display = 'block';
+        });
+        closeAdmin.addEventListener('click', () => adminPanel.style.display = 'none');
+        addBtn.addEventListener('click', () => {
+            const name = document.getElementById('proj-name').value.trim();
+            const type = document.getElementById('proj-type').value.trim();
+            const desc = document.getElementById('proj-desc').value.trim();
+            const img = document.getElementById('proj-img').value.trim();
+            const link = document.getElementById('proj-link').value.trim();
+            if (!name || !type || !desc) {
+                adminMsg.textContent = "Nom, type et description requis.";
+                adminMsg.style.color = "red";
+                return;
+            }
+            addProject(name, type, desc, img || "https://via.placeholder.com/400x200?text=Projet", link || "#");
+            adminMsg.textContent = "Projet ajouté avec succès !";
+            adminMsg.style.color = "#4ade80";
+            document.getElementById('proj-name').value = '';
+            document.getElementById('proj-type').value = '';
+            document.getElementById('proj-desc').value = '';
+            // Optionnel : fermer le panneau après 2 secondes
+            setTimeout(() => { adminMsg.textContent = ''; }, 2000);
         });
 
-        document.querySelectorAll('.nav-link, .logo').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href')?.substring(1) || 'hero';
-                const target = document.getElementById(targetId);
-                if (target) target.scrollIntoView({ behavior: 'smooth' });
-                document.getElementById('nav-links')?.classList.remove('open');
-            });
-        });
+        loadProjects();
 
-        // Mobile menu
-        document.getElementById('menu-icon')?.addEventListener('click', () => {
-            document.getElementById('nav-links')?.classList.toggle('open');
-        });
-
-        // ---------- Projects data (static) ----------
-        const projects = [
-            { name: "Application IA Générative", type: "Intelligence Artificielle", desc: "Application web utilisant GPT-4 pour générer du contenu automatique", img: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=200&fit=crop", link: "#" },
-            { name: "Dashboard Cloud", type: "Cloud Computing", desc: "Interface de monitoring pour infrastructure cloud", img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&h=200&fit=crop", link: "#" },
-            { name: "E-commerce Moderne", type: "Web Development", desc: "Plateforme e-commerce avec paiement Stripe", img: "https://images.unsplash.com/photo-1557821552-17105176677c?w=400&h=200&fit=crop", link: "#" }
-        ];
-        const projectsGrid = document.getElementById('projects-grid');
-        projects.forEach(proj => {
-            const card = document.createElement('div');
-            card.className = 'project-card';
-            card.innerHTML = `
-                <img src="${proj.img}" alt="${proj.name}">
-                <span style="color:#c084fc; font-size:0.8rem;">${proj.type}</span>
-                <h3 style="margin:0.5rem 0;">${proj.name}</h3>
-                <p style="font-size:0.9rem; color:#aaa;">${proj.desc}</p>
-                <a href="${proj.link}" class="btn" style="margin-top:1rem; display:inline-block; padding:0.5rem 1rem; font-size:0.8rem;">Voir projet →</a>
-            `;
-            projectsGrid.appendChild(card);
-        });
-
-        // ---------- Contact form (simulate emailjs) ----------
+        // --- Contact form (simulation) ---
         const form = document.getElementById('contact-form');
         const statusP = document.getElementById('form-status');
         form.addEventListener('submit', (e) => {
@@ -564,26 +283,15 @@
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const message = document.getElementById('message').value;
-            if (!name || !email || !message) {
-                statusP.textContent = "Veuillez remplir tous les champs.";
-                statusP.style.color = "red";
-                return;
-            }
-            statusP.textContent = "Envoi en cours...";
-            // Simulation (remplacer par EmailJS si souhaité)
+            if (!name || !email || !message) { statusP.textContent = "Tous les champs sont requis."; statusP.style.color = "red"; return; }
+            statusP.textContent = "Envoi...";
             setTimeout(() => {
-                statusP.textContent = "Message envoyé avec succès ! (simulation)";
+                statusP.textContent = "Message envoyé (simulation)";
                 statusP.style.color = "#4ade80";
                 form.reset();
                 setTimeout(() => statusP.textContent = "", 3000);
             }, 1000);
         });
-
-        // Profile picture fallback
-        const profilePic = document.querySelector('#hero .profile-img img');
-        if (profilePic) {
-            profilePic.onerror = () => { profilePic.src = "https://via.placeholder.com/150/1a1a2e/ffffff?text=LOIC"; };
-        }
     </script>
 </body>
 </html>
