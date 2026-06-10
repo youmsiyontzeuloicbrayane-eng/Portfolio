@@ -737,30 +737,78 @@
                 });
             }
 
-            // ========== EMAILJS ==========
-            emailjs.init("rRVVucP8EH8_pQAnI");
+            // ========== EMAILJS AMÉLIORÉ ==========
             const form = document.getElementById("contact-form");
             const statusP = document.getElementById("form-status");
-            
-            if (form) {
-                form.addEventListener("submit", (e) => {
-                    e.preventDefault();
-                    statusP.textContent = "📧 Envoi en cours...";
-                    statusP.style.color = "#c084fc";
-                    emailjs.send("service_d9862n6", "template_t9l84tx", {
-                        name: document.getElementById("name").value,
-                        email: document.getElementById("email").value,
-                        message: document.getElementById("msg").value
-                    }).then(() => {
-                        statusP.textContent = "✅ Message envoyé avec succès !";
-                        statusP.style.color = "#4ade80";
-                        form.reset();
-                        setTimeout(() => statusP.textContent = "", 4000);
-                    }).catch(() => {
-                        statusP.textContent = "❌ Erreur lors de l'envoi";
+
+            // Attendre que EmailJS soit chargé
+            function initEmailJS() {
+                if (typeof emailjs === "undefined") {
+                    console.error("❌ EmailJS n'est pas chargé");
+                    if (statusP) {
+                        statusP.textContent = "❌ Erreur : EmailJS non chargé";
                         statusP.style.color = "#ef4444";
+                    }
+                    return;
+                }
+
+                // Ton User ID (Public Key)
+                emailjs.init("rRVVucP8EH8_pQAnI");
+
+                if (form) {
+                    form.addEventListener("submit", (e) => {
+                        e.preventDefault();
+
+                        const name = document.getElementById("name").value.trim();
+                        const email = document.getElementById("email").value.trim();
+                        const message = document.getElementById("msg").value.trim();
+
+                        // Validation simple côté client
+                        if (!name || !email || !message) {
+                            if (statusP) {
+                                statusP.textContent = "❌ Tous les champs sont obligatoires";
+                                statusP.style.color = "#ef4444";
+                            }
+                            return;
+                        }
+
+                        if (statusP) {
+                            statusP.textContent = "📧 Envoi en cours...";
+                            statusP.style.color = "#c084fc";
+                        }
+
+                        emailjs.send("service_d9862n6", "template_t9l84tx", {
+                            name: name,
+                            email: email,
+                            message: message
+                        }).then((response) => {
+                            console.log("✅ Email envoyé :", response.status, response.text);
+                            if (statusP) {
+                                statusP.textContent = "✅ Message envoyé avec succès !";
+                                statusP.style.color = "#4ade80";
+                            }
+                            form.reset();
+
+                            setTimeout(() => {
+                                if (statusP) statusP.textContent = "";
+                            }, 5000);
+                        }).catch((error) => {
+                            console.error("❌ Erreur EmailJS :", error);
+                            if (statusP) {
+                                statusP.textContent = "❌ Échec de l'envoi. Vérifie la console (F12)";
+                                statusP.style.color = "#ef4444";
+                            }
+                        });
                     });
-                });
+                }
+            }
+
+            // Lancer l'initialisation après le chargement complet
+            if (typeof emailjs !== "undefined") {
+                initEmailJS();
+            } else {
+                // Attendre un peu si la librairie n'est pas encore prête
+                setTimeout(initEmailJS, 800);
             }
         });
     </script>
