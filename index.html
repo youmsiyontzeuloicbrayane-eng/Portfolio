@@ -35,7 +35,6 @@
             margin: 0 auto;
         }
         
-        /* Typographie futuriste */
         h1, h2, h3, .logo, .nav-links a, .btn {
             font-family: 'Orbitron', monospace;
         }
@@ -72,7 +71,6 @@
             border-radius: 3px;
         }
         
-        /* Navigation */
         .navbar {
             position: fixed;
             top: 0;
@@ -120,7 +118,6 @@
             cursor: pointer;
         }
         
-        /* Sections */
         section {
             min-height: 100vh;
             padding: 120px 5% 80px;
@@ -129,7 +126,6 @@
             width: 100%;
         }
         
-        /* Hero */
         .hero-content {
             text-align: center;
             margin-top: 10vh;
@@ -167,7 +163,6 @@
             display: inline-block;
         }
         
-        /* Boutons */
         .btn {
             display: inline-block;
             padding: 0.8rem 2rem;
@@ -192,7 +187,6 @@
             box-shadow: 0 0 20px rgba(192,132,252,0.5);
         }
         
-        /* Grilles */
         .skills-grid, .projects-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -233,7 +227,6 @@
             margin-bottom: 1rem;
         }
         
-        /* Contact */
         .contact-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -283,7 +276,6 @@
             box-shadow: 0 0 10px rgba(192,132,252,0.3);
         }
         
-        /* Admin Panel */
         .admin-panel {
             display: none;
             position: fixed;
@@ -348,7 +340,6 @@
             width: 100%;
         }
         
-        /* Curseur personnalisé */
         .cursor-dot {
             width: 6px;
             height: 6px;
@@ -370,7 +361,6 @@
             transition: 0.1s;
         }
         
-        /* Canvas 3D */
         #bg-canvas {
             position: fixed;
             top: 0;
@@ -381,7 +371,6 @@
             pointer-events: none;
         }
         
-        /* Responsive */
         @media (max-width: 768px) {
             h1 { font-size: 2rem; }
             h2 { font-size: 1.8rem; }
@@ -399,7 +388,6 @@
     <div class="cursor-dot"></div>
     <div class="cursor-ring"></div>
 
-    <!-- Admin Panel -->
     <div id="admin-panel" class="admin-panel">
         <span class="close-admin" id="close-admin">&times;</span>
         <h3><i class="fas fa-lock"></i> Admin - Gestion des projets</h3>
@@ -414,7 +402,6 @@
         <p id="admin-msg" style="margin-top: 0.8rem; font-size: 0.85rem; text-align:center;"></p>
     </div>
 
-    <!-- Navigation -->
     <nav class="navbar" id="navbar">
         <div class="logo" id="secret-logo">LBY</div>
         <div class="menu-icon" id="menu-icon"><i class="fas fa-bars"></i></div>
@@ -428,7 +415,6 @@
         </div>
     </nav>
 
-    <!-- Hero -->
     <section id="hero">
         <div class="container">
             <div class="hero-content">
@@ -445,7 +431,6 @@
         </div>
     </section>
 
-    <!-- Université -->
     <section id="university">
         <div class="container">
             <h2>Université</h2>
@@ -458,7 +443,6 @@
         </div>
     </section>
 
-    <!-- Compétences -->
     <section id="skills">
         <div class="container">
             <h2>Compétences</h2>
@@ -475,7 +459,6 @@
         </div>
     </section>
 
-    <!-- À propos -->
     <section id="about">
         <div class="container">
             <h2>À propos</h2>
@@ -487,7 +470,6 @@
         </div>
     </section>
 
-    <!-- Projets -->
     <section id="projects">
         <div class="container">
             <h2>Projets</h2>
@@ -495,7 +477,6 @@
         </div>
     </section>
 
-    <!-- Contact -->
     <section id="contact">
         <div class="container">
             <h2>Contact</h2>
@@ -592,24 +573,24 @@
             // ========== CURSEUR ==========
             const cursorDot = document.querySelector('.cursor-dot');
             const cursorRing = document.querySelector('.cursor-ring');
-
             document.addEventListener('mousemove', (e) => {
                 if (cursorDot) cursorDot.style.transform = `translate(${e.clientX - 3}px, ${e.clientY - 3}px)`;
                 if (cursorRing) cursorRing.style.transform = `translate(${e.clientX - 16}px, ${e.clientY - 16}px)`;
             });
 
-            // ========== PROJETS (localStorage) ==========
-            let projects = JSON.parse(localStorage.getItem('portfolio_projects')) || [];
+            // ========== PROJETS (localStorage avec correction) ==========
+            let projects = [];
 
             function saveProjects() {
                 localStorage.setItem('portfolio_projects', JSON.stringify(projects));
             }
 
-            function displayProjects() {
-                const grid = document.getElementById('projects-grid');
-                if (!grid) return;
-                grid.innerHTML = "";
-                if (projects.length === 0) {
+            function loadProjectsFromStorage() {
+                const stored = localStorage.getItem('portfolio_projects');
+                if (stored && stored !== '[]') {
+                    projects = JSON.parse(stored);
+                } else {
+                    // Projets par défaut
                     projects = [
                         { id: '1', name: "Application IA Générative", type: "Intelligence Artificielle", description: "Application web utilisant GPT-4 pour générer du contenu automatique", imageUrl: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=200&fit=crop", link: "#" },
                         { id: '2', name: "Dashboard Cloud", type: "Cloud Computing", description: "Interface de monitoring pour infrastructure cloud", imageUrl: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&h=200&fit=crop", link: "#" },
@@ -617,6 +598,18 @@
                     ];
                     saveProjects();
                 }
+            }
+
+            function displayProjects() {
+                const grid = document.getElementById('projects-grid');
+                if (!grid) return;
+                grid.innerHTML = "";
+                
+                // S'assurer que projects n'est pas vide
+                if (!projects || projects.length === 0) {
+                    loadProjectsFromStorage();
+                }
+                
                 projects.forEach(p => {
                     const div = document.createElement("div");
                     div.className = "project-card";
@@ -630,6 +623,10 @@
                     grid.appendChild(div);
                 });
             }
+
+            // Charger les projets au démarrage
+            loadProjectsFromStorage();
+            displayProjects();
 
             // ========== ADMIN PANEL ==========
             let editingId = null;
@@ -673,7 +670,8 @@
                     refreshAdminList();
                     const msg = document.getElementById('admin-msg');
                     if (msg) {
-                        msg.textContent = 'Projet supprimé';
+                        msg.textContent = '✅ Projet supprimé';
+                        msg.style.color = '#4ade80';
                         setTimeout(() => msg.textContent = '', 2000);
                     }
                 }
@@ -688,8 +686,10 @@
             
             if (logo) {
                 logo.addEventListener('dblclick', () => {
-                    if (adminPanel) adminPanel.style.display = 'block';
-                    refreshAdminList();
+                    if (adminPanel) {
+                        adminPanel.style.display = 'block';
+                        refreshAdminList();
+                    }
                 });
             }
             
@@ -722,7 +722,7 @@
                     
                     if (!name || !type || !desc) {
                         if (adminMsg) {
-                            adminMsg.textContent = 'Nom, type et description requis';
+                            adminMsg.textContent = '❌ Nom, type et description requis';
                             adminMsg.style.color = 'red';
                         }
                         return;
@@ -745,7 +745,7 @@
                     displayProjects();
                     refreshAdminList();
                     if (adminMsg) {
-                        adminMsg.textContent = editingId ? 'Projet modifié !' : 'Projet ajouté !';
+                        adminMsg.textContent = editingId ? '✏️ Projet modifié !' : '✅ Projet ajouté !';
                         adminMsg.style.color = '#4ade80';
                         setTimeout(() => adminMsg.textContent = '', 2000);
                     }
@@ -787,7 +787,6 @@
                 });
             });
             
-            // Smooth scroll sur les liens
             document.querySelectorAll('.nav-links a, .logo').forEach(anchor => {
                 anchor.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -828,7 +827,7 @@
                 });
             }
 
-            // ========== CONTACT EMAIL (EmailJS corrigé) ==========
+            // ========== CONTACT EMAIL (EmailJS) ==========
             emailjs.init("rRVVucP8EH8_pQAnI");
 
             document.getElementById("contact-form").addEventListener("submit", function(e) {
@@ -855,9 +854,6 @@
                     status.style.color = "#ef4444";
                 });
             });
-
-            // ========== INITIALISATION AFFICHAGE PROJETS ==========
-            displayProjects();
         });
     </script>
 </body>
