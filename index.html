@@ -806,7 +806,7 @@
                 menu.addEventListener("click", () => { nav.classList.toggle("open"); });
             }
 
-            // ========== PHOTO DE PROFIL (modifiée avec ta nouvelle image) ==========
+            // ========== PHOTO DE PROFIL ==========
             const profileClick = document.getElementById('profile-click');
             const profilePic = document.getElementById('profile-pic');
             if (profileClick && profilePic) {
@@ -828,46 +828,33 @@
                 });
             }
 
-            // ========== CONTACT EMAIL (EmailJS) ==========
-            const form = document.getElementById("contact-form");
-            if (form && typeof emailjs !== 'undefined') {
-                emailjs.init('rRVVucP8EH8_pQAnI');
-                form.addEventListener("submit", async (e) => {
-                    e.preventDefault();
-                    const status = document.getElementById("form-status");
-                    const name = document.getElementById("name").value;
-                    const email = document.getElementById("email").value;
-                    const message = document.getElementById("msg").value;
-                    
-                    if (!name || !email || !message) {
-                        status.textContent = "⚠️ Tous les champs sont requis";
-                        status.style.color = "#f97316";
-                        return;
-                    }
-                    
-                    status.textContent = "📧 Envoi en cours...";
-                    status.style.color = "#c084fc";
-                    
-                    try {
-                        await emailjs.send("service_d9862n6", "template_t9l84tx", {
-                            from_name: name,
-                            from_email: email,
-                            message: message,
-                            to_name: "Loïc Brayane"
-                        });
-                        status.textContent = "✅ Message envoyé avec succès !";
-                        status.style.color = "#4ade80";
-                        form.reset();
-                        setTimeout(() => status.textContent = "", 5000);
-                    } catch (err) {
-                        status.textContent = "❌ Erreur lors de l'envoi";
-                        status.style.color = "#ef4444";
-                        console.error(err);
-                    }
+            // ========== CONTACT EMAIL (EmailJS corrigé) ==========
+            emailjs.init("rRVVucP8EH8_pQAnI");
+
+            document.getElementById("contact-form").addEventListener("submit", function(e) {
+                e.preventDefault();
+
+                const status = document.getElementById("form-status");
+
+                status.textContent = "📧 Envoi en cours...";
+                status.style.color = "#c084fc";
+
+                emailjs.send("service_d9862n6", "template_t9l84tx", {
+                    name: document.getElementById("name").value,
+                    email: document.getElementById("email").value,
+                    message: document.getElementById("msg").value
+                })
+                .then(() => {
+                    status.textContent = "✅ Message envoyé !";
+                    status.style.color = "#4ade80";
+                    document.getElementById("contact-form").reset();
+                })
+                .catch((err) => {
+                    console.log(err);
+                    status.textContent = "❌ Erreur envoi";
+                    status.style.color = "#ef4444";
                 });
-            } else if (form) {
-                console.error("EmailJS non chargé");
-            }
+            });
 
             // ========== INITIALISATION AFFICHAGE PROJETS ==========
             displayProjects();
