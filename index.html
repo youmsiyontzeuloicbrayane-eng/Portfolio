@@ -9,18 +9,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/emailjs.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
             background: #0a0a0a;
             color: white;
             overflow-x: hidden;
         }
-        
         h1, h2, h3, .logo, .nav-links a, .btn {
             font-family: 'Orbitron', monospace;
         }
@@ -38,7 +33,6 @@
             backdrop-filter: blur(10px);
             z-index: 1000;
         }
-        
         .logo {
             font-size: 1.8rem;
             font-weight: 800;
@@ -47,34 +41,45 @@
             background-clip: text;
             color: transparent;
             cursor: pointer;
+            position: relative;
         }
-        
+        /* Indice admin discret (visible uniquement au survol) */
+        .logo::after {
+            content: "⚡ admin";
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            font-size: 0.6rem;
+            color: #c084fc;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+        }
+        .logo:hover::after {
+            opacity: 0.6;
+        }
         .nav-links {
             display: flex;
             gap: 2rem;
         }
-        
         .nav-links a {
             color: #ccc;
             text-decoration: none;
             transition: 0.3s;
         }
-        
         .nav-links a:hover, .nav-links a.active {
             color: #c084fc;
         }
-        
         .menu-icon {
             display: none;
             font-size: 1.5rem;
             cursor: pointer;
         }
-        
         section {
             min-height: 100vh;
             padding: 100px 5% 80px;
         }
-        
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -85,7 +90,6 @@
             text-align: center;
             margin-top: 10vh;
         }
-        
         .profile-img {
             width: 150px;
             height: 150px;
@@ -95,14 +99,12 @@
             padding: 3px;
             cursor: pointer;
         }
-        
         .profile-img img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             border-radius: 50%;
         }
-        
         h1 {
             font-size: 3rem;
             background: linear-gradient(135deg, #c084fc, #ec4899, #3b82f6);
@@ -111,15 +113,12 @@
             color: transparent;
             margin-bottom: 1rem;
         }
-        
         #typed-text {
             font-size: 1.2rem;
             color: #c084fc;
             border-right: 2px solid #c084fc;
             display: inline-block;
         }
-        
-        /* Boutons */
         .btn {
             display: inline-block;
             padding: 0.8rem 2rem;
@@ -132,17 +131,13 @@
             border: none;
             cursor: pointer;
         }
-        
         .btn-outline {
             background: transparent;
             border: 1px solid #a855f7;
         }
-        
         .btn:hover {
             transform: scale(1.05);
         }
-        
-        /* Grilles */
         h2 {
             font-size: 2rem;
             text-align: center;
@@ -152,13 +147,11 @@
             background-clip: text;
             color: transparent;
         }
-        
         .skills-grid, .projects-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 1.5rem;
         }
-        
         .skill-card, .project-card {
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(139, 92, 246, 0.3);
@@ -167,17 +160,14 @@
             text-align: center;
             transition: 0.3s;
         }
-        
         .skill-card:hover, .project-card:hover {
             transform: translateY(-5px);
             border-color: #c084fc;
         }
-        
         .skill-card i {
             font-size: 2.5rem;
             margin-bottom: 0.5rem;
         }
-        
         .project-card img {
             width: 100%;
             height: 120px;
@@ -185,33 +175,27 @@
             border-radius: 0.5rem;
             margin-bottom: 0.5rem;
         }
-        
-        /* Contact */
         .contact-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 2rem;
         }
-        
         .info-card, .form-card {
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(139, 92, 246, 0.3);
             border-radius: 1rem;
             padding: 1.5rem;
         }
-        
         .info-item {
             display: flex;
             align-items: center;
             gap: 1rem;
             margin-bottom: 1rem;
         }
-        
         .info-item i {
             font-size: 1.2rem;
             color: #c084fc;
         }
-        
         input, textarea {
             width: 100%;
             padding: 0.8rem;
@@ -221,13 +205,12 @@
             border-radius: 0.5rem;
             color: white;
         }
-        
         input:focus, textarea:focus {
             outline: none;
             border-color: #c084fc;
         }
         
-        /* Admin Panel */
+        /* Admin Panel - invisible pour les visiteurs */
         .admin-panel {
             display: none;
             position: fixed;
@@ -242,12 +225,10 @@
             padding: 1.5rem;
             z-index: 2000;
         }
-        
         .admin-panel h3 {
             margin-bottom: 1rem;
             text-align: center;
         }
-        
         .close-admin {
             position: absolute;
             top: 10px;
@@ -255,13 +236,11 @@
             font-size: 1.5rem;
             cursor: pointer;
         }
-        
         #admin-projects-list {
             margin-top: 1rem;
             max-height: 200px;
             overflow-y: auto;
         }
-        
         #admin-projects-list div {
             background: #2a2a2a;
             margin: 0.5rem 0;
@@ -270,7 +249,6 @@
             display: flex;
             justify-content: space-between;
         }
-        
         footer {
             text-align: center;
             padding: 2rem;
@@ -285,7 +263,6 @@
             h1 { font-size: 2rem; }
         }
         
-        /* Canvas 3D */
         #bg-canvas {
             position: fixed;
             top: 0;
@@ -300,17 +277,17 @@
 <body>
     <canvas id="bg-canvas"></canvas>
 
-    <!-- Admin Panel -->
+    <!-- Admin Panel (invisible par défaut, accessible uniquement par double-clic sur le logo) -->
     <div id="admin-panel" class="admin-panel">
         <span class="close-admin" id="close-admin">&times;</span>
-        <h3><i class="fas fa-lock"></i> Admin - Projets</h3>
-        <input type="text" id="proj-name" placeholder="Nom du projet">
-        <input type="text" id="proj-type" placeholder="Type">
-        <textarea id="proj-desc" placeholder="Description" rows="2"></textarea>
-        <input type="text" id="proj-img" placeholder="URL image">
-        <input type="text" id="proj-link" placeholder="Lien">
-        <button id="add-project-btn" class="btn" style="width:100%">Ajouter</button>
-        <button id="cancel-edit" class="btn-outline" style="width:100%; margin-top:0.5rem; display:none;">Annuler</button>
+        <h3><i class="fas fa-lock"></i> Admin - Gestion des projets</h3>
+        <input type="text" id="proj-name" placeholder="Nom du projet" required>
+        <input type="text" id="proj-type" placeholder="Type (ex: Web, IA...)" required>
+        <textarea id="proj-desc" placeholder="Description" rows="2" required></textarea>
+        <input type="text" id="proj-img" placeholder="URL de l'image (optionnel)">
+        <input type="text" id="proj-link" placeholder="Lien du projet (optionnel)">
+        <button id="add-project-btn" class="btn" style="width:100%">Ajouter le projet</button>
+        <button id="cancel-edit" class="btn-outline" style="width:100%; margin-top:0.5rem; display:none;">Annuler l'édition</button>
         <div id="admin-projects-list"></div>
         <p id="admin-msg" style="margin-top:0.5rem; font-size:0.8rem; text-align:center;"></p>
     </div>
@@ -334,7 +311,7 @@
         <div class="container">
             <div class="hero-content">
                 <div class="profile-img" id="profile-click">
-                    <img src="https://i.ibb.co/p6m5zrpc/image-aac7e0a5.png" alt="Photo" id="profile-pic">
+                    <img src="https://i.ibb.co/p6m5zrpc/image-aac7e0a5.png" alt="Photo de profil" id="profile-pic">
                 </div>
                 <h1>Loïc Brayane</h1>
                 <div style="margin: 1rem 0;"><span id="typed-text"></span></div>
@@ -351,7 +328,8 @@
             <div style="background: rgba(255,255,255,0.05); border-radius: 1rem; padding: 2rem; text-align: center;">
                 <i class="fas fa-university" style="font-size: 3rem; color: #c084fc;"></i>
                 <h3 style="margin: 1rem 0;">IUT DE DOUALA</h3>
-                <p>BUT Informatique - 2024-2027</p>
+                <p>Département Informatique - BUT Informatique</p>
+                <p>2024 - 2027</p>
             </div>
         </div>
     </section>
@@ -399,18 +377,18 @@
             <h2>Contact</h2>
             <div class="contact-grid">
                 <div class="info-card">
-                    <h3>Infos</h3>
+                    <h3>Informations</h3>
                     <div class="info-item"><i class="fas fa-phone"></i><span>681591969</span></div>
                     <div class="info-item"><i class="fas fa-envelope"></i><span>youmsiyontzeuloicbrayane@gmail.com</span></div>
                 </div>
                 <div class="form-card">
-                    <h3>Message</h3>
+                    <h3>Envoyez-moi un message</h3>
                     <form id="contact-form">
-                        <input type="text" id="name" placeholder="Nom" required>
-                        <input type="email" id="email" placeholder="Email" required>
-                        <textarea id="msg" rows="4" placeholder="Message" required></textarea>
-                        <button type="submit" class="btn" style="width:100%">Envoyer</button>
-                        <p id="form-status" style="margin-top:1rem; text-align:center;"></p>
+                        <input type="text" id="name" placeholder="Votre nom" required>
+                        <input type="email" id="email" placeholder="Votre email" required>
+                        <textarea id="msg" rows="4" placeholder="Votre message" required></textarea>
+                        <button type="submit" class="btn" style="width:100%">Envoyer <i class="fas fa-paper-plane"></i></button>
+                        <p id="form-status" style="margin-top: 1rem; text-align: center;"></p>
                     </form>
                 </div>
             </div>
@@ -418,7 +396,7 @@
     </section>
 
     <footer>
-        <p>&copy; 2025 Loïc Brayane</p>
+        <p>&copy; 2025 Loïc Brayane - Tous droits réservés</p>
     </footer>
 
     <script>
@@ -500,7 +478,7 @@
             if (!grid) return;
             grid.innerHTML = "";
             if (projects.length === 0) {
-                grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:2rem;">Aucun projet. Double-cliquez sur LBY pour en ajouter.</div>';
+                grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:2rem; color:#888;">Aucun projet pour le moment.</div>';
                 return;
             }
             projects.forEach(p => {
@@ -521,6 +499,10 @@
             const listDiv = document.getElementById('admin-projects-list');
             if (!listDiv) return;
             listDiv.innerHTML = '';
+            if (projects.length === 0) {
+                listDiv.innerHTML = '<p style="text-align:center; color:#888;">Aucun projet. Ajoutez-en ci-dessus.</p>';
+                return;
+            }
             projects.forEach(p => {
                 const div = document.createElement('div');
                 div.innerHTML = `<span><b>${p.name}</b> (${p.type})</span>
@@ -539,7 +521,7 @@
                 document.getElementById('proj-img').value = p.imageUrl || '';
                 document.getElementById('proj-link').value = p.link || '';
                 window.editingId = id;
-                document.getElementById('add-project-btn').textContent = 'Modifier';
+                document.getElementById('add-project-btn').textContent = 'Modifier le projet';
                 document.getElementById('cancel-edit').style.display = 'block';
             }
         };
@@ -550,10 +532,12 @@
                 saveProjects();
                 displayProjects();
                 refreshAdminList();
+                document.getElementById('admin-msg').textContent = '✅ Projet supprimé';
+                setTimeout(() => document.getElementById('admin-msg').textContent = '', 2000);
             }
         };
         
-        // Admin panel
+        // Admin panel - accessible uniquement par double-clic sur le logo
         const adminPanel = document.getElementById('admin-panel');
         const logo = document.getElementById('secret-logo');
         const closeAdmin = document.getElementById('close-admin');
@@ -561,11 +545,14 @@
         const cancelBtn = document.getElementById('cancel-edit');
         let editingId = null;
         
-        logo.addEventListener('dblclick', () => { adminPanel.style.display = 'block'; refreshAdminList(); });
+        logo.addEventListener('dblclick', () => { 
+            adminPanel.style.display = 'block'; 
+            refreshAdminList(); 
+        });
         closeAdmin.addEventListener('click', () => { adminPanel.style.display = 'none'; });
         cancelBtn.addEventListener('click', () => {
             editingId = null;
-            addBtn.textContent = 'Ajouter';
+            addBtn.textContent = 'Ajouter le projet';
             cancelBtn.style.display = 'none';
             document.getElementById('proj-name').value = '';
             document.getElementById('proj-type').value = '';
@@ -579,7 +566,7 @@
             const type = document.getElementById('proj-type').value.trim();
             const desc = document.getElementById('proj-desc').value.trim();
             if (!name || !type || !desc) {
-                document.getElementById('admin-msg').textContent = 'Nom, type et description requis';
+                document.getElementById('admin-msg').textContent = '❌ Nom, type et description requis';
                 return;
             }
             const img = document.getElementById('proj-img').value.trim();
@@ -590,7 +577,7 @@
                 if (index !== -1) {
                     projects[index] = { ...projects[index], name, type, description: desc, imageUrl: img, link: link };
                     editingId = null;
-                    addBtn.textContent = 'Ajouter';
+                    addBtn.textContent = 'Ajouter le projet';
                     cancelBtn.style.display = 'none';
                 }
             } else {
@@ -604,7 +591,7 @@
             document.getElementById('proj-desc').value = '';
             document.getElementById('proj-img').value = '';
             document.getElementById('proj-link').value = '';
-            document.getElementById('admin-msg').textContent = 'Projet ajouté !';
+            document.getElementById('admin-msg').textContent = '✅ Projet ajouté/modifié !';
             setTimeout(() => document.getElementById('admin-msg').textContent = '', 2000);
         });
         
@@ -654,26 +641,26 @@
             document.getElementById('nav-links')?.classList.toggle('open');
         });
         
-        // ========== EMAILJS ==========
+        // ========== EMAILJS (avec tes identifiants) ==========
         emailjs.init('rRVVucP8EH8_pQAnI');
         const form = document.getElementById('contact-form');
         const statusP = document.getElementById('form-status');
         
         form.addEventListener('submit', (e) => {
             e.preventDefault();
-            statusP.textContent = 'Envoi...';
+            statusP.textContent = '📧 Envoi en cours...';
             statusP.style.color = '#c084fc';
             emailjs.send('service_d9862n6', 'template_t9l84tx', {
                 name: document.getElementById('name').value,
                 email: document.getElementById('email').value,
                 message: document.getElementById('msg').value
             }).then(() => {
-                statusP.textContent = '✅ Message envoyé !';
+                statusP.textContent = '✅ Message envoyé avec succès !';
                 statusP.style.color = '#4ade80';
                 form.reset();
-                setTimeout(() => statusP.textContent = '', 3000);
+                setTimeout(() => statusP.textContent = '', 4000);
             }).catch(() => {
-                statusP.textContent = '❌ Erreur';
+                statusP.textContent = '❌ Erreur lors de l\'envoi';
                 statusP.style.color = '#ef4444';
             });
         });
