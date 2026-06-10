@@ -20,7 +20,6 @@
             font-family: 'Orbitron', monospace;
         }
         
-        /* Navigation */
         .navbar {
             position: fixed;
             top: 0;
@@ -43,7 +42,6 @@
             cursor: pointer;
             position: relative;
         }
-        /* Indice admin discret (visible uniquement au survol) */
         .logo::after {
             content: "⚡ admin";
             position: absolute;
@@ -85,7 +83,6 @@
             margin: 0 auto;
         }
         
-        /* Hero */
         .hero-content {
             text-align: center;
             margin-top: 10vh;
@@ -210,7 +207,6 @@
             border-color: #c084fc;
         }
         
-        /* Admin Panel - invisible pour les visiteurs */
         .admin-panel {
             display: none;
             position: fixed;
@@ -466,8 +462,19 @@
         }
         typeEffect();
 
-        // ========== GESTION DES PROJETS ==========
-        let projects = JSON.parse(localStorage.getItem('my_projects')) || [];
+        // ========== GESTION DES PROJETS (CORRIGÉE) ==========
+        let projects = [];
+        
+        // Charger les projets depuis localStorage au démarrage
+        function loadProjects() {
+            const stored = localStorage.getItem('my_projects');
+            if (stored) {
+                projects = JSON.parse(stored);
+            } else {
+                projects = [];
+            }
+            displayProjects();
+        }
         
         function saveProjects() {
             localStorage.setItem('my_projects', JSON.stringify(projects));
@@ -477,21 +484,33 @@
             const grid = document.getElementById('projects-grid');
             if (!grid) return;
             grid.innerHTML = "";
+            
             if (projects.length === 0) {
                 grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:2rem; color:#888;">Aucun projet pour le moment.</div>';
                 return;
             }
+            
             projects.forEach(p => {
                 const card = document.createElement('div');
                 card.className = 'project-card';
                 card.innerHTML = `
                     <img src="${p.imageUrl || 'https://via.placeholder.com/300x150'}" onerror="this.src='https://via.placeholder.com/300x150'">
-                    <h3>${p.name}</h3>
-                    <p style="color:#c084fc; font-size:0.8rem;">${p.type}</p>
-                    <p style="font-size:0.8rem;">${p.description}</p>
+                    <h3>${escapeHtml(p.name)}</h3>
+                    <p style="color:#c084fc; font-size:0.8rem;">${escapeHtml(p.type)}</p>
+                    <p style="font-size:0.8rem;">${escapeHtml(p.description)}</p>
                     <a href="${p.link || '#'}" target="_blank" class="btn" style="margin-top:0.5rem; padding:0.3rem 1rem; font-size:0.8rem;">Voir →</a>
                 `;
                 grid.appendChild(card);
+            });
+        }
+        
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
             });
         }
         
@@ -505,9 +524,9 @@
             }
             projects.forEach(p => {
                 const div = document.createElement('div');
-                div.innerHTML = `<span><b>${p.name}</b> (${p.type})</span>
-                    <div><button onclick="editProject('${p.id}')" style="background:#3b82f6; border:none; color:white; padding:2px 8px; border-radius:4px;">✏️</button>
-                    <button onclick="deleteProject('${p.id}')" style="background:#ef4444; border:none; color:white; padding:2px 8px; border-radius:4px;">🗑️</button></div>`;
+                div.innerHTML = `<span><b>${escapeHtml(p.name)}</b> (${escapeHtml(p.type)})</span>
+                    <div><button onclick="editProject('${p.id}')" style="background:#3b82f6; border:none; color:white; padding:2px 8px; border-radius:4px; cursor:pointer;">✏️</button>
+                    <button onclick="deleteProject('${p.id}')" style="background:#ef4444; border:none; color:white; padding:2px 8px; border-radius:4px; cursor:pointer;">🗑️</button></div>`;
                 listDiv.appendChild(div);
             });
         }
@@ -537,7 +556,7 @@
             }
         };
         
-        // Admin panel - accessible uniquement par double-clic sur le logo
+        // Admin panel
         const adminPanel = document.getElementById('admin-panel');
         const logo = document.getElementById('secret-logo');
         const closeAdmin = document.getElementById('close-admin');
@@ -641,7 +660,7 @@
             document.getElementById('nav-links')?.classList.toggle('open');
         });
         
-        // ========== EMAILJS (avec tes identifiants) ==========
+        // ========== EMAILJS ==========
         emailjs.init('rRVVucP8EH8_pQAnI');
         const form = document.getElementById('contact-form');
         const statusP = document.getElementById('form-status');
@@ -665,7 +684,8 @@
             });
         });
         
-        displayProjects();
+        // ========== CHARGEMENT INITIAL ==========
+        loadProjects();
     </script>
 </body>
 </html>
