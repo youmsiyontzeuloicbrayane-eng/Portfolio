@@ -433,7 +433,7 @@
         <div class="container">
             <div class="hero-content">
                 <div class="profile-img" id="profile-click">
-                    <img src="https://via.placeholder.com/180/2a2a2a/ffffff?text=LOIC" alt="Photo de profil" id="profile-pic">
+                    <img src="https://i.ibb.co/p6m5zrpc/image-aac7e0a5.png" alt="Photo de profil" id="profile-pic">
                 </div>
                 <h1>Loïc Brayane</h1>
                 <div style="font-size: 1.5rem; margin: 1rem 0;">
@@ -806,7 +806,7 @@
                 menu.addEventListener("click", () => { nav.classList.toggle("open"); });
             }
 
-            // ========== PHOTO DE PROFIL ==========
+            // ========== PHOTO DE PROFIL (modifiée avec ta nouvelle image) ==========
             const profileClick = document.getElementById('profile-click');
             const profilePic = document.getElementById('profile-pic');
             if (profileClick && profilePic) {
@@ -818,7 +818,9 @@
                         const file = e.target.files[0];
                         if (file) {
                             const reader = new FileReader();
-                            reader.onload = (ev) => { profilePic.src = ev.target.result; };
+                            reader.onload = (ev) => {
+                                profilePic.src = ev.target.result;
+                            };
                             reader.readAsDataURL(file);
                         }
                     };
