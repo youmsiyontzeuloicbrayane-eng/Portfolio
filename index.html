@@ -359,7 +359,6 @@
                 font-size: 0.95rem;
                 line-height: 1.7;
             }
-            /* Réduire la charge du canvas sur mobile */
             #bg-canvas {
                 opacity: 0.7;
             }
@@ -438,7 +437,6 @@
                     <a href="#contact" class="btn">Me contacter</a>
                     <a href="#projects" class="btn btn-outline">Voir projets</a>
                 </div>
-                <!-- Bouton de téléchargement CV - Nouvel emplacement -->
                 <div style="margin-top: 2rem;">
                     <a href="#" id="download-cv" class="btn btn-cv">
                         <i class="fas fa-download"></i> Télécharger mon CV
@@ -573,10 +571,7 @@
             if (downloadBtn) {
                 downloadBtn.addEventListener("click", function(e) {
                     e.preventDefault();
-                    // Option 1: Fichier local (place ton CV dans public/cv/mon-cv.pdf)
                     window.open("/cv/mon-cv.pdf", "_blank");
-                    // Option 2: Lien externe (décommente la ligne ci-dessous et commente celle du dessus)
-                    // window.open("https://ton-lien-vers-ton-cv.pdf", "_blank");
                     alert("Téléchargement du CV...");
                 });
             }
@@ -708,7 +703,7 @@
                 projects.forEach(p => {
                     const div = document.createElement("div");
                     div.innerHTML = `
-                        <span><b>${escapeHtml(p.name)}</b> (${escapeHtml(p.type)})</span>
+                        <span><b>\( {escapeHtml(p.name)}</b> ( \){escapeHtml(p.type)})</span>
                         <div>
                             <button onclick="editProjectAdmin('${p.id}')" style="background:#3b82f6;border:none;color:white;padding:2px 6px;border-radius:4px;">✏️</button>
                             <button onclick="deleteProjectAdmin('${p.id}')" style="background:#ef4444;border:none;color:white;padding:2px 6px;border-radius:4px;">🗑️</button>
@@ -826,44 +821,66 @@
                 document.getElementById("nav-links").classList.toggle("open");
             });
 
-            // ========== EMAILJS ==========
+            // ========== EMAILJS - VERSION FINALE CORRIGÉE ==========
             const form = document.getElementById("contact-form");
             const statusP = document.getElementById("form-status");
+
             function initEmailJS() {
                 if (typeof emailjs === "undefined") {
-                    console.error("EmailJS non chargé");
+                    console.error("❌ EmailJS SDK non chargé");
+                    if (statusP) {
+                        statusP.textContent = "❌ Erreur de chargement (vérifie ta connexion)";
+                        statusP.style.color = "#ef4444";
+                    }
                     return;
                 }
-                emailjs.init({ publicKey: "rRVVucP8EH8_pQAnI" });
+
+                emailjs.init({
+                    publicKey: "rRVVucP8EH8_pQAnI",
+                });
+
+                console.log("✅ EmailJS initialisé avec succès");
+
                 if (form) {
                     form.addEventListener("submit", function(e) {
                         e.preventDefault();
+
                         const name = document.getElementById("name").value.trim();
                         const email = document.getElementById("email").value.trim();
                         const message = document.getElementById("msg").value.trim();
+
                         if (!name || !email || !message) {
-                            statusP.textContent = "❌ Tous les champs requis";
+                            statusP.textContent = "❌ Tous les champs sont obligatoires";
                             statusP.style.color = "#ef4444";
                             return;
                         }
-                        statusP.textContent = "📧 Envoi...";
+
+                        statusP.textContent = "📧 Envoi en cours...";
                         statusP.style.color = "#c084fc";
-                        emailjs.send("service_d9862n6", "template_t9l84tx", { name, email, message })
-                            .then(() => {
-                                statusP.textContent = "✅ Message envoyé !";
-                                statusP.style.color = "#4ade80";
-                                form.reset();
-                                setTimeout(() => statusP.textContent = "", 5000);
-                            })
-                            .catch(() => {
-                                statusP.textContent = "❌ Erreur";
-                                statusP.style.color = "#ef4444";
-                            });
+
+                        emailjs.send("service_d9862n6", "template_t9l84tx", {
+                            name: name,
+                            email: email,
+                            message: message
+                        }).then((response) => {
+                            console.log("✅ Email envoyé avec succès", response.status);
+                            statusP.textContent = "✅ Message envoyé avec succès !";
+                            statusP.style.color = "#4ade80";
+                            form.reset();
+                            setTimeout(() => statusP.textContent = "", 6000);
+                        }).catch((error) => {
+                            console.error("❌ Erreur EmailJS détaillée :", error);
+                            statusP.textContent = "❌ Échec de l'envoi. Vérifie la console (F12)";
+                            statusP.style.color = "#ef4444";
+                        });
                     });
                 }
             }
-            if (typeof emailjs !== "undefined") initEmailJS();
-            else setTimeout(initEmailJS, 800);
+
+            // Lancement plus fiable
+            window.addEventListener("load", () => {
+                setTimeout(initEmailJS, 1000);
+            });
 
             displayProjects();
         });
